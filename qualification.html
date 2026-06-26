@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Qualification · Espace Agents — Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css">
+</head><body data-page="qualif">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Formulaire de qualification</h1><span class="tag">Connecté à Airtable</span>
+    </div>
+    <div class="content" id="app">
+      <div class="callout c-bad"><b>B2B transport uniquement.</b> Jamais de particulier, jamais de CPF. Financement = entreprise via OPCO Mobilité.</div>
+      <div class="status" id="status">En cours de qualification…<small id="statusSub">Renseignez les 3 critères d'éligibilité.</small></div>
+
+      <div class="fcard"><h2>Appel</h2><div class="row">
+        <div class="f"><label>Date / heure</label><input id="dt" type="text"></div>
+        <div class="f"><label>Agent</label><input id="agent" placeholder="Prénom de l'agent"></div>
+      </div></div>
+
+      <div class="fcard"><h2>1 · Éligibilité — les 3 OUI obligatoires</h2><div class="row">
+        <div class="f"><label>Entreprise de transport ?</label><div class="seg" data-key="transport"><button data-v="Oui">Oui</button><button data-v="Non">Non</button></div></div>
+        <div class="f"><label>Type</label><select id="type"><option value="">—</option><option>Léger</option><option>Lourd</option><option>Commission / affrètement</option></select></div>
+        <div class="f"><label>Affiliée OPCO Mobilité ?</label><div class="seg" data-key="opco"><button data-v="Oui">Oui</button><button data-v="Non">Non</button><button data-v="Ne sait pas">NSP</button></div></div>
+        <div class="f full"><label>Interlocuteur = décideur formation ?</label><div class="seg" data-key="decideur"><button data-v="Oui">Oui</button><button data-v="Non">Non</button></div></div>
+      </div></div>
+
+      <div class="fcard"><h2>2 · Entreprise</h2><div class="row">
+        <div class="f"><label>Raison sociale</label><input id="rs"></div>
+        <div class="f"><label>SIRET</label><input id="siret" inputmode="numeric"></div>
+        <div class="f"><label>Code postal</label><input id="cp" inputmode="numeric"></div>
+        <div class="f"><label>Ville</label><input id="ville"></div>
+        <div class="f"><label>Nombre de salariés</label><input id="eff" inputmode="numeric"></div>
+      </div></div>
+
+      <div class="fcard"><h2>3 · Interlocuteur</h2><div class="row">
+        <div class="f"><label>Nom</label><input id="nom"></div>
+        <div class="f"><label>Prénom</label><input id="prenom"></div>
+        <div class="f"><label>Fonction</label><input id="fonction"></div>
+        <div class="f"><label>Email *</label><input id="email" type="email"></div>
+        <div class="f"><label>Portable *</label><input id="tel" type="tel"></div>
+      </div><p class="hint">* Email + portable obligatoires pour qu'un RDV compte comme qualifié.</p></div>
+
+      <div class="fcard"><h2>4 · Découverte (faites parler le dirigeant)</h2><div class="row">
+        <div class="f full"><label>Quelles sont ses problématiques / besoins actuels ?</label><textarea id="besoins" placeholder="charges, recrutement chauffeurs, manque de temps, cotations, clients…"></textarea></div>
+        <div class="f"><label>Assureur marchandises actuel</label><input id="ass_march" placeholder="nom / ne sait pas"></div>
+        <div class="f"><label>Assureur flotte actuel</label><input id="ass_flotte" placeholder="nom / ne sait pas"></div>
+        <div class="f"><label>Budget formation (PDC) déjà utilisé ?</label><div class="seg" data-key="pdc"><button data-v="Non">Non</button><button data-v="Oui">Oui</button><button data-v="Ne sait pas">NSP</button></div></div>
+        <div class="f"><label>Utilise déjà l'IA ?</label><div class="seg" data-key="ia"><button data-v="Non">Non</button><button data-v="Un peu">Un peu</button><button data-v="Oui">Oui</button></div></div>
+        <div class="f"><label>Intéressé par la flotte électrique ?</label><div class="seg" data-key="elec"><button data-v="Oui">Oui</button><button data-v="Plus tard">Plus tard</button><button data-v="Non">Non</button></div></div>
+        <div class="f"><label>Ouvert à un réseau d'entraide transporteurs ?</label><div class="seg" data-key="reseau"><button data-v="Oui">Oui</button><button data-v="Non">Non</button></div></div>
+      </div><p class="hint">Le réseau : on note l'intérêt, on ne le « vend » pas ici — c'est à l'adhésion.</p></div>
+
+      <div class="fcard"><h2>5 · Orientation</h2><div class="row">
+        <div class="f"><label>Offre pressentie</label><select id="offre"><option value="">—</option><option>Formation IA Dirigeant (1500€ PDC)</option><option>TP RPMS (NPEC)</option><option>À définir</option></select></div>
+        <div class="f"><label>Niveau d'intérêt</label><div class="seg" data-key="interet"><button data-v="🔥 Chaud">🔥 Chaud</button><button data-v="🟡 Tiède">🟡 Tiède</button><button data-v="❄️ Froid">❄️ Froid</button></div></div>
+        <div class="f"><label>RDV audit IA</label><div class="seg" data-key="rdv"><button data-v="Pris">Pris</button><button data-v="À rappeler">Rappeler</button><button data-v="Refus">Refus</button></div></div>
+        <div class="f"><label>Créneau du RDV</label><input id="creneau" placeholder="ex. mar. 8 juil. 14h"></div>
+        <div class="f full"><label>Objection / notes libres</label><input id="objection"></div>
+      </div></div>
+
+      <div class="fcard"><h2>RDV qualifié ? (5 critères)</h2><div class="crit" id="crit">
+        <span data-c="decideur">Décideur</span><span data-c="transport">Transport</span><span data-c="opco">OPCO Mobilité</span><span data-c="contact">Email + portable</span><span data-c="creneau">Créneau confirmé</span>
+      </div></div>
+
+      <div class="actions">
+        <button class="btn btn-p" id="send">Envoyer la fiche dans Airtable</button>
+        <button class="btn btn-g" id="reset">Nouvelle fiche</button>
+      </div>
+      <p class="hint" id="sendHint"></p>
+    </div>
+
+    <div class="content" id="done">
+      <div class="big">✅</div><h2 style="font-size:1.4rem">Fiche envoyée dans Airtable&nbsp;!</h2>
+      <p class="muted" id="doneMsg"></p>
+      <button class="btn btn-p" id="again" style="margin:22px auto 0;max-width:280px">Nouvelle fiche</button>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+<script>
+var WEBHOOK='https://hook.eu1.make.com/fp02imeceyg5dv7xjfr87kp3qxm3ltmv';
+var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
+var state={transport:'',opco:'',decideur:'',pdc:'',ia:'',elec:'',reseau:'',interet:'',rdv:''};
+var d=new Date();$('#dt').value=d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+$$('.seg').forEach(function(seg){var key=seg.getAttribute('data-key');seg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;seg.querySelectorAll('button').forEach(function(x){x.classList.remove('on','good','bad')});b.classList.add('on');if(b.getAttribute('data-v')==='Oui'&&['transport','opco','decideur'].indexOf(key)>-1)b.classList.add('good');if(b.getAttribute('data-v')==='Non'&&['transport','decideur'].indexOf(key)>-1)b.classList.add('bad');state[key]=b.getAttribute('data-v');update();});});
+['#email','#tel','#creneau'].forEach(function(s){$(s).addEventListener('input',update)});
+function update(){var email=$('#email').value.trim(),tel=$('#tel').value.trim(),cr=$('#creneau').value.trim();
+  var c={decideur:state.decideur==='Oui',transport:state.transport==='Oui',opco:state.opco==='Oui',contact:email!==''&&tel!=='',creneau:cr!==''&&state.rdv==='Pris'};
+  $$('#crit span').forEach(function(s){s.classList.toggle('ok',c[s.getAttribute('data-c')])});
+  var st=$('#status'),sub=$('#statusSub');st.className='status';
+  if(state.transport==='Non'||state.decideur==='Non'){st.classList.add('no');st.firstChild.textContent='⛔ Non éligible — ';sub.textContent=state.transport==='Non'?'Pas une entreprise de transport.':'Interlocuteur non décideur.';return;}
+  var n=0;for(var k in c)if(c[k])n++;
+  if(n===5){st.classList.add('q');st.firstChild.textContent='✅ RDV QUALIFIÉ — ';sub.textContent='Les 5 critères sont réunis.';}
+  else{st.firstChild.textContent='En cours de qualification… ';sub.textContent=n+' / 5 critères réunis.';}
+}
+function statut(){if(state.transport==='Non'||state.decideur==='Non')return'Non éligible';
+  var ok=state.decideur==='Oui'&&state.transport==='Oui'&&state.opco==='Oui'&&$('#email').value.trim()&&$('#tel').value.trim()&&$('#creneau').value.trim()&&state.rdv==='Pris';
+  if(ok)return'RDV qualifié';if(state.rdv==='À rappeler')return'À rappeler';if(state.rdv==='Refus')return'Pas intéressé';return'';}
+$('#send').addEventListener('click',function(){
+  var email=$('#email').value.trim(),tel=$('#tel').value.trim(),g=function(id){return $(id).value.trim()};
+  if(!state.transport||!state.decideur){$('#sendHint').textContent='⚠️ Renseignez au moins « transport » et « décideur ».';return;}
+  if(!g('#rs')){$('#sendHint').textContent='⚠️ Indiquez au moins la raison sociale.';return;}
+  var notes=[]; if(g('#ass_march'))notes.push('Assureur marchandises: '+g('#ass_march'));
+  if(g('#ass_flotte'))notes.push('Assureur flotte: '+g('#ass_flotte'));
+  if(state.elec)notes.push('Flotte électrique: '+state.elec);
+  if(state.reseau)notes.push('Réseau d\'entraide: '+state.reseau);
+  if(g('#objection'))notes.push(g('#objection'));
+  var map={source:"Centre d'appel (CallTech)",agent:g('#agent'),date_appel:new Date().toISOString().slice(0,10),
+    raison_sociale:g('#rs'),siret:g('#siret'),cp:g('#cp'),ville:g('#ville'),type_transport:$('#type').value,
+    opco_mobilite:state.opco,decideur:state.decideur,nom_contact:g('#nom'),prenom_contact:g('#prenom'),fonction_contact:g('#fonction'),
+    email:email,portable:tel,pdc:state.pdc,ia:state.ia,difficulte:g('#besoins'),offre:$('#offre').value,interet:state.interet,
+    rdv:state.rdv,creneau:g('#creneau'),objection:g('#objection'),notes:notes.join(' · '),statut:statut()};
+  if(g('#eff'))map.effectif=g('#eff');
+  var p=new URLSearchParams();Object.keys(map).forEach(function(k){if(map[k])p.append(k,map[k])});
+  var btn=$('#send');btn.disabled=true;btn.textContent='Envoi…';$('#sendHint').textContent='';
+  fetch(WEBHOOK,{method:'POST',mode:'no-cors',body:p}).then(function(){
+    $('#doneMsg').textContent=statut()==='RDV qualifié'?'🔥 RDV qualifié enregistré dans ENTREPRISES.':'Fiche « '+(statut()||'en cours')+' » enregistrée dans ENTREPRISES.';
+    $('#app').style.display='none';$('#done').style.display='block';window.scrollTo({top:0,behavior:'smooth'});
+  }).catch(function(){btn.disabled=false;btn.textContent='Envoyer la fiche dans Airtable';$('#sendHint').textContent='❌ Échec d\'envoi (réseau). Réessayez.';});
+});
+function resetForm(){$$('#app input,#app textarea').forEach(function(i){i.value=''});$('#type').value='';$('#offre').value='';
+  $$('.seg button').forEach(function(b){b.classList.remove('on','good','bad')});for(var k in state)state[k]='';
+  var d=new Date();$('#dt').value=d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  $('#sendHint').textContent='';var b=$('#send');b.disabled=false;b.textContent='Envoyer la fiche dans Airtable';update();}
+$('#reset').addEventListener('click',function(){if(confirm('Effacer la fiche ?'))resetForm();});
+$('#again').addEventListener('click',function(){resetForm();$('#done').style.display='none';$('#app').style.display='block';});
+update();
+</script>
+</body></html>

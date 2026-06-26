@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit IA · Espace Agents — Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css">
+</head><body data-page="audit">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Audit IA — diagnostic transporteur</h1><span class="tag">Accroche & découverte</span>
+    </div>
+    <div class="content" id="app">
+      <p class="lead">Le diagnostic IA à faire remplir au dirigeant (ou à remplir avec lui pendant l'appel). Il révèle ses usages, ses besoins et sa maturité — c'est votre <b>cheval de Troie</b> pour qualifier et orienter vers la bonne offre.</p>
+      <div class="callout c-info"><b>Accroche conforme :</b> « Paris Sud Formation, organisme <b>habilité OPCO Mobilité</b>, mène une enquête sur l'usage de l'IA chez les transporteurs. 5 minutes, et vous repartez avec des pistes concrètes — financées. » <i>(Jamais « je suis l'OPCO ».)</i></div>
+
+      <div class="fcard"><h2>L'entreprise</h2><div class="row">
+        <div class="f"><label>Raison sociale</label><input id="rs"></div>
+        <div class="f"><label>SIRET</label><input id="siret" inputmode="numeric"></div>
+        <div class="f"><label>Nombre de salariés</label><select id="eff"><option value="">—</option><option>0 (seul)</option><option>1 à 10</option><option>11 à 49</option><option>50 à 299</option><option>300+</option></select></div>
+        <div class="f"><label>Rôle dans la chaîne</label><select id="role"><option value="">—</option><option>Sous-traitant</option><option>Donneur d'ordre</option><option>Les deux</option></select></div>
+        <div class="f"><label>Ancienneté</label><select id="anc"><option value="">—</option><option>&lt; 1 an</option><option>1 à 3 ans</option><option>3 à 10 ans</option><option>10 ans +</option></select></div>
+        <div class="f"><label>Santé économique</label><select id="sante"><option value="">—</option><option>Très bonne</option><option>Bonne</option><option>Difficile</option><option>Très difficile</option></select></div>
+      </div></div>
+
+      <div class="fcard"><h2>Perception de l'IA</h2><div class="row">
+        <div class="f full"><label>Pour votre activité, l'IA c'est…</label><select id="perc"><option value="">—</option><option>Incontournable à court/moyen terme</option><option>Une opportunité importante</option><option>Intéressante mais incertaine</option><option>Encore éloignée de mes préoccupations</option><option>Surestimée / effet de mode</option></select></div>
+        <div class="f"><label>Utilisez-vous déjà l'IA ?</label><div class="seg" data-key="usage"><button data-v="Oui, structuré">Oui, structuré</button><button data-v="Un peu">Un peu</button><button data-v="Non">Non</button></div></div>
+        <div class="f"><label>Une formation IA prévue ?</label><div class="seg" data-key="formprev"><button data-v="Oui">Oui</button><button data-v="Non">Non</button><button data-v="NSP">NSP</button></div></div>
+      </div></div>
+
+      <div class="fcard"><h2>Où l'IA pourrait vous aider (cochez)</h2>
+        <div id="usages" class="row" style="gap:8px 16px"></div>
+      </div>
+
+      <div class="fcard"><h2>Vos priorités & freins</h2><div class="row">
+        <div class="f full"><label>Votre besoin n°1 aujourd'hui ?</label><input id="besoin1" placeholder="ex. répondre plus vite aux cotations, recruter, baisser les charges…"></div>
+        <div class="f full"><label>Principaux freins à l'IA chez vous ?</label><div id="freins" class="row" style="gap:6px 14px"></div></div>
+      </div></div>
+
+      <div class="fcard"><h2>Pour vous recontacter</h2><div class="row">
+        <div class="f"><label>Nom du dirigeant</label><input id="nom"></div>
+        <div class="f"><label>Email</label><input id="email" type="email"></div>
+        <div class="f"><label>Portable</label><input id="tel" type="tel"></div>
+      </div></div>
+
+      <div class="actions">
+        <button class="btn btn-p" id="gen">Générer le récap de l'audit</button>
+        <button class="btn btn-g" id="reset">Réinitialiser</button>
+      </div>
+
+      <div id="out" style="display:none;margin-top:16px">
+        <div class="fcard"><h2>Récap — à coller dans Airtable / la fiche</h2>
+          <textarea id="recap" class="copybox" readonly></textarea>
+          <div class="actions"><button class="btn btn-p" id="copy">Copier le récap</button></div>
+          <p class="hint">Conseil d'orientation : peu d'usages IA + besoin de temps &rarr; <b>Formation IA Dirigeant</b>. Volonté de baisser les charges / salarié à faire monter &rarr; <b>TP RPMS</b>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+<script>
+var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
+var USAGES=['Optimisation des tournées & plans de transport','Aide à la création de devis / cotations','Automatisation des mails & documents','Affrètement & conformité documentaire automatisés','Planification des chauffeurs (staffing)','Maintenance prédictive des véhicules','Prévision d\'activité & tableaux de bord','Gestion des litiges de livraison','Relation client / chatbots','Prévision financière & gestion des risques','Marketing & communication','Recrutement & tri de candidatures'];
+var FREINS=['Manque de compétences en interne','Coûts','Pas le temps','Difficile d\'identifier les usages utiles','Sécurité des données','Réticence des équipes','Aucun frein particulier'];
+$('#usages').innerHTML=USAGES.map(function(u,i){return '<label style="flex-direction:row;align-items:center;gap:.6rem;font-size:.9rem;color:#33415a"><input type="checkbox" class="uchk" value="'+u+'" style="width:18px;height:18px;min-height:0">'+u+'</label>';}).join('');
+$('#freins').innerHTML=FREINS.map(function(u){return '<label style="flex-direction:row;align-items:center;gap:.5rem;font-size:.88rem;color:#33415a"><input type="checkbox" class="fchk" value="'+u+'" style="width:18px;height:18px;min-height:0">'+u+'</label>';}).join('');
+var seg={};
+$$('.seg').forEach(function(s){var k=s.getAttribute('data-key');s.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;s.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');seg[k]=b.getAttribute('data-v');});});
+$('#gen').addEventListener('click',function(){
+  var g=function(id){return $(id).value.trim()||'—'};
+  var u=$$('.uchk').filter(function(c){return c.checked}).map(function(c){return c.value});
+  var f=$$('.fchk').filter(function(c){return c.checked}).map(function(c){return c.value});
+  var r='=== AUDIT IA — '+g('#rs')+' ===\n'
+    +'SIRET: '+g('#siret')+' · Salariés: '+(g('#eff'))+' · Rôle: '+g('#role')+' · Ancienneté: '+g('#anc')+'\n'
+    +'Santé éco: '+g('#sante')+'\n\n'
+    +'Perception IA: '+g('#perc')+'\n'
+    +'Usage actuel IA: '+(seg.usage||'—')+'  | Formation IA prévue: '+(seg.formprev||'—')+'\n\n'
+    +'Domaines où l\'IA aiderait:\n'+(u.length?(' - '+u.join('\n - ')):' —')+'\n\n'
+    +'Besoin n°1: '+g('#besoin1')+'\n'
+    +'Freins: '+(f.length?f.join(', '):'—')+'\n\n'
+    +'Contact: '+g('#nom')+' · '+g('#email')+' · '+g('#tel');
+  $('#recap').value=r;$('#out').style.display='block';$('#out').scrollIntoView({behavior:'smooth'});
+});
+$('#copy').addEventListener('click',function(e){$('#recap').select();navigator.clipboard.writeText($('#recap').value).then(function(){var b=e.target,o=b.textContent;b.textContent='Copié ✓';setTimeout(function(){b.textContent=o},1400);});});
+$('#reset').addEventListener('click',function(){$$('#app input,#app textarea').forEach(function(i){i.value='';if(i.type==='checkbox')i.checked=false});$$('#app select').forEach(function(s){s.value=''});$$('.seg button').forEach(function(b){b.classList.remove('on')});seg={};$('#out').style.display='none';});
+</script>
+</body></html>
