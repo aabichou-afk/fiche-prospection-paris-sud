@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ma journée · Espace Agents — Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.prog{height:12px;background:var(--soft);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+.prog>i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--gold));width:0;transition:.3s}
+.tgrp{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:6px 8px;margin-bottom:14px;box-shadow:var(--shadow)}
+.tgrp>h3{margin:10px 12px 6px;color:var(--primary-3);font-family:var(--serif);font-size:1.15rem;display:flex;gap:.5rem;align-items:center}
+.task{display:flex;gap:12px;align-items:flex-start;padding:11px 12px;border-radius:10px;cursor:pointer;transition:.12s}
+.task:hover{background:var(--soft)}
+.task input{width:22px;height:22px;min-height:0;flex:none;accent-color:var(--primary);margin-top:1px;cursor:pointer}
+.task .txt{font-size:.95rem;color:var(--fg)}
+.task .txt small{display:block;color:var(--muted);font-size:.78rem}
+.task.done .txt{text-decoration:line-through;color:var(--muted)}
+.daybar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.daybar .pct{font-family:var(--serif);font-weight:700;font-size:1.6rem;color:var(--primary)}
+</style>
+</head><body data-page="journee">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Ma journée</h1><span class="tag" id="dateTag"></span>
+    </div>
+    <div class="content">
+      <div class="hero-banner" style="padding:22px 26px"><span class="pill">Routine quotidienne</span>
+        <h1 style="font-size:clamp(1.5rem,3.5vw,2.1rem)">Votre feuille de route du jour</h1>
+        <p>Cochez chaque tâche une fois faite. Tout est sauvegardé sur votre navigateur et <b>repart à zéro chaque matin</b>.</p>
+      </div>
+      <div class="daybar" style="margin-top:18px">
+        <div class="pct" id="pct">0%</div>
+        <div style="flex:1;min-width:200px"><div class="prog"><i id="bar"></i></div></div>
+        <button class="btn btn-g" id="reset" style="min-height:40px;flex:none">Réinitialiser</button>
+      </div>
+      <div id="list"></div>
+      <div class="callout c-info">💡 <b>Astuce :</b> ouvre cette page le matin, garde-la dans un onglet, et coche au fil de l'eau. À 100% = journée gagnée 🏆</div>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+<script>
+var PLAN=[
+ {h:'🌅 Matin — prospection (priorité absolue)',items:[
+   ['Ouvrir le Cockpit Airtable et repérer les leads du jour',''],
+   ['Passer 50 appels avant midi','rythme ~100/jour'],
+   ['Remplir une fiche de qualification à CHAQUE appel','ce qui n\'est pas saisi n\'existe pas'],
+   ['Décrocher au moins 2 RDV ou closings',''],
+ ]},
+ {h:'🕐 Midi — relances & WhatsApp',items:[
+   ['Traiter tous les « À rappeler » du cockpit',''],
+   ['Confirmer les RDV de demain (rappel J-1)',''],
+   ['Répondre aux messages WhatsApp & animer la communauté',''],
+ ]},
+ {h:'🌇 Après-midi — acquisition & contenu',items:[
+   ['Passer 50 appels',''],
+   ['Publier 1 post réseaux sociaux (LinkedIn + Insta)','via Canva + SOP'],
+   ['Lancer / suivre la séquence cold mail du jour','lemlist'],
+   ['Envoyer les WhatsApp à froid prévus','WATI'],
+ ]},
+ {h:'📋 Administratif — transformer les oui',items:[
+   ['Saisir les contrats des leads chauds','YPAREO Neo'],
+   ['Envoyer les conventions + CERFA à signer',''],
+   ['Relancer les signatures électroniques en attente',''],
+   ['Relancer les dépôts / accords de prise en charge OPCO',''],
+ ]},
+ {h:'🌙 Fin de journée',items:[
+   ['Mettre à jour tous les statuts dans Airtable',''],
+   ['Noter les blocages / questions pour Abdel',''],
+   ['Préparer 1 idée de contenu pour demain (blog/post)',''],
+ ]},
+];
+function todayKey(){var d=new Date();return 'psf_taches_'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+var KEY=todayKey();
+var saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){saved={};}
+var d=new Date();
+document.getElementById('dateTag').textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+var list=document.getElementById('list');var idx=0;var total=0;
+PLAN.forEach(function(g){
+  var box=document.createElement('div');box.className='tgrp';
+  var h=document.createElement('h3');h.textContent=g.h;box.appendChild(h);
+  g.items.forEach(function(it){
+    var id='t'+idx;total++;
+    var lab=document.createElement('label');lab.className='task'+(saved[id]?' done':'');
+    lab.innerHTML='<input type="checkbox" data-id="'+id+'" '+(saved[id]?'checked':'')+'><span class="txt">'+it[0]+(it[1]?'<small>'+it[1]+'</small>':'')+'</span>';
+    box.appendChild(lab);idx++;
+  });
+  list.appendChild(box);
+});
+function refresh(){
+  var checks=[].slice.call(document.querySelectorAll('.task input'));
+  var done=checks.filter(function(c){return c.checked}).length;
+  var pc=Math.round(done/total*100);
+  document.getElementById('pct').textContent=pc+'%';
+  document.getElementById('bar').style.width=pc+'%';
+}
+list.addEventListener('change',function(e){
+  var c=e.target;if(c.type!=='checkbox')return;
+  saved[c.getAttribute('data-id')]=c.checked;
+  localStorage.setItem(KEY,JSON.stringify(saved));
+  c.closest('.task').classList.toggle('done',c.checked);
+  refresh();
+});
+document.getElementById('reset').addEventListener('click',function(){
+  if(!confirm('Décocher toutes les tâches du jour ?'))return;
+  saved={};localStorage.removeItem(KEY);
+  document.querySelectorAll('.task input').forEach(function(c){c.checked=false;c.closest('.task').classList.remove('done');});
+  refresh();
+});
+refresh();
+</script>
+</body></html>
