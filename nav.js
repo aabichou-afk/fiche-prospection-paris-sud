@@ -39,7 +39,7 @@
   }).join('');
   var side=document.getElementById('side');
   if(side){
-    side.innerHTML='<div class="logo"><span class="dot">P</span> Paris Sud · Agents</div>'
+    side.innerHTML='<div class="logo">Paris&nbsp;Sud <span style="color:#52ae32">·</span> Agents</div>'
       +'<div class="lab">Espace de travail</div><div class="nav">'+nav+'</div>'
       +'<div class="foot">'+opco('#cfe0d5')+'<br><span style="display:block;margin-top:6px">Habilité &middot; usage interne</span></div>';
   }
