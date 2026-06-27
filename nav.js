@@ -1,4 +1,4 @@
-// Sidebar partagée — Espace Agents Paris Sud Formation
+// Sidebar + footer partagés — Espace Agents Paris Sud Formation
 (function(){
   var I={
     home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
@@ -13,6 +13,13 @@
     opco:'<path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/>',
     sop:'<circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.5H10.4l-.3 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4L6 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.5h3.2l.3-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4L18.9 13a7 7 0 0 0 .1-1z"/>'
   };
+  // Emblème OPCO Mobilités (recréé) — txt = couleur du texte
+  function opco(txt){
+    return '<span class="opco-badge" style="color:'+txt+'"><svg class="mk" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round">'
+      +'<path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#8cc63f"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/>'
+      +'<path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#8cc63f"/>'
+      +'<circle cx="12" cy="12" r="3.1" fill="#00a88e" stroke="none"/></svg>OPCO Mobilités</span>';
+  }
   var items=[
     ['accueil','Accueil','index.html',I.home],
     ['journee','Ma journée','journee.html',I.day],
@@ -34,9 +41,30 @@
   if(side){
     side.innerHTML='<div class="logo"><span class="dot">P</span> Paris Sud · Agents</div>'
       +'<div class="lab">Espace de travail</div><div class="nav">'+nav+'</div>'
-      +'<div class="foot">Outil interne — usage agents.<br>Ne pas diffuser aux prospects.</div>';
+      +'<div class="foot">'+opco('#cfe0d5')+'<br><span style="display:block;margin-top:6px">Habilité &middot; usage interne</span></div>';
   }
   var b=document.getElementById('burger'),sc=document.getElementById('scrim');
   if(b){b.addEventListener('click',function(){side.classList.toggle('open');sc.classList.toggle('open');});}
   if(sc){sc.addEventListener('click',function(){side.classList.remove('open');sc.classList.remove('open');});}
+  // ---- footer institutionnel injecté sur toutes les pages ----
+  var main=document.querySelector('.main');
+  if(main){
+    var f=document.createElement('footer');f.className='foot-site';
+    f.innerHTML=
+     '<div class="cols">'
+      +'<div><h4>Espace agents</h4><a href="index.html">Accueil</a><a href="journee.html">Ma journée</a><a href="qualification.html">Qualification</a><a href="playbook.html">Objections & Playbook</a><a href="formation.html">Formation</a></div>'
+      +'<div><h4>Outils clés</h4><a href="https://airtable.com/appaAZXNf5RFf89WV/pagFIIF8dl5vDMjV6" target="_blank" rel="noopener">Cockpit leads</a><a href="https://airtable.com/appaAZXNf5RFf89WV/pagj9RlR1OveO6TAi" target="_blank" rel="noopener">Cockpit prospects</a><a href="https://paris-sud.ypareo-neo.com" target="_blank" rel="noopener">YPAREO Neo</a><a href="https://mgestion.opcomobilites.fr" target="_blank" rel="noopener">OPCO Mobilités — espace</a></div>'
+      +'<div><h4>Paris Sud Formation</h4><a href="mailto:formation@paris-sud.com">formation@paris-sud.com</a><a href="https://paris-sud.com" target="_blank" rel="noopener">paris-sud.com</a><div style="margin-top:8px">'+opco('#ffffff')+'</div></div>'
+     +'</div>'
+     +'<div class="foot-badges">'
+      +'<span class="foot-badge">✓ Certifié Qualiopi</span>'
+      +'<span class="foot-badge">'+opco('#ffffff')+'</span>'
+      +'<span class="foot-badge">Partenaire CCI</span>'
+      +'<span class="foot-badge">France Compétences · RNCP 38575</span>'
+      +'<span class="foot-badge">Ministère de la Transition Écologique</span>'
+      +'<span class="foot-badge">'+opco('#ffffff')+'</span>'
+     +'</div>'
+     +'<div class="foot-legal">Paris Sud Formation · CFA certifié Qualiopi · N° DA 11911094991 · Titre RNCP38575 (Niveau 5 / Bac+2) · <b>Habilité OPCO Mobilités</b>. Formation 100% financée — 0&nbsp;€ de reste à charge. <b>Outil interne agents — ne pas diffuser aux prospects.</b></div>';
+    main.appendChild(f);
+  }
 })();

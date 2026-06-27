@@ -146,3 +146,22 @@ td{border:1px solid var(--border);padding:9px 11px;color:#3a382c;vertical-align:
 .launch .tool:nth-child(4){animation-delay:.12s}.launch .tool:nth-child(5){animation-delay:.16s}
 .launch .tool:nth-child(n+6){animation-delay:.2s}
 @media(prefers-reduced-motion:reduce){.reveal,.launch .tool{animation:none}}
+
+/* ===== v3 : footer institutionnel + emblème OPCO + dynamisme ===== */
+.opco-badge{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;color:var(--primary-3)}
+.opco-badge .mk{flex:none}
+.hero-banner .opco-hero{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.92);color:#16302a;border-radius:999px;padding:6px 13px;font-weight:700;font-size:.8rem;margin-top:12px;position:relative;box-shadow:0 6px 18px -10px rgba(0,0,0,.4)}
+.foot-site{margin:32px -28px 0;background:linear-gradient(180deg,var(--primary-3),var(--primary-2));color:#dfe9e1;padding:30px 28px 22px}
+.foot-site .cols{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;max-width:1000px;margin:0 auto}
+.foot-site h4{color:#fff;font-family:var(--serif);font-size:1.15rem;margin-bottom:10px}
+.foot-site a{color:#cfe0d5;font-size:.86rem;display:block;margin:4px 0;transition:.12s}
+.foot-site a:hover{color:#fff}
+.foot-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;max-width:1000px;margin-left:auto;margin-right:auto}
+.foot-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:7px 11px;font-size:.74rem;color:#fff;font-weight:600;display:inline-flex;align-items:center;gap:.45rem}
+.foot-legal{border-top:1px solid rgba(255,255,255,.14);margin:18px auto 0;padding-top:13px;font-size:.72rem;color:#a9c2b1;max-width:1000px;line-height:1.6}
+.foot-legal b{color:#f4ce1e}
+@media(max-width:680px){.foot-site{margin-left:-20px;margin-right:-20px}}
+/* tuiles outils : fond légèrement teinté + accent gauche */
+.tool{border-left:3px solid transparent}
+.tool:hover{border-left-color:var(--gold)}
+.grp-title::before{content:"";display:inline-block;width:6px;height:22px;border-radius:3px;background:linear-gradient(var(--primary),var(--gold))}
