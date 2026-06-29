@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pilotage dirigeant · Paris Sud</title>
+<link rel="stylesheet" href="style.css">
+</head><body data-page="pilotage">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Pilotage dirigeant</h1><span class="tag" id="today"></span>
+    </div>
+    <div class="content">
+      <div class="hero-banner">
+        <span class="pill">Machine à cash</span>
+        <h1>Bonjour Abdel. On signe.</h1>
+        <p>Votre cockpit du jour : les priorités cash, vos outils en 1 clic, vos automatisations. Objectif des prochains jours — <b>un maximum de contrats signés.</b></p>
+        <div class="opco-hero"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#8cc63f"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/><path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#8cc63f"/><circle cx="12" cy="12" r="3.1" fill="#00a88e"/></svg> Organisme habilité OPCO Mobilités</div>
+      </div>
+
+      <h2 class="grp-title">💰 Mes priorités cash — aujourd'hui</h2>
+      <div class="grp-sub">Coche au fur et à mesure. Remise à zéro chaque matin. <span id="prog" style="font-weight:700;color:var(--primary)"></span></div>
+      <div id="tasks"></div>
+
+      <h2 class="grp-title">Mes outils — accès direct</h2>
+      <div class="grp-sub">Tout ce que vous ouvrez chaque jour, en 1 clic.</div>
+      <div class="launch" id="launch"></div>
+
+      <h2 class="grp-title">Mes automatisations</h2>
+      <div class="grid g2">
+        <div class="card"><h3 style="color:var(--primary-3)">✅ En place</h3><ul class="clean">
+          <li>Formulaire qualification → <b>Make</b> → fiche Airtable (ENTREPRISES)</li>
+          <li>Cockpits Airtable : leads + prospects (À appeler / À rappeler / RDV)</li>
+          <li>Espace agents en ligne (12 onglets) + banque de contenu</li>
+        </ul></div>
+        <div class="card"><h3 style="color:var(--gold-d)">⚡ À activer (1 clic Make)</h3><ul class="clean">
+          <li>Relance auto : prospects silencieux ≥ 5j → message prêt</li>
+          <li>Confirmation RDV J-1 automatique (anti no-show)</li>
+          <li>Alerte « RDV qualifié » → notif dès qu'un lead chaud tombe</li>
+          <li>Sourcing : nouvelles entreprises de transport (Sirene) chaque semaine</li>
+        </ul></div>
+      </div>
+
+      <h2 class="grp-title">Mes routines</h2>
+      <div class="circuit">
+        <div class="c"><div class="n">9h</div><div class="x">Cockpit + cash</div><div class="o">RDV qualifiés à closer</div></div>
+        <div class="c"><div class="n">12h</div><div class="x">Relances</div><div class="o">signatures + OPCO</div></div>
+        <div class="c"><div class="n">15h</div><div class="x">Contenu</div><div class="o">valider posts/mails</div></div>
+        <div class="c"><div class="n">18h</div><div class="x">Bilan</div><div class="o">contrats signés du jour</div></div>
+      </div>
+
+      <h2 class="grp-title">Optimisations productivité</h2>
+      <div class="card"><ul class="clean">
+        <li><b>Une seule source de vérité</b> : les leads vivent dans Airtable, pas dans 3 fichiers.</li>
+        <li><b>Bloc d'appels le matin</b> (énergie max) ; admin/contenu l'après-midi.</li>
+        <li><b>2 relances auto puis stop</b> : ne pas s'épuiser sur les silencieux.</li>
+        <li><b>Déléguer aux agentes</b> tout ce qui est dans l'espace ; vous = closing + décisions cash.</li>
+        <li><b>Une session = un sujet</b> avec Claude (éviter le fourre-tout qui épuise).</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+<script>
+var $=function(s){return document.querySelector(s)};
+var d=new Date();$('#today').textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+// ---- priorités cash (localStorage par jour) ----
+var TASKS=[
+ "💰 Cockpit leads : closer les RDV qualifiés en attente",
+ "📞 Cockpit prospects : traiter les « À appeler » & « À rappeler »",
+ "✍️ Relancer les signatures électroniques en attente",
+ "🏛️ Relancer les dépôts / accords de prise en charge OPCO",
+ "✅ Valider les contenus du jour (posts, mails, WhatsApp)",
+ "🔁 Lancer / relancer une séquence lemlist",
+ "🤝 1 décision cash (devis, relance créance, partenariat)"
+];
+var key='psf_pilotage_'+d.toISOString().slice(0,10);
+var done=JSON.parse(localStorage.getItem(key)||'[]');
+function renderTasks(){
+  var html=TASKS.map(function(t,i){
+    var c=done.indexOf(i)>-1;
+    return '<label class="card" style="display:flex;gap:.7rem;align-items:center;cursor:pointer;margin-bottom:8px;padding:13px 16px'+(c?';opacity:.55':'')+'">'
+      +'<input type="checkbox" data-i="'+i+'" '+(c?'checked':'')+' style="width:20px;height:20px;min-height:0;accent-color:#1f8a5c">'
+      +'<span style="font-size:.95rem;color:var(--dark);'+(c?'text-decoration:line-through':'')+'">'+t+'</span></label>';
+  }).join('');
+  $('#tasks').innerHTML=html;
+  $('#prog').textContent=done.length+' / '+TASKS.length+' fait';
+  document.querySelectorAll('#tasks input').forEach(function(cb){
+    cb.addEventListener('change',function(){
+      var i=+cb.getAttribute('data-i');
+      if(cb.checked){if(done.indexOf(i)<0)done.push(i);}else{done=done.filter(function(x){return x!==i});}
+      localStorage.setItem(key,JSON.stringify(done));renderTasks();
+    });
+  });
+}
+renderTasks();
+// ---- launcher outils Abdel ----
+var T=[
+ ['Cockpit leads','RDV à closer','https://airtable.com/appaAZXNf5RFf89WV/pagFIIF8dl5vDMjV6','airtable','#18BFFF'],
+ ['Cockpit prospects','À appeler / relancer','https://airtable.com/appaAZXNf5RFf89WV/pagj9RlR1OveO6TAi','airtable','#18BFFF'],
+ ['Make','Automatisations','https://eu1.make.com','make','#6D00CC'],
+ ['lemlist','Cold mail + LinkedIn','https://app.lemlist.com/login','','#1f8a5c'],
+ ['Notion — Hub','Groupe Paris Sud','https://app.notion.com/p/Groupe-Paris-Sud-Hub-362f6a5b99ef81bebcc6e32b6f046906','notion','#000'],
+ ['Gmail','formation@paris-sud.com','https://mail.google.com','gmail','#EA4335'],
+ ['Calendly','RDV audit','https://calendly.com/paris-sud/com','calendly','#006BFF'],
+ ['YPAREO Neo','Contrats','https://paris-sud.ypareo-neo.com','','#1f8a5c'],
+ ['OPCO Mobilités','Prise en charge','https://mgestion.opcomobilites.fr','','#e2553f'],
+ ['Site paris-sud.com','Votre site','https://paris-sud.com','','#1f8a5c'],
+ ['LinkedIn','Réseau pro','https://www.linkedin.com','linkedin','#0A66C2'],
+ ['Instagram','Posts & stories','https://www.instagram.com','instagram','#E4405F'],
+ ['Facebook','Page & groupe','https://www.facebook.com','facebook','#1877F2'],
+ ['WhatsApp Web','Communauté & relances','https://web.whatsapp.com','whatsapp','#25D366'],
+ ['Google Drive','Documents','https://drive.google.com','googledrive','#1FA463'],
+ ['Canva','Visuels','https://www.canva.com','canva','#00C4CC'],
+ ['Espace agents','Le hub équipe','index.html','','#11362b']
+];
+$('#launch').innerHTML=T.map(function(t){
+  var nom=t[0],desc=t[1],url=t[2],si=t[3],col=t[4];
+  var logo=si?'<img src="https://cdn.simpleicons.org/'+si+'" alt="" onerror="this.parentNode.classList.add(\'brand\');this.parentNode.style.background=\''+col+'\';this.outerHTML=\'<span class=&quot;mono&quot;>'+nom[0]+'</span>\'">':'<span class="mono" style="color:#fff">'+nom.slice(0,2)+'</span>';
+  var ext=url.indexOf('http')===0?' <span class="ext">↗</span>':'';
+  var logobg=si?'':'background:'+col;
+  return '<a class="tool" href="'+url+'"'+(url.indexOf('http')===0?' target="_blank" rel="noopener"':'')+'><span class="logo'+(si?'':' brand')+'" style="'+logobg+'">'+logo+'</span><span class="meta"><span class="t">'+nom+ext+'</span><span class="d">'+desc+'</span></span></a>';
+}).join('');
+</script>
+</body></html>
