@@ -1,6 +1,6 @@
 // Porte d'accès par mot de passe — Espace Paris Sud (déterrent côté navigateur)
 (function(){
-  var OK='72a824c62fcaae9fbc42a550441573c56c56a553e5544e8aae4044a54ecf0353';
+  var OK='83b4ac00d574d4b484c45efd3899c72402092e8c54727e09486cb7ff106fcfc0';
   try{ if(sessionStorage.getItem('psf_gate')===OK) return; }catch(e){}
   var hide=document.createElement('style');
   hide.textContent='.app{display:none!important}';
