@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contrats & dossiers en cours · Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css">
+<script src="gate.js"></script>
+<style>
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:6px 0 20px}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#fff;border:1px solid var(--line,#E8E4D8);border-radius:16px;padding:16px 18px;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
+.kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:700;color:var(--primary,#1f8a5c);line-height:1}
+.kpi .l{font-size:.82rem;color:#5f6b62;margin-top:4px}
+.ctab{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 10px 30px -22px rgba(17,54,43,.6);font-size:.9rem}
+.ctab th{background:#11362b;color:#fff;text-align:left;padding:11px 12px;font-weight:600;font-size:.8rem;letter-spacing:.02em}
+.ctab td{padding:11px 12px;border-top:1px solid #EDEAE0;vertical-align:top}
+.ctab tr:hover td{background:#FAF8F2}
+.st{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.74rem;font-weight:700;white-space:nowrap}
+.st-ok{background:#e3f5ea;color:#1f7a4d}.st-wait{background:#fdf3df;color:#9a7212}.st-warn{background:#fde8e3;color:#c0432a}.st-todo{background:#eef0f2;color:#4a5a52}
+.money{font-weight:700;color:#11362b;white-space:nowrap}
+</style>
+</head><body data-page="contrats">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Contrats & dossiers en cours</h1><span class="tag">Cash en vol</span>
+    </div>
+    <div class="content">
+      <div class="hero-banner">
+        <span class="pill">Pipeline signatures</span>
+        <h1>Vos contrats, du CERFA à la facture OPCO.</h1>
+        <p>L'état réel de chaque dossier apprentissage — ce qui est signé, ce qui bloque, ce qui reste à saisir. <b>Objectif : lever les blocages et facturer.</b></p>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="v">6</div><div class="l">Contrats saisis YPAREO</div></div>
+        <div class="kpi"><div class="v">3</div><div class="l">À saisir</div></div>
+        <div class="kpi"><div class="v">16 666&nbsp;€</div><div class="l">Conventions OPCO signées (2×8&nbsp;333&nbsp;€)</div></div>
+        <div class="kpi"><div class="v">3</div><div class="l">Dossiers à débloquer 🔴</div></div>
+      </div>
+
+      <h2 class="grp-title">Contrats saisis dans YPAREO Neo</h2>
+      <div class="grp-sub">Sync note « Contrat en cours » — 02/07/2026.</div>
+      <div style="overflow-x:auto">
+      <table class="ctab">
+        <tr><th>Apprenant</th><th>Entreprise</th><th>Formation</th><th>Début</th><th>Financeur</th><th>Statut</th></tr>
+        <tr><td><b>AOUN Nesrine</b><br><span class="muted" style="font-size:.78rem">contrat n°8</span></td><td>SAFE</td><td>Conseiller commercial</td><td>18/06/26<br>→18/06/27</td><td>Op'Commerce <span class="money">8 333 €</span></td><td><span class="st st-ok">✅ Signatures envoyées</span></td></tr>
+        <tr><td><b>SAHLI Samira</b><br><span class="muted" style="font-size:.78rem">contrat n°9 · RQTH</span></td><td>Quick Évasion Beauté (Antony)</td><td>Conseiller commercial</td><td>29/06/26<br>→30/06/27</td><td>OPCO EP <span class="money">8 333 €</span></td><td><span class="st st-warn">🟠 3 erreurs contrôle + renvoyer 2 signatures</span></td></tr>
+        <tr><td><b>BELABDA Mehdi</b></td><td>BETRA Services</td><td>Conseiller commercial</td><td>20/04/26</td><td>AKTO</td><td><span class="st st-ok">✅ Saisi</span></td></tr>
+        <tr><td><b>ILGAZ Sedanur</b></td><td>SAFE</td><td>Conseiller commercial</td><td>03/06/26</td><td>Op'Commerce</td><td><span class="st st-wait">⏳ Envoyé à l'entreprise</span></td></tr>
+        <tr><td><b>ROSCO Needy</b></td><td>Laya Consulting</td><td>RPMS</td><td>20/04/26</td><td>ATLAS</td><td><span class="st st-warn">⚠️ Financement accordé mais bloqué (pas de N° DECA) · à rompre + refaire RPMS Atlas</span></td></tr>
+        <tr><td><b>JOVANOVIC Tony</b></td><td>Anya Clean Conseil</td><td>Agent propreté</td><td>20/04/26</td><td>AKTO <span class="muted" style="font-size:.75rem">n°2605CA020007</span></td><td><span class="st st-wait">⚠️ Dossier à suivre</span></td></tr>
+      </table>
+      </div>
+
+      <h2 class="grp-title">À saisir dans YPAREO</h2>
+      <div class="grp-sub">Détectés dans la note, pas encore créés.</div>
+      <div style="overflow-x:auto">
+      <table class="ctab">
+        <tr><th>Apprenant</th><th>Entreprise</th><th>Financeur</th><th>Note</th></tr>
+        <tr><td><b>MEHDI</b></td><td>Kalishop</td><td>Op'Commerce</td><td><span class="st st-todo">À créer</span></td></tr>
+        <tr><td><b>EVAN Colak</b></td><td>Palais de Mariage</td><td>POEI restauration</td><td>Devis 2026-621 · <span class="st st-todo">À créer</span></td></tr>
+        <tr><td><b>TAMBA</b></td><td>Travels Partners</td><td>OPCO Mobilités</td><td><span class="st st-todo">À créer</span></td></tr>
+      </table>
+      </div>
+
+      <h2 class="grp-title">Dossiers par financeur (OPCO)</h2>
+      <div class="grid g2">
+        <div class="card"><h3 style="color:var(--primary-3,#11362b)">OPCO Mobilités</h3><ul class="clean">
+          <li>Travels Partners ✅ · GTS ✅</li><li>Euro Trans · Laya Cars</li>
+        </ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#11362b)">AKTO</h3><ul class="clean">
+          <li>Betra Services · Anya Clean Service · Laya Clean</li>
+        </ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#11362b)">Op'Commerce</h3><ul class="clean">
+          <li>SAFE · Kalishop · Global Trading Company</li>
+        </ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#11362b)">OPCO EP</h3><ul class="clean">
+          <li>Quick Évasion Beauté (Sahli) · Maison des Pains (à relancer) · Laya Bat · N Fournil</li>
+        </ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#11362b)">ATLAS</h3><ul class="clean">
+          <li>Laya Consulting (RPMS)</li>
+        </ul></div>
+        <div class="card"><h3 style="color:var(--gold-d,#9a7212)">À trancher</h3><ul class="clean">
+          <li>RK Service 🚫 FIFPL · Tavares Rendy ⚠️ à refaire</li>
+        </ul></div>
+      </div>
+
+      <h2 class="grp-title">Développement formation — en cours</h2>
+      <div class="grid g2">
+        <div class="card"><h3 style="color:var(--gold-d,#9a7212)">⚡ Démarches à relancer</h3><ul class="clean">
+          <li><b>EDOF</b> — refaire la demande ⚠️</li>
+          <li><b>Kairos</b> — se reconnecter</li>
+          <li><b>Soltea</b> — demande de référencement</li>
+          <li><b>Op'Commerce</b> — création du compte</li>
+        </ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#11362b)">🎓 Agréments / titres</h3><ul class="clean">
+          <li><b>TP RPMS</b> — RNCP 38575 (Niveau 5) validé</li>
+          <li><b>DRIEETS n°27230466</b> — 2ᵉ TP en instruction 🟡</li>
+          <li>N° DA 11911094991 · UAI 0912524Z · Qualiopi</li>
+        </ul></div>
+      </div>
+
+      <div class="callout c-warn" style="margin-top:16px"><b>Priorité cash :</b> lever les 3 blocages — renvoyer les signatures Sahli, débloquer le N° DECA de Rosco (ou rompre + refaire en Atlas), et saisir les 3 contrats en attente. Les 2 conventions signées (16 666 €) partent en facturation OPCO dès accord.</div>
+
+      <div class="launch" id="launch" style="margin-top:18px"></div>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+<script>
+var T=[
+ ['YPAREO Neo','Saisie contrats','https://paris-sud.ypareo-neo.com','','#1f8a5c'],
+ ['OPCO Mobilités','Prise en charge','https://mgestion.opcomobilites.fr','','#e2553f'],
+ ['jesignexpert','Signature électronique','https://www.jesignexpert.com','','#1f8a5c'],
+ ['EDOF','Compte Formation OF','https://www.of.moncompteformation.gouv.fr','','#1f6f5c'],
+ ['Adhésion entreprise','Formulaire contrat','https://airtable.com/appaAZXNf5RFf89WV/pagliROW5NttiqP9c/form','airtable','#18BFFF'],
+ ['Adhésion salarié','Formulaire contrat','https://airtable.com/appv3OIuP1STIpVgz/pagaIdjkbRKz9ztJK/form','airtable','#18BFFF']
+];
+document.getElementById('launch').innerHTML=T.map(function(t){
+  var nom=t[0],desc=t[1],url=t[2],si=t[3],col=t[4];
+  var logo=si?'<img src="https://cdn.simpleicons.org/'+si+'" alt="" onerror="this.parentNode.classList.add(\'brand\');this.parentNode.style.background=\''+col+'\';this.outerHTML=\'<span class=&quot;mono&quot;>'+nom[0]+'</span>\'">':'<span class="mono" style="color:#fff">'+nom.slice(0,2)+'</span>';
+  var logobg=si?'':'background:'+col;
+  return '<a class="tool" href="'+url+'" target="_blank" rel="noopener"><span class="logo'+(si?'':' brand')+'" style="'+logobg+'">'+logo+'</span><span class="meta"><span class="t">'+nom+' <span class="ext">↗</span></span><span class="d">'+desc+'</span></span></a>';
+}).join('');
+</script>
+</body></html>

@@ -20,6 +20,7 @@
   var items=[
     ['accueil','Accueil','index.html',I.home],
     ['pilotage','Pilotage','pilotage.html',I.rocket],
+    ['contrats','Contrats','contrats.html',I.day],
     ['journee','Ma journée','journee.html',I.day],
     ['qualif','Qualification','qualification.html',I.phone],
     ['audit','Audit IA','audit.html',I.audit],
