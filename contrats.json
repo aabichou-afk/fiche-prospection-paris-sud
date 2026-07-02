@@ -1,0 +1,16 @@
+{
+  "updated": "2026-07-02",
+  "source": "Airtable · base ENTREPRISES · table Contrats",
+  "interface": "https://airtable.com/appaAZXNf5RFf89WV/paguMocSPAlHEMgrS",
+  "contrats": [
+    {"apprenant": "AOUN Nesrine", "entreprise": "SAFE", "formation": "Conseiller commercial", "debut": "18/06/26", "fin": "18/06/27", "financeur": "Op'Commerce", "montant": 8333, "statut": "signe", "num": "n°8", "note": "CERFA complet + convention OPCO 8 333 € — signatures envoyées."},
+    {"apprenant": "SAHLI Samira", "entreprise": "Quick Évasion Beauté (Antony)", "formation": "Conseiller commercial", "debut": "29/06/26", "fin": "30/06/27", "financeur": "OPCO EP", "montant": 8333, "statut": "corrections", "num": "n°9 · RQTH", "note": "3 erreurs contrôle (tél employeur / nationalité / adresse) + renvoyer les 2 signatures (annulées 02/07 pour corriger la date de début)."},
+    {"apprenant": "BELABDA Mehdi", "entreprise": "BETRA Services", "formation": "Conseiller commercial", "debut": "20/04/26", "fin": "", "financeur": "AKTO", "montant": null, "statut": "signe", "num": "", "note": ""},
+    {"apprenant": "ILGAZ Sedanur", "entreprise": "SAFE", "formation": "Conseiller commercial", "debut": "03/06/26", "fin": "", "financeur": "Op'Commerce", "montant": null, "statut": "envoye", "num": "", "note": "Contrat envoyé à l'entreprise."},
+    {"apprenant": "ROSCO Needy", "entreprise": "Laya Consulting", "formation": "RPMS", "debut": "20/04/26", "fin": "", "financeur": "ATLAS", "montant": null, "statut": "bloque", "num": "", "note": "Financement ATLAS accordé 01/07 mais bloqué : pas de N° DECA → facture impossible. À rompre + refaire un RPMS Atlas."},
+    {"apprenant": "JOVANOVIC Tony", "entreprise": "Anya Clean Conseil", "formation": "Agent propreté", "debut": "20/04/26", "fin": "", "financeur": "AKTO", "montant": null, "statut": "bloque", "num": "2605CA020007", "note": "Dossier OPCO n°2605CA020007 — à suivre."},
+    {"apprenant": "MEHDI", "entreprise": "Kalishop", "formation": "", "debut": "", "fin": "", "financeur": "Op'Commerce", "montant": null, "statut": "asaisir", "num": "", "note": "Pas encore dans YPAREO — à créer."},
+    {"apprenant": "EVAN Colak", "entreprise": "Palais de Mariage", "formation": "", "debut": "", "fin": "", "financeur": "POEI", "montant": null, "statut": "asaisir", "num": "", "note": "POEI restauration — devis 2026-621. À créer."},
+    {"apprenant": "TAMBA", "entreprise": "Travels Partners", "formation": "", "debut": "", "fin": "", "financeur": "OPCO Mobilités", "montant": null, "statut": "asaisir", "num": "", "note": "Pas encore dans YPAREO — à créer."}
+  ]
+}
