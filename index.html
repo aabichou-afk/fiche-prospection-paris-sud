@@ -17,7 +17,7 @@
       <div class="hero-banner">
         <span class="pill">Paris Sud Formation</span>
         <h1>Votre poste de travail.<br>Tous vos outils, un seul endroit.</h1>
-        <p>Prospecter, qualifier, signer, accompagner — la formation transport <b>100% financée OPCO Mobilité, 0&nbsp;€</b>. Cliquez sur un outil pour l'ouvrir.</p>
+        <p>Prospecter, qualifier, signer, accompagner — la formation transport <b>100% financée OPCO Mobilités, 0&nbsp;€</b>. Cliquez sur un outil pour l'ouvrir.</p>
         <div class="opco-hero"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#8cc63f"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/><path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#8cc63f"/><circle cx="12" cy="12" r="3.1" fill="#00a88e"/></svg> Organisme habilité OPCO Mobilités</div>
         <svg class="ill" viewBox="0 0 120 70" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.4">
           <path d="M4 50h66V26h20l14 14v10h-8" stroke="rgba(255,255,255,.7)"/>
@@ -82,7 +82,7 @@
 
       <div id="groups"></div>
 
-      <div class="callout c-warn" style="margin-top:20px;"><b>Rappels :</b> B2B transport uniquement · jamais « CPF » · jamais se présenter comme « OPCO » (on dit « habilité OPCO Mobilité ») · le réseau se révèle seulement à l'adhésion · une fiche remplie à chaque appel.</div>
+      <div class="callout c-warn" style="margin-top:20px;"><b>Rappels :</b> B2B transport uniquement · jamais « CPF » · jamais se présenter comme « OPCO » (on dit « habilité OPCO Mobilités ») · le réseau se révèle seulement à l'adhésion · une fiche remplie à chaque appel.</div>
     </div>
   </div>
 </div>
@@ -110,7 +110,7 @@ var GROUPS=[
    {n:'Adhésion — Entreprise',d:'Infos pour le contrat',u:'https://airtable.com/appaAZXNf5RFf89WV/pagliROW5NttiqP9c/form',si:'airtable',c:'#18BFFF'},
    {n:'Adhésion — Salarié',d:'Si formation salarié',u:'https://airtable.com/appv3OIuP1STIpVgz/pagaIdjkbRKz9ztJK/form',si:'airtable',c:'#18BFFF'},
    {n:'YPAREO Neo',d:'Générer le contrat',u:'https://paris-sud.ypareo-neo.com',mono:'Y',c:'#1f7a4d'},
-   {n:'OPCO Mobilité',d:'Espace prise en charge',u:'https://mgestion.opcomobilites.fr',mono:'OM',c:'#e96252'},
+   {n:'OPCO Mobilités',d:'Espace prise en charge',u:'https://mgestion.opcomobilites.fr',mono:'OM',c:'#e96252'},
    {n:'Aide compte OPCO',d:'Créer le compte (2 min)',u:'opco.html',int:'book'},
    {n:'Calendly',d:'RDV audit avec Abdel',u:'https://calendly.com/paris-sud/com',si:'calendly',c:'#006BFF'}
  ]},
@@ -119,9 +119,9 @@ var GROUPS=[
    {n:'WATI',d:'WhatsApp business',u:'https://app.wati.io',si:'whatsapp',c:'#25D366'},
    {n:'Notion — Hub',d:'Groupe Paris Sud',u:'https://app.notion.com/p/Groupe-Paris-Sud-Hub-362f6a5b99ef81bebcc6e32b6f046906',si:'notion',c:'#000000'},
    {n:'Meta Business',d:'Facebook + Instagram + Ads',u:'https://business.facebook.com',si:'meta',c:'#0467DF'},
-   {n:'Instagram',d:'Page Paris Sud',u:'https://www.instagram.com',si:'instagram',c:'#E4405F'},
-   {n:'Facebook',d:'Page Paris Sud',u:'https://www.facebook.com',si:'facebook',c:'#1877F2'},
-   {n:'LinkedIn',d:'Page entreprise',u:'https://www.linkedin.com',mono:'in',c:'#0A66C2'},
+   {n:'Instagram',d:'Publier / gérer',u:'https://www.instagram.com',si:'instagram',c:'#E4405F'},
+   {n:'Facebook',d:'Publier / gérer',u:'https://www.facebook.com',si:'facebook',c:'#1877F2'},
+   {n:'LinkedIn',d:'Publier / gérer',u:'https://www.linkedin.com',mono:'in',c:'#0A66C2'},
    {n:'Google Ads',d:'Campagnes',u:'https://ads.google.com',si:'googleads',c:'#4285F4'},
    {n:'Canva',d:'Visuels & posts',u:'https://www.canva.com',si:'canva',c:'#00C4CC'},
    {n:'Trustpilot',d:'Avis clients',u:'https://www.trustpilot.com',si:'trustpilot',c:'#00B67A'},
@@ -135,7 +135,6 @@ var GROUPS=[
  ]}
 ];
 var root=document.getElementById('groups');
-function mono(label,color){var s=document.createElement('span');s.className='mono';s.textContent=label;var box=s.parentNode;return s;}
 GROUPS.forEach(function(g){
   var h=document.createElement('h2');h.className='grp-title';h.textContent=g.t;root.appendChild(h);
   var sub=document.createElement('div');sub.className='grp-sub';sub.textContent=g.s;root.appendChild(sub);
