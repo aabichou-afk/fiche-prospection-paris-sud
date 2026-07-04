@@ -4,88 +4,135 @@
 <title>Audit IA · Espace Agents — Paris Sud Formation</title>
 <link rel="stylesheet" href="style.css">
 <script src="gate.js"></script>
+<style>
+.qz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
+.qz .qt{font-weight:700;color:#11362b;font-size:1.02rem;margin-bottom:4px}
+.qz .qs{font-size:.82rem;color:#5f6b62;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid #d7e5dd;background:#fff;color:#33453d;border-radius:999px;padding:9px 15px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.13s;font-family:inherit}
+.chip:hover{border-color:#1f8a5c;background:#f2faf5}
+.chip.on{background:#1f8a5c;color:#fff;border-color:#1f8a5c}
+.chip.on.warn{background:#c9a24a;border-color:#c9a24a}
+.chip.on.red{background:#d1543a;border-color:#d1543a}
+.scorewrap{position:sticky;top:118px;z-index:10;background:linear-gradient(135deg,#11362b,#1f6f5c);color:#fff;border-radius:16px;padding:16px 20px;margin-bottom:8px;box-shadow:0 14px 34px -20px rgba(17,54,43,.7)}
+.scorewrap .big{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.1rem;font-weight:700;line-height:1.05}
+.scorewrap .lbl{font-size:.85rem;opacity:.92}
+.bar{height:12px;background:rgba(255,255,255,.22);border-radius:999px;overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8cc63f,#f4ce1e);transition:.35s}
+.reco{background:#eef7f2;border:1px solid #bfe3cd;border-radius:14px;padding:16px 18px;margin:12px 0}
+.reco h3{margin:0 0 6px;color:#11362b}
+.act{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.act button{border:none;border-radius:999px;padding:12px 20px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
+.copybtn{background:#18BFFF;color:#fff}.resetbtn{background:#fff;border:1px solid #d7e5dd!important;color:#33453d}
+@media(max-width:640px){.scorewrap{top:8px}}
+</style>
 </head><body data-page="audit">
 <div class="app">
   <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
   <div class="main">
     <div class="topbar">
       <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
-      <h1>Audit IA — diagnostic transporteur</h1><span class="tag">Accroche & découverte</span>
+      <h1>Audit IA — questionnaire</h1><span class="tag">À remplir avec le dirigeant</span>
     </div>
-    <div class="content" id="app">
-      <p class="lead">Le diagnostic IA à faire remplir au dirigeant (ou à remplir avec lui pendant l'appel). Il révèle ses usages, ses besoins et sa maturité — c'est votre <b>cheval de Troie</b> pour qualifier et orienter vers la bonne offre.</p>
-      <div class="callout c-info"><b>Accroche conforme :</b> « Paris Sud Formation, organisme <b>habilité OPCO Mobilités</b>, mène une enquête sur l'usage de l'IA chez les transporteurs. 5 minutes, et vous repartez avec des pistes concrètes — financées. » <i>(Jamais « je suis l'OPCO ».)</i></div>
+    <div class="content">
+      <div class="callout c-info" style="margin-top:0">🎧 <b>À utiliser pendant l'appel / l'audit.</b> Cliquez les réponses du dirigeant — le score et la reco se calculent tout seuls. En bas : <b>« Copier le résumé »</b> pour le coller dans la note du prospect (Airtable).</div>
 
-      <div class="fcard"><h2>L'entreprise</h2><div class="row">
-        <div class="f"><label>Raison sociale</label><input id="rs"></div>
-        <div class="f"><label>SIRET</label><input id="siret" inputmode="numeric"></div>
-        <div class="f"><label>Nombre de salariés</label><select id="eff"><option value="">—</option><option>0 (seul)</option><option>1 à 10</option><option>11 à 49</option><option>50 à 299</option><option>300+</option></select></div>
-        <div class="f"><label>Rôle dans la chaîne</label><select id="role"><option value="">—</option><option>Sous-traitant</option><option>Donneur d'ordre</option><option>Les deux</option></select></div>
-        <div class="f"><label>Ancienneté</label><select id="anc"><option value="">—</option><option>&lt; 1 an</option><option>1 à 3 ans</option><option>3 à 10 ans</option><option>10 ans +</option></select></div>
-        <div class="f"><label>Santé économique</label><select id="sante"><option value="">—</option><option>Très bonne</option><option>Bonne</option><option>Difficile</option><option>Très difficile</option></select></div>
-      </div></div>
-
-      <div class="fcard"><h2>Perception de l'IA</h2><div class="row">
-        <div class="f full"><label>Pour votre activité, l'IA c'est…</label><select id="perc"><option value="">—</option><option>Incontournable à court/moyen terme</option><option>Une opportunité importante</option><option>Intéressante mais incertaine</option><option>Encore éloignée de mes préoccupations</option><option>Surestimée / effet de mode</option></select></div>
-        <div class="f"><label>Utilisez-vous déjà l'IA ?</label><div class="seg" data-key="usage"><button data-v="Oui, structuré">Oui, structuré</button><button data-v="Un peu">Un peu</button><button data-v="Non">Non</button></div></div>
-        <div class="f"><label>Une formation IA prévue ?</label><div class="seg" data-key="formprev"><button data-v="Oui">Oui</button><button data-v="Non">Non</button><button data-v="NSP">NSP</button></div></div>
-      </div></div>
-
-      <div class="fcard"><h2>Où l'IA pourrait vous aider (cochez)</h2>
-        <div id="usages" class="row" style="gap:8px 16px"></div>
+      <div class="scorewrap">
+        <div class="lbl">Score de maturité IA du dirigeant</div>
+        <div class="big"><span id="score">0</span>/100 · <span id="verdict">à évaluer</span></div>
+        <div class="bar"><i id="barfill"></i></div>
+        <div class="lbl" id="opp" style="margin-top:8px"></div>
       </div>
 
-      <div class="fcard"><h2>Vos priorités & freins</h2><div class="row">
-        <div class="f full"><label>Votre besoin n°1 aujourd'hui ?</label><input id="besoin1" placeholder="ex. répondre plus vite aux cotations, recruter, baisser les charges…"></div>
-        <div class="f full"><label>Principaux freins à l'IA chez vous ?</label><div id="freins" class="row" style="gap:6px 14px"></div></div>
-      </div></div>
+      <div id="quiz"></div>
 
-      <div class="fcard"><h2>Pour vous recontacter</h2><div class="row">
-        <div class="f"><label>Nom du dirigeant</label><input id="nom"></div>
-        <div class="f"><label>Email</label><input id="email" type="email"></div>
-        <div class="f"><label>Portable</label><input id="tel" type="tel"></div>
-      </div></div>
-
-      <div class="actions">
-        <button class="btn btn-p" id="gen">Générer le récap de l'audit</button>
-        <button class="btn btn-g" id="reset">Réinitialiser</button>
-      </div>
-
-      <div id="out" style="display:none;margin-top:16px">
-        <div class="fcard"><h2>Récap — à coller dans Airtable / la fiche</h2>
-          <textarea id="recap" class="copybox" readonly></textarea>
-          <div class="actions"><button class="btn btn-p" id="copy">Copier le récap</button></div>
-          <p class="hint">Conseil d'orientation : peu d'usages IA + besoin de temps &rarr; <b>Formation IA Dirigeant</b>. Volonté de baisser les charges / salarié à faire monter &rarr; <b>TP RPMS</b>.</p>
+      <div class="reco" id="reco" style="display:none">
+        <h3>🎯 Recommandation à formuler au dirigeant</h3>
+        <div id="recotext"></div>
+        <div class="act">
+          <button class="copybtn" id="copy">📋 Copier le résumé pour Airtable</button>
+          <button class="resetbtn" id="reset">Nouveau questionnaire</button>
         </div>
+        <div class="hint" id="copied" style="color:#1f8a5c;font-weight:700"></div>
       </div>
+
+      <div class="callout c-warn"><b>Rappel :</b> l'audit sert à faire parler le dirigeant et à décrocher le RDV avec Abdel. Financement = OPCO Mobilités. Ne promettez jamais un montant chiffré (« on calcule ça ensemble à l'audit »).</div>
     </div>
   </div>
 </div>
 <script src="nav.js"></script>
 <script>
-var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
-var USAGES=['Optimisation des tournées & plans de transport','Aide à la création de devis / cotations','Automatisation des mails & documents','Affrètement & conformité documentaire automatisés','Planification des chauffeurs (staffing)','Maintenance prédictive des véhicules','Prévision d\'activité & tableaux de bord','Gestion des litiges de livraison','Relation client / chatbots','Prévision financière & gestion des risques','Marketing & communication','Recrutement & tri de candidatures'];
-var FREINS=['Manque de compétences en interne','Coûts','Pas le temps','Difficile d\'identifier les usages utiles','Sécurité des données','Réticence des équipes','Aucun frein particulier'];
-$('#usages').innerHTML=USAGES.map(function(u,i){return '<label style="flex-direction:row;align-items:center;gap:.6rem;font-size:.9rem;color:#33415a"><input type="checkbox" class="uchk" value="'+u+'" style="width:18px;height:18px;min-height:0">'+u+'</label>';}).join('');
-$('#freins').innerHTML=FREINS.map(function(u){return '<label style="flex-direction:row;align-items:center;gap:.5rem;font-size:.88rem;color:#33415a"><input type="checkbox" class="fchk" value="'+u+'" style="width:18px;height:18px;min-height:0">'+u+'</label>';}).join('');
-var seg={};
-$$('.seg').forEach(function(s){var k=s.getAttribute('data-key');s.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;s.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');seg[k]=b.getAttribute('data-v');});});
-$('#gen').addEventListener('click',function(){
-  var g=function(id){return $(id).value.trim()||'—'};
-  var u=$$('.uchk').filter(function(c){return c.checked}).map(function(c){return c.value});
-  var f=$$('.fchk').filter(function(c){return c.checked}).map(function(c){return c.value});
-  var r='=== AUDIT IA — '+g('#rs')+' ===\n'
-    +'SIRET: '+g('#siret')+' · Salariés: '+(g('#eff'))+' · Rôle: '+g('#role')+' · Ancienneté: '+g('#anc')+'\n'
-    +'Santé éco: '+g('#sante')+'\n\n'
-    +'Perception IA: '+g('#perc')+'\n'
-    +'Usage actuel IA: '+(seg.usage||'—')+'  | Formation IA prévue: '+(seg.formprev||'—')+'\n\n'
-    +'Domaines où l\'IA aiderait:\n'+(u.length?(' - '+u.join('\n - ')):' —')+'\n\n'
-    +'Besoin n°1: '+g('#besoin1')+'\n'
-    +'Freins: '+(f.length?f.join(', '):'—')+'\n\n'
-    +'Contact: '+g('#nom')+' · '+g('#email')+' · '+g('#tel');
-  $('#recap').value=r;$('#out').style.display='block';$('#out').scrollIntoView({behavior:'smooth'});
+var Q=[
+ {id:'taille',t:'Taille de l\'entreprise',s:'Combien de salariés ?',type:'one',o:[['Dirigeant seul',8],['1 à 5',10],['6 à 20',9],['20 à 50',7],['50+',5]]},
+ {id:'type',t:'Type de transport',s:'Activité principale',type:'one',o:[['Marchandises léger',6],['Marchandises lourd',6],['Messagerie / dernier km',7],['Commission / affrètement',7],['Autre',5]]},
+ {id:'douleurs',t:'Ses plus grosses douleurs',s:'Cliquez tout ce qui s\'applique (faites-le parler)',type:'multi',o:[['Manque de clients',9,'red'],['Trajets à vide',8,'red'],['Charges trop lourdes',8,'red'],['Noyé sous l\'administratif',7,'warn'],['Marges serrées',7,'warn'],['Recruter des chauffeurs',6,'warn'],['Pilotage à vue',6,'warn'],['Dépendance à 1 client',8,'red']]},
+ {id:'ia',t:'Utilise-t-il déjà l\'IA ?',s:'Aujourd\'hui, dans son activité',type:'one',o:[['Pas du tout',12,'red'],['Un peu (ChatGPT perso)',7,'warn'],['Oui, plusieurs outils',3]]},
+ {id:'outils',t:'Outils en place',s:'Ce qu\'il utilise pour piloter',type:'multi',o:[['Aucun / Excel',9,'red'],['Logiciel de cotation',3],['TMS / exploitation',3],['CRM clients',3],['Compta en ligne',2]]},
+ {id:'admin',t:'Temps passé sur l\'administratif',s:'Devis, mails, planning, relances',type:'one',o:[['Plus de 3h/jour',10,'red'],['1 à 3h/jour',7,'warn'],['Moins d\'1h/jour',3]]},
+ {id:'interet',t:'Ce qui l\'intéresse le plus',s:'Là où on va brancher l\'offre',type:'multi',o:[['Trouver des clients',7],['Automatiser les devis',6],['Piloter sa marge',6],['Alléger ses charges',6],['Former ses salariés',5],['Flotte électrique',4],['Communauté / entraide',4]]},
+ {id:'opco',t:'Éligibilité financement',s:'Le nerf de la guerre',type:'one',o:[['Affilié OPCO Mobilités, budget dispo',10],['Affilié, ne sait pas pour le budget',7],['Ne sait pas',5],['Pas transport / non éligible',0,'red']]}
+];
+var maxScore=0;Q.forEach(function(q){var vals=q.o.map(function(o){return o[1]});maxScore+=q.type==='multi'?vals.filter(function(v){return v>0}).sort(function(a,b){return b-a}).slice(0,3).reduce(function(a,b){return a+b},0):Math.max.apply(null,vals);});
+var state={};
+var quiz=document.getElementById('quiz');
+Q.forEach(function(q){
+  var box=document.createElement('div');box.className='qz';
+  box.innerHTML='<div class="qt">'+q.t+'</div><div class="qs">'+q.s+'</div>';
+  var chips=document.createElement('div');chips.className='chips';
+  q.o.forEach(function(o){
+    var c=document.createElement('button');c.className='chip'+(o[2]?' '+o[2]:'');c.textContent=o[0];
+    c.addEventListener('click',function(){
+      if(q.type==='one'){chips.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');state[q.id]=[o];}
+      else{c.classList.toggle('on');state[q.id]=q.o.filter(function(oo,k){return chips.querySelectorAll('.chip')[k].classList.contains('on')});}
+      compute();
+    });
+    chips.appendChild(c);
+  });
+  box.appendChild(chips);quiz.appendChild(box);
 });
-$('#copy').addEventListener('click',function(e){$('#recap').select();navigator.clipboard.writeText($('#recap').value).then(function(){var b=e.target,o=b.textContent;b.textContent='Copié ✓';setTimeout(function(){b.textContent=o},1400);});});
-$('#reset').addEventListener('click',function(){$$('#app input,#app textarea').forEach(function(i){i.value='';if(i.type==='checkbox')i.checked=false});$$('#app select').forEach(function(s){s.value=''});$$('.seg button').forEach(function(b){b.classList.remove('on')});seg={};$('#out').style.display='none';});
+function compute(){
+  var sc=0,answered=0;
+  Q.forEach(function(q){var sel=state[q.id]||[];if(sel.length)answered++;
+    if(q.type==='one'&&sel[0])sc+=sel[0][1];
+    if(q.type==='multi')sc+=sel.map(function(o){return o[1]}).sort(function(a,b){return b-a}).slice(0,3).reduce(function(a,b){return a+b},0);
+  });
+  var pct=Math.min(100,Math.round(sc/maxScore*100));
+  document.getElementById('score').textContent=pct;
+  document.getElementById('barfill').style.width=pct+'%';
+  var v,opp;
+  if(answered<3){v='à évaluer';opp='Continuez à cliquer les réponses du dirigeant…';}
+  else if(pct>=70){v='🔥 Très fort potentiel';opp='Retard IA + douleurs marquées = énorme marge de progrès. Foncez sur le RDV.';}
+  else if(pct>=45){v='🟡 Bon potentiel';opp='De vraies douleurs à adresser. Un audit va révéler des gains concrets.';}
+  else{v='❄️ Potentiel plus faible';opp='Déjà assez outillé — vendez l\'avance et le financement à 0 €.';}
+  document.getElementById('verdict').textContent=v;
+  document.getElementById('opp').textContent=opp;
+  if(answered>=4){document.getElementById('reco').style.display='block';buildReco(pct);}
+}
+function buildReco(pct){
+  var d=state.douleurs||[],it=state.interet||[];
+  var levers=[];
+  var map={'Manque de clients':'prospection clients pilotée par IA + nouvelles lignes régulières','Trajets à vide':'optimisation des tournées + lignes de retour','Charges trop lourdes':'audit des charges + apprentissage (moins de charges sociales)','Noyé sous l\'administratif':'automatisation des devis, mails et relances','Marges serrées':'cockpit de pilotage de la marge par ligne','Recruter des chauffeurs':'aide au recrutement + POEI','Pilotage à vue':'CRM & tableau de bord temps réel','Dépendance à 1 client':'diversification via prospection + donneurs d\'ordre'};
+  d.forEach(function(o){if(map[o[0]])levers.push(map[o[0]]);});
+  it.forEach(function(o){var m={'Automatiser les devis':'automatisation des devis','Piloter sa marge':'pilotage de la marge','Former ses salariés':'formation des salariés (jusqu\'à ~10 000 € pris en charge)','Flotte électrique':'accompagnement transition flotte électrique','Communauté / entraide':'communauté Transporteurs 2.0'};if(m[o[0]]&&levers.indexOf(m[o[0]])<0)levers.push(m[o[0]]);});
+  if(!levers.length)levers.push('pilotage IA de l\'activité + formation dirigeant');
+  var offre=pct>=45?'Formation IA Dirigeant (enveloppe ~1 500 €, débloquée en ~2 semaines) — porte d\'entrée de l\'accompagnement 360°':'Formation IA Dirigeant + valoriser l\'avance concurrentielle';
+  var txt='<b>Offre à proposer :</b> '+offre+'.<br><b>Leviers à mettre en avant :</b> '+levers.slice(0,4).join(' · ')+'.<br><b>Prochaine étape :</b> bloquer l\'audit gratuit de 30 min avec Abdel.';
+  document.getElementById('recotext').innerHTML=txt;
+}
+document.getElementById('copy').addEventListener('click',function(){
+  var lines=['— AUDIT IA (rempli en appel) —'];
+  Q.forEach(function(q){var sel=state[q.id]||[];if(sel.length)lines.push(q.t+' : '+sel.map(function(o){return o[0]}).join(', '));});
+  lines.push('Score maturité IA : '+document.getElementById('score').textContent+'/100 ('+document.getElementById('verdict').textContent+')');
+  lines.push('Reco : '+document.getElementById('recotext').innerText.replace(/\n/g,' '));
+  navigator.clipboard.writeText(lines.join('\n')).then(function(){
+    document.getElementById('copied').textContent='✓ Résumé copié — collez-le dans « Notes prospect » sur Airtable.';
+    setTimeout(function(){document.getElementById('copied').textContent='';},4000);
+  });
+});
+document.getElementById('reset').addEventListener('click',function(){
+  state={};document.querySelectorAll('.chip.on').forEach(function(c){c.classList.remove('on')});
+  document.getElementById('reco').style.display='none';compute();
+});
+compute();
 </script>
 </body></html>

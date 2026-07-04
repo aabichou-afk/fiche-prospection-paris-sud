@@ -11,7 +11,7 @@
     o.id='psfgate';
     o.style.cssText='position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;font-family:Inter,system-ui,sans-serif;background:linear-gradient(135deg,#11362b,#1f6f5c,#1f8a5c)';
     o.innerHTML='<div style="background:#fff;border-radius:18px;padding:30px 28px;max-width:360px;width:100%;box-shadow:0 30px 70px -20px rgba(0,0,0,.5);text-align:center">'
-      +'<svg width="76" height="76" viewBox="0 0 100 100" style="display:block;margin:0 auto 8px"><defs><clipPath id="lgg"><circle cx="40" cy="50" r="18"/></clipPath></defs><circle cx="50" cy="50" r="45" fill="#fff" stroke="#2f4a63" stroke-width="8"/><circle cx="40" cy="50" r="18" fill="#00e676"/><circle cx="60" cy="50" r="18" fill="#0a7d6e"/><g clip-path="url(#lgg)"><circle cx="60" cy="50" r="18" fill="#fff"/></g></svg>'
+      +'<svg width="76" height="76" viewBox="0 0 100 100" style="display:block;margin:0 auto 8px"><defs><clipPath id="lgg"><circle cx="40" cy="50" r="18"/></clipPath></defs><circle cx="50" cy="50" r="45" fill="#fff" stroke="#11362b" stroke-width="8"/><circle cx="40" cy="50" r="18" fill="#00e676"/><circle cx="60" cy="50" r="18" fill="#0a7d6e"/><g clip-path="url(#lgg)"><circle cx="60" cy="50" r="18" fill="#fff"/></g></svg>'
       +'<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:1.3rem;font-weight:700;color:#11362b">Paris Sud <span style="color:#1f8a5c">Formation</span></div>'
       +'<p style="color:#5f6b62;font-size:.9rem;margin:6px 0 18px">Accès réservé — entrez le mot de passe.</p>'
       +'<input id="psfpw" type="password" placeholder="Mot de passe" autofocus style="width:100%;padding:12px 14px;border:1px solid #E4E2D6;border-radius:11px;font-size:1rem;text-align:center">'
