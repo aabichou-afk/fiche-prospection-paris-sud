@@ -4,55 +4,157 @@
 <title>Scripts & Pitch · Espace Agents — Paris Sud Formation</title>
 <link rel="stylesheet" href="style.css">
 <script src="gate.js"></script>
+<style>
+.goalbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:linear-gradient(135deg,#11362b,#1f6f5c);color:#fff;border-radius:16px;padding:16px 20px;margin-bottom:16px;box-shadow:0 14px 34px -20px rgba(17,54,43,.7)}
+.goalbar .g{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;font-weight:700;line-height:1.15}
+.goalbar .a{font-size:.9rem;opacity:.95;background:rgba(255,255,255,.14);border-radius:999px;padding:5px 13px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.steps button{border:1px solid #d7e5dd;background:#fff;color:#1f6f5c;border-radius:999px;padding:8px 15px;font-size:.86rem;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit}
+.steps button:hover{background:#eef7f2}
+.steps button.on{background:#1f8a5c;color:#fff;border-color:#1f8a5c}
+.panel{display:none}.panel.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.line{position:relative;background:#fff;border:1px solid #e3ece7;border-left:4px solid #1f6f5c;border-radius:12px;padding:14px 46px 14px 16px;margin:10px 0;font-size:1.02rem;line-height:1.5;color:#1e2b25;cursor:pointer;transition:.15s}
+.line:hover{border-left-color:#1f8a5c;box-shadow:0 8px 22px -16px rgba(17,54,43,.5)}
+.line .who{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:#1f8a5c;font-weight:700;margin-bottom:5px}
+.line .cpy{position:absolute;right:10px;top:12px;font-size:.72rem;color:#9bb0a5;border:1px solid #e3ece7;border-radius:7px;padding:3px 7px;background:#fff}
+.line.copied{border-left-color:#8cc63f;background:#f2faf5}
+.line.copied .cpy{color:#1f8a5c;border-color:#bfe3cd}
+.hint2{font-size:.85rem;color:#5f6b62;margin:2px 0 0}
+.tip{background:#fdf6e3;border-left:4px solid #c9a24a;border-radius:10px;padding:11px 15px;margin:12px 0;font-size:.92rem}
+.obsearch{width:100%;padding:12px 15px;border:1px solid #d7e5dd;border-radius:12px;font-size:1rem;margin:4px 0 12px;font-family:inherit}
+details.ob{background:#fff;border:1px solid #e3ece7;border-radius:11px;margin:8px 0;overflow:hidden}
+details.ob summary{padding:12px 15px;font-weight:600;color:#11362b;cursor:pointer;list-style:none;display:flex;gap:10px;align-items:center}
+details.ob summary::-webkit-details-marker{display:none}
+details.ob .q{background:#1f8a5c;color:#fff;border-radius:7px;padding:2px 9px;font-size:.78rem;font-weight:700;flex:none}
+details.ob[open] summary{background:#f2faf5}
+details.ob .a{padding:0 15px 14px;color:#33453d;font-size:.96rem;line-height:1.55}
+.trackcta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:#eef7f2;border:1px dashed #1f8a5c;border-radius:14px;padding:14px 18px;margin:14px 0}
+.trackcta a{background:#18BFFF;color:#fff;font-weight:700;border-radius:999px;padding:10px 18px;text-decoration:none;font-size:.9rem}
+</style>
 </head><body data-page="scripts">
 <div class="app">
   <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
   <div class="main">
     <div class="topbar">
       <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
-      <h1>Scripts & Pitch</h1><span class="tag">À dégainer au téléphone</span>
+      <h1>Scripts & Pitch</h1><span class="tag">Cliquez une phrase = copiée</span>
     </div>
     <div class="content">
-      <span class="kick">Le but de l'appel</span>
-      <h2 style="margin-top:8px">Décrocher le RDV d'audit avec Abdel · closer si le lead est déjà chaud · sinon rappeler.</h2>
-      <div class="callout c-ok" style="margin-top:6px"><b>L'angle qui ouvre :</b> « Les transporteurs ne se forment pas encore à l'IA — <b>soyez en avance, démarquez-vous.</b> »</div>
 
-      <h2>① Accroche</h2>
-      <div class="say"><span class="who">Ouverture</span>« Bonjour, [Prénom] de Paris Sud Formation, organisme certifié Qualiopi. Je souhaite parler au dirigeant ou au responsable, c'est bien vous ? »</div>
-      <div class="say"><span class="who">Hook</span>« On accompagne les dirigeants de transport à piloter leur activité avec l'IA et à former leurs équipes — <b>100% financé par votre OPCO Mobilités, 0&nbsp;€ pour vous</b>. Vous êtes bien dans le transport ? »</div>
+      <div class="goalbar">
+        <div class="g">🎯 Un seul but : décrocher le RDV d'audit (30 min).</div>
+        <div class="a">Closing seulement si le lead est déjà chaud · sinon on rappelle</div>
+      </div>
+      <div class="tip">💡 <b>L'angle qui ouvre :</b> « Les transporteurs ne se forment pas encore à l'IA — <b>soyez en avance, démarquez-vous.</b> » · Astuce : <b>cliquez n'importe quelle phrase pour la copier.</b></div>
 
-      <h2>② Qualification (remplir la fiche)</h2>
-      <div class="say">Transport (léger / lourd / commission) ? · Affiliée OPCO Mobilités ? · Combien de salariés ? · Vous décidez sur la formation ? · Quelles sont vos problématiques ? · Email + portable.</div>
+      <div class="steps" id="steps">
+        <button data-p="p1" class="on">① Accroche</button>
+        <button data-p="p2">② Qualifier</button>
+        <button data-p="p3">③ Pitch</button>
+        <button data-p="p4">④ Objections</button>
+        <button data-p="p5">⑤ Closing</button>
+        <button data-p="p6">⑥ Tracer l'appel</button>
+      </div>
 
-      <h2>③ Pitch selon l'offre</h2>
-      <div class="say"><span class="who">Offre IA — enveloppe OPCO ~1 500 € · 0 € pour vous</span>« Une formation 100% distancielle pour piloter votre activité avec l'IA — gagner du temps sur l'administratif, les cotations, le planning — avec un audit offert avec Abdel, un dirigeant du transport. Vous avez une <b>enveloppe d'environ 1 500 € qu'on débloque en ~2 semaines</b> ; c'est financé à 100% par votre OPCO Mobilités, vous ne payez rien. »</div>
-      <div class="say"><span class="who">Offre RPMS — diplôme d'État · 0€</span>« En formant un salarié sur un diplôme d'État, vous avez jusqu'à ~10 000&nbsp;€ de formation pris en charge, <b>moins de charges sociales</b> et une aide de l'État (apprentissage), et il monte en compétence en management. Ordinateur offert, 100% à distance. 0&nbsp;€ de reste à charge. »</div>
+      <!-- ① ACCROCHE -->
+      <div class="panel on" id="p1">
+        <div class="line"><span class="who">Ouverture</span>Bonjour, [Prénom] de Paris Sud Formation, organisme certifié Qualiopi. Je souhaite parler au dirigeant ou au responsable, c'est bien vous ?<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Hook — le 0 €</span>On accompagne les dirigeants de transport à piloter leur activité avec l'IA et à former leurs équipes — 100% financé par votre OPCO Mobilités, 0 € pour vous. Vous êtes bien dans le transport ?<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Hook — l'avance IA</span>Aujourd'hui 99% des transporteurs ne se sont pas encore mis à l'IA. Ceux qui s'y mettent maintenant prennent une vraie longueur d'avance. Je vous explique en 2 minutes ?<span class="cpy">copier</span></div>
+        <div class="hint2">But de l'accroche : franchir le barrage et obtenir 30 secondes d'attention. Souriez, allez droit au but.</div>
+      </div>
 
-      <h2>④ Les 4 phrases qui font mouche</h2>
-      <div class="say"><b>Le 0€ —</b> « C'est votre budget formation, que vous cotisez déjà chaque année. On vous aide juste à le récupérer. »</div>
-      <div class="say"><b>L'anti-piège —</b> « Aucun piège : la loi oblige les entreprises à cotiser pour la formation. On vous fait profiter de ce que vous payez déjà. »</div>
-      <div class="say"><b>La crédibilité —</b> « Abdel accompagne le transport depuis 5 ans, il a généré plusieurs millions d'€ de CA grâce à l'IA. Derrière, c'est le Groupe Paris Sud, certifié Qualiopi et habilité OPCO Mobilités. »</div>
-      <div class="say"><b>L'urgence douce —</b> « Les enveloppes OPCO sont annuelles — autant en profiter cette année tant que votre budget est disponible. »</div>
+      <!-- ② QUALIFIER -->
+      <div class="panel" id="p2">
+        <div class="line"><span class="who">Les 3 OUI d'éligibilité</span>Vous êtes bien une entreprise de transport ? · Vous décidez sur la formation ? · Vous cotisez à l'OPCO Mobilités (transport = quasi toujours oui) ?<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Découverte — la douleur</span>Aujourd'hui c'est quoi votre plus gros casse-tête : trouver des clients, la paperasse, les charges, ou les marges ?<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Creuser</span>Vos camions tournent pleins à l'aller ET au retour, ou vous avez des trajets à vide ? … Et ça vous coûte quoi, à peu près, par mois ?<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Infos à récupérer</span>Nombre de salariés · vos besoins · e-mail + portable du dirigeant.<span class="cpy">copier</span></div>
+        <div class="trackcta">📋 Remplissez la <b>fiche de qualification</b> pendant l'appel.<a href="qualification.html">Ouvrir la fiche →</a></div>
+      </div>
 
-      <h2>⑤ Closing</h2>
-      <div class="say"><span class="who">Closer direct</span>« On lance ensemble ? Je prends 2 minutes pour vos informations. »</div>
-      <div class="say"><span class="who">Ou poser le RDV</span>« Le mieux, c'est 30 minutes en visio avec Abdel pour caler votre plan et votre financement, sans engagement. Vous préférez début ou fin de semaine ? Matin ou après-midi ? »</div>
-      <div class="callout c-info"><b>Technique :</b> après la question de closing, <b>taisez-vous</b>. Le premier qui parle a perdu. Puis récupérez email + portable + un créneau précis.</div>
+      <!-- ③ PITCH -->
+      <div class="panel" id="p3">
+        <div class="line"><span class="who">Offre IA — enveloppe ~1 500 € · 0 €</span>Vous avez une enveloppe d'environ 1 500 € qu'on débloque en ~2 semaines pour vous former à piloter votre activité avec l'IA — gagner du temps sur l'administratif, les cotations, le planning. C'est financé à 100% par votre OPCO Mobilités, vous ne payez rien, et l'audit avec Abdel est offert.<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Offre RPMS — diplôme d'État · 0 €</span>En formant un salarié sur un diplôme d'État, vous avez jusqu'à ~10 000 € de formation pris en charge, moins de charges sociales et une aide de l'État, et il monte en compétence en management. Ordinateur offert, 100% à distance, 0 € de reste à charge.<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Brancher sur SA douleur (360°)</span>Vous m'avez dit [sa douleur] → justement, on vous aide là-dessus : prospection de clients pilotée par IA, nouvelles lignes régulières, automatisation de vos devis, pilotage de votre marge, audit de vos charges… le tout financé par votre enveloppe.<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">La phrase qui convertit</span>Le seul risque, c'est de laisser cet argent — et cette avance — à vos concurrents. On regarde ensemble ce à quoi vous avez droit ?<span class="cpy">copier</span></div>
+        <div class="tip">Ne récitez pas tout. Prenez UNE douleur qu'il a formulée → UN levier → l'enveloppe → le RDV.</div>
+      </div>
 
-      <h2>⑥ Relance</h2>
-      <div class="say">« [Prénom], j'ai gardé votre dossier. On cale l'audit de 30 min cette semaine pour voir votre financement ? C'est gratuit et sans engagement. »</div>
+      <!-- ④ OBJECTIONS -->
+      <div class="panel" id="p4">
+        <input class="obsearch" id="obsearch" placeholder="🔎 Tapez un mot (prix, temps, CPF, associé…)">
+        <div id="oblist"></div>
+        <p style="margin-top:12px"><a class="btn btn-g" href="playbook.html" style="display:inline-flex;width:auto">Voir le mur complet des objections →</a></p>
+      </div>
 
-      <h2>Top objections (le mur complet est dans le Playbook)</h2>
-      <details><summary><span class="q">01</span> « Ça coûte combien ? »</summary><div class="a">« 0&nbsp;€ pour vous. 100% financé par votre OPCO Mobilités — un budget que vous cotisez déjà. »</div></details>
-      <details><summary><span class="q">02</span> « C'est gratuit… c'est quoi le piège ? »</summary><div class="a">« Aucun piège. La loi oblige les entreprises à cotiser pour la formation. On vous aide à récupérer ce budget. »</div></details>
-      <details><summary><span class="q">03</span> « C'est du CPF ? »</summary><div class="a">« Non, rien à voir. Financement entreprise via l'OPCO, ça ne touche pas le CPF. »</div></details>
-      <details><summary><span class="q">04</span> « Je n'ai pas le temps »</summary><div class="a">« 100% distanciel, à votre rythme — et l'IA vous fait gagner du temps. L'audit ne prend que 30 min. »</div></details>
-      <details><summary><span class="q">05</span> « Si je forme mon salarié, il va partir »</summary><div class="a">« Au contraire : vous le fidélisez en le faisant monter en compétence, et vous baissez vos charges pendant la formation. »</div></details>
-      <p style="margin-top:14px"><a class="btn btn-g" href="playbook.html" style="display:inline-flex;width:auto">Voir les 14 objections →</a></p>
+      <!-- ⑤ CLOSING -->
+      <div class="panel" id="p5">
+        <div class="line"><span class="who">Closing par l'alternative (le bon réflexe)</span>Le mieux, c'est un audit gratuit de 30 minutes avec Abdel pour caler votre plan et votre financement, sans engagement. Vous préférez plutôt demain matin ou jeudi après-midi ?<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Closing par la valeur</span>Cet audit ne vous engage à rien. Au pire vous repartez avec un état des lieux clair de vos droits OPCO. Au mieux, on transforme votre activité. On bloque 30 min ?<span class="cpy">copier</span></div>
+        <div class="line"><span class="who">Si vraiment chaud — closer</span>On peut même lancer tout de suite : je prends 2 minutes pour vos informations et je vous envoie tout à signer.<span class="cpy">copier</span></div>
+        <div class="tip">⚠️ Après la question de closing, <b>TAISEZ-VOUS.</b> Le premier qui parle a perdu. Puis récupérez e-mail + portable + un créneau précis.</div>
+        <div class="line"><span class="who">Relance (lead tiède)</span>[Prénom], j'ai gardé votre dossier. On cale l'audit de 30 min cette semaine pour voir votre financement ? C'est gratuit et sans engagement.<span class="cpy">copier</span></div>
+      </div>
 
-      <div class="callout c-warn"><b>Interdits :</b> jamais « CPF », jamais « je suis l'OPCO » (on dit « habilité OPCO Mobilités »), jamais de garantie d'emploi/résultat, jamais le réseau au 1er appel, jamais <b>promettre</b> un financement de flotte électrique garanti (c'est un sujet d'audit, pas une promesse), jamais un montant inventé (« on calcule ça à l'audit »).</div>
+      <!-- ⑥ TRACER -->
+      <div class="panel" id="p6">
+        <div class="trackcta" style="border-color:#18BFFF;background:#eaf7fe">📞 <b>Chaque appel se trace</b> — cochez « Appelé », mettez l'Intérêt, ajoutez une note.<a href="https://airtable.com/appaAZXNf5RFf89WV/pagpFh6DIUmIq8Vpi" target="_blank" rel="noopener">Ouvrir le suivi des appels →</a></div>
+        <div class="card"><h3 style="margin-top:0;color:#11362b">Après CHAQUE appel, dans le cockpit :</h3><ul class="clean">
+          <li>✅ Cocher <b>« Appelé »</b> (même si personne n'a décroché).</li>
+          <li>🎯 Choisir l'<b>Intérêt</b> : 🔥 Intéressé · 🟡 À relancer · ❄️ Pas intéressé · 📵 Injoignable · ❌ Hors cible.</li>
+          <li>📝 Écrire une <b>note</b> : ce qui s'est dit, la douleur, l'objection, quand rappeler.</li>
+          <li>📅 Si RDV pris → remplir la <a href="qualification.html" style="color:var(--primary);font-weight:700">fiche de qualification</a> (elle part dans Airtable).</li>
+        </ul></div>
+        <div class="tip">Règle d'or : <b>un appel non tracé = un appel qui n'a pas existé.</b> C'est ce qui permet de relancer au bon moment et de ne perdre aucun prospect chaud.</div>
+      </div>
+
+      <div class="callout c-warn" style="margin-top:18px"><b>Interdits :</b> jamais « CPF », jamais « je suis l'OPCO » (on dit « habilité OPCO Mobilités »), jamais de garantie d'emploi/résultat, jamais le réseau au 1er appel, jamais <b>promettre</b> un financement de flotte électrique garanti, jamais un montant inventé (« on calcule ça à l'audit »).</div>
     </div>
   </div>
 </div>
 <script src="nav.js"></script>
+<script>
+// --- navigation par étapes ---
+var steps=document.getElementById('steps');
+steps.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  steps.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});
+  document.getElementById(b.getAttribute('data-p')).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+// --- copier au clic ---
+document.addEventListener('click',function(e){var l=e.target.closest('.line');if(!l)return;
+  var txt=l.childNodes[1]&&l.querySelector('.who')?l.textContent.replace('copier','').replace(l.querySelector('.who').textContent,'').trim():l.textContent.replace('copier','').trim();
+  navigator.clipboard.writeText(txt).then(function(){
+    l.classList.add('copied');var c=l.querySelector('.cpy');var o=c.textContent;c.textContent='copié ✓';
+    setTimeout(function(){l.classList.remove('copied');c.textContent=o;},1100);
+  });
+});
+// --- objections (recherche instantanée) ---
+var OBJ=[
+ ['Ça coûte combien ?','0 € pour vous. 100% financé par votre OPCO Mobilités — un budget que vous cotisez déjà.'],
+ ['C\'est gratuit, c\'est quoi le piège ?','Aucun piège. La loi oblige les entreprises à cotiser pour la formation. On vous aide juste à récupérer ce budget.'],
+ ['Je n\'ai pas le temps','C\'est justement pour ça qu\'on existe : on vous fait gagner du temps. Et l\'audit ne prend que 30 min — demain matin ou jeudi ?'],
+ ['C\'est du CPF ?','Non, rien à voir. Financement entreprise via l\'OPCO Mobilités, ça ne touche pas le CPF.'],
+ ['L\'IA c\'est pas pour moi','C\'est ce que disaient ceux qui ont raté Internet. Vos concurrents non plus ne s\'y sont pas mis — d\'où votre fenêtre d\'avance. Je vous montre 2 usages concrets transport.'],
+ ['Envoyez-moi un mail','Avec plaisir — mais un mail générique ne parlera pas de VOTRE boîte. 30 min d\'audit et je vous envoie un doc personnalisé. Jeudi ?'],
+ ['Je dois en parler à mon associé','Logique. L\'audit est gratuit — proposez-lui d\'être là, vous décidez à deux avec les bons chiffres.'],
+ ['On a déjà utilisé notre budget','On regarde votre situation — il y a souvent d\'autres enveloppes ou l\'année suivante. On calcule ça à l\'audit, sans engagement.'],
+ ['Rappelez-moi dans 6 mois','Le souci : l\'enveloppe de l\'année peut être perdue si elle n\'est pas utilisée. Bloquons juste l\'audit, sans engagement, pour ne pas laisser filer vos droits.'],
+ ['Vous êtes l\'OPCO ?','Non — on est un organisme habilité OPCO Mobilités. Eux financent ; nous, on monte votre dossier et on vous accompagne.'],
+ ['Si je forme mon salarié il va partir','Au contraire : vous le fidélisez en le faisant monter en compétence, et vous allégez vos charges pendant la formation.'],
+ ['Je suis trop petit / tout seul','C\'est le profil idéal : le plus gros levier de gain est chez les petites structures. Et la communauté Transporteurs 2.0 fait que vous n\'êtes plus seul.'],
+ ['Vous garantissez un résultat ?','On ne promet pas de miracle. Ce qu\'on garantit : l\'accompagnement, le diplôme d\'État et le financement.'],
+ ['Je ne suis pas sur le Kbis','Aucun souci — la formation RPMS est justement accessible aux salariés, exploitants, chefs d\'équipe et porteurs de projet.']
+];
+var oblist=document.getElementById('oblist'),obsearch=document.getElementById('obsearch');
+function renderOb(f){f=(f||'').toLowerCase();
+  oblist.innerHTML=OBJ.filter(function(o){return !f||o[0].toLowerCase().indexOf(f)>-1||o[1].toLowerCase().indexOf(f)>-1})
+   .map(function(o,i){return '<details class="ob"><summary><span class="q">'+(i+1<10?'0':'')+(i+1)+'</span>« '+o[0]+' »</summary><div class="a">'+o[1]+'</div></details>'}).join('')||'<p class="hint2">Aucune objection ne correspond — voyez le Playbook complet.</p>';
+}
+renderOb();obsearch.addEventListener('input',function(){renderOb(obsearch.value)});
+</script>
 </body></html>
