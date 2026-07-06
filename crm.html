@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRM · Paris Sud — Pilotage complet</title>
+<link rel="stylesheet" href="style.css">
+<script src="gate.js"></script>
+<style>
+.crmbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.crmtab{border:1px solid #d7e5dd;background:#fff;color:#1f6f5c;border-radius:999px;padding:9px 16px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;gap:.4rem;align-items:center}
+.crmtab.on{background:#11362b;color:#fff;border-color:#11362b}.crmtab .b{background:#1f8a5c;color:#fff;border-radius:999px;font-size:.72rem;padding:1px 7px}
+.crmtab.on .b{background:#8cc63f;color:#11362b}
+.toolrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.search{flex:1;min-width:200px;padding:11px 14px;border:1px solid #d7e5dd;border-radius:12px;font-size:.95rem;font-family:inherit}
+.btnadd{background:#1f8a5c;color:#fff;border:none;border-radius:999px;padding:11px 18px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}
+.btncfg{background:#fff;border:1px solid #d7e5dd;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem;color:#33453d}
+.conn{font-size:.8rem;padding:5px 12px;border-radius:999px;font-weight:700}
+.conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fdf3df;color:#9a7212}
+.card2{background:#fff;border:1px solid #e6ebe8;border-radius:16px;padding:14px 16px;margin-bottom:11px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5);transition:.12s}
+.card2:hover{box-shadow:0 12px 28px -18px rgba(17,54,43,.55)}
+.r1{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.r1 .nm{font-weight:700;color:#11362b;font-size:1.02rem}
+.r1 .sub{font-size:.82rem;color:#5f6b62}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.ic{width:38px;height:38px;border-radius:10px;border:1px solid #e0e8e4;background:#fff;display:grid;place-items:center;cursor:pointer;font-size:1.05rem;text-decoration:none;transition:.12s}
+.ic:hover{transform:translateY(-1px);border-color:#1f8a5c}
+.ic.wa{background:#e9fbf0;border-color:#b9eccb}.ic.tel{background:#eaf3ff;border-color:#bcd8f7}.ic.ai{background:#f3ecff;border-color:#d8c4f5}
+.r2{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:11px}
+.r2 select,.r2 input[type=text]{padding:7px 10px;border:1px solid #dbe6e0;border-radius:9px;font-size:.84rem;font-family:inherit;background:#fff;min-height:0;width:auto}
+.chk{display:inline-flex;gap:5px;align-items:center;font-size:.84rem;font-weight:600;color:#33453d;cursor:pointer}
+.chk input{width:18px;height:18px;min-height:0;accent-color:#1f8a5c}
+.mini{font-size:.72rem;color:#8a978f;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.notebox{margin-top:9px;display:none}
+.notebox.on{display:block}
+.notebox textarea{width:100%;border:1px solid #dbe6e0;border-radius:10px;padding:9px 11px;font-family:inherit;font-size:.88rem;min-height:52px}
+.notehist{font-size:.82rem;color:#5f6b62;background:#f6f9f7;border-radius:9px;padding:8px 11px;margin-top:6px;white-space:pre-wrap;max-height:120px;overflow:auto}
+.savepill{font-size:.72rem;color:#1f8a5c;font-weight:700;opacity:0;transition:.2s}.savepill.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(17,54,43,.5);display:none;place-items:center;z-index:200;padding:16px}
+.overlay.on{display:grid}
+.modal{background:#fff;border-radius:18px;padding:22px;max-width:460px;width:100%;box-shadow:0 30px 70px -20px rgba(0,0,0,.5);max-height:88vh;overflow:auto}
+.modal h3{margin:0 0 12px;color:#11362b}
+.modal label{display:block;font-size:.78rem;color:#5f6b62;font-weight:600;margin:9px 0 3px}
+.modal input,.modal select,.modal textarea{width:100%;padding:10px 12px;border:1px solid #dbe6e0;border-radius:10px;font-family:inherit;font-size:.92rem}
+.modal .go{margin-top:14px;display:flex;gap:9px}
+.modal .go button{flex:1;border:none;border-radius:999px;padding:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.modal .go .ok{background:#1f8a5c;color:#fff}.modal .go .no{background:#eee;color:#333}
+.empty{text-align:center;color:#8a978f;padding:40px 10px}
+kbd{background:#eef1ef;border-radius:5px;padding:1px 6px;font-size:.8rem}
+</style>
+</head><body data-page="crm">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>CRM — Pilotage</h1><span class="conn demo" id="conn">Mode aperçu</span>
+    </div>
+    <div class="content">
+      <div class="crmbar" id="tabs"></div>
+      <div class="toolrow">
+        <input class="search" id="search" placeholder="🔎 Rechercher (nom, ville, dirigeant…)">
+        <button class="btnadd" id="add">➕ Ajouter</button>
+        <button class="btncfg" id="cfg">⚙️ Connecter</button>
+      </div>
+      <div id="list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ov"><div class="modal" id="modal"></div></div>
+
+<script src="nav.js"></script>
+<script>
+/* ================= CONFIG ================= */
+var CFG={api:localStorage.getItem('crm_api')||'',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var TABS={
+ prospects:{table:'Prospects',label:'📞 Prospects',snap:'prospects',
+   cols:{nom:'nom',tel:'telephone',email:'email',dirigeant:'dirigeants',ville:'ville',
+     statut:'Statut prospection',interet:'Intérêt',appele:'Appelé',appelePar:'Appelé par',agent:'Agent',notes:'Notes prospect'},
+   statutOpts:['À appeler','À rappeler','RDV pris','Pas intéressé','Injoignable','Client signé'],
+   interetOpts:['🔥 Intéressé','🟡 À relancer','❄️ Pas intéressé','📵 Injoignable','❌ Faux numéro / hors cible'],
+   agentOpts:['Agente 1','Agente 2','Abdel','Souleyman']},
+ contrats:{table:'Contrats',label:'📁 Contrats',snap:'contrats',
+   cols:{apprenant:'Apprenant',entreprise:'Entreprise',statut:'Statut',financeur:'Financeur',montant:'Montant convention',note:'Blocage / note'},
+   statutOpts:['📝 À saisir','⏳ Envoyé entreprise','🟠 Corrections','⚠️ Bloqué','✅ Signé'],
+   financeurOpts:["OPCO Mobilités","AKTO","Op'Commerce","OPCO EP","ATLAS","POEI"]},
+ chauffeurs:{table:'Chauffeurs',label:'🚛 Chauffeurs',snap:'chauffeurs',
+   cols:{nom:'Nom',tel:'Téléphone',email:'Email',statut:'Statut',zone:'Zone',poste:'Type de poste',source:'Source',notes:'Notes'},
+   statutOpts:['🔍 En recrutement','🟢 Disponible','🚛 En poste','⏸ En attente','❌ Écarté'],
+   posteOpts:['Messagerie / dernier km','Régional','Longue distance','Affrètement'],
+   sourceOpts:['France Travail / POEI','Cooptation','Annonce','Communauté WhatsApp','Autre']},
+ taches:{table:'Taches',label:'✅ Tâches',snap:'taches',
+   cols:{tache:'Tâche',assigne:'Assigné à',statut:'Statut',priorite:'Priorité',dossier:'Dossier lié',notes:'Notes'},
+   assigneOpts:['Abdel','Souleyman','Agente 1','Agente 2','Amine','Non assigné'],
+   statutOpts:['🔴 À faire','🟠 En cours','⏸ En attente','✅ Fait'],
+   prioriteOpts:['🔥 Haute','🟠 Moyenne','🟡 Basse']}
+};
+var cur='prospects', SNAP=null, DATA={}, filter='';
+var $=function(s){return document.querySelector(s)};
+
+/* ============ connexion ============ */
+function setConn(){var c=$('#conn');if(LIVE){c.className='conn live';c.textContent='● Connecté (live)';}else{c.className='conn demo';c.textContent='Mode aperçu (lecture)';}}
+setConn();
+
+/* ============ helpers ============ */
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function waNum(t){if(!t)return'';var n=String(t).replace(/[^0-9+]/g,'');if(n.indexOf('+')===0)return n.slice(1);if(n.indexOf('00')===0)return n.slice(2);if(n[0]==='0')return '33'+n.slice(1);return n;}
+function today(){var d=new Date();return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2);}
+
+/* ============ chargement ============ */
+function loadSnap(){return fetch('crm_snapshot.json?cb='+Date.now()).then(function(r){return r.json()}).then(function(j){SNAP=j;});}
+function api(method,payload,q){
+  var url=CFG.api+(q||'');
+  var opt={method:method,headers:{'x-crm-key':CFG.key}};
+  if(payload){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(payload);}
+  return fetch(url,opt).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});
+}
+function fetchTab(tab){
+  var T=TABS[tab];
+  if(LIVE){
+    return api('GET',null,'?table='+T.table+'&max=800').then(function(j){
+      return (j.records||[]).map(function(r){var o={id:r.id};for(var k in T.cols){o[k]=r.fields[T.cols[k]];if(o[k]&&o[k].name)o[k]=o[k].name;}return o;});
+    });
+  }
+  return Promise.resolve((SNAP&&SNAP[T.snap])?SNAP[T.snap].slice():[]);
+}
+function refresh(){
+  var l=$('#list');l.innerHTML='<div class="empty">Chargement…</div>';
+  fetchTab(cur).then(function(rows){DATA[cur]=rows;render();}).catch(function(e){l.innerHTML='<div class="empty">Erreur: '+esc(e.message)+'</div>';});
+}
+
+/* ============ sauvegarde ============ */
+function save(id,fieldName,value,pill){
+  if(!LIVE){toast('⚠️ Connecte le CRM (⚙️) pour enregistrer en direct');return Promise.reject();}
+  var fields={};fields[fieldName]=value;
+  return api('PATCH',{table:TABS[cur].table,id:id,fields:fields}).then(function(){if(pill){pill.classList.add('show');setTimeout(function(){pill.classList.remove('show')},1500);}});
+}
+function createRow(table,fields){return api('POST',{table:table,fields:fields});}
+
+/* ============ rendu ============ */
+function opt(list,val){return list.map(function(o){return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>'}).join('');}
+function render(){
+  var T=TABS[cur],rows=(DATA[cur]||[]);
+  if(filter){var f=filter.toLowerCase();rows=rows.filter(function(r){return Object.keys(T.cols).some(function(k){return (r[k]!=null)&&String(r[k]).toLowerCase().indexOf(f)>-1;});});}
+  updateTabCounts();
+  var l=$('#list');
+  if(!rows.length){l.innerHTML='<div class="empty">Aucune ligne. Clique <b>➕ Ajouter</b> pour en créer une.</div>';return;}
+  l.innerHTML=rows.map(function(r){return card(r);}).join('');
+  bind();
+}
+function card(r){
+  if(cur==='prospects')return cardProspect(r);
+  if(cur==='contrats')return cardContrat(r);
+  if(cur==='chauffeurs')return cardChauffeur(r);
+  return cardTache(r);
+}
+function phoneActs(tel,email,nm){
+  var h='';var wn=waNum(tel);
+  if(tel){h+='<a class="ic tel" href="tel:'+esc(tel)+'" title="Appeler">📞</a>';
+    h+='<a class="ic wa" href="https://wa.me/'+wn+'" target="_blank" rel="noopener" title="WhatsApp">💬</a>';
+    h+='<a class="ic" href="sms:'+esc(tel)+'" title="SMS">✉️</a>';}
+  if(email)h+='<a class="ic" href="mailto:'+esc(email)+'" title="Email">📧</a>';
+  h+='<button class="ic ai" data-ai="'+esc(nm)+'|'+esc(tel)+'" title="Message IA">🤖</button>';
+  return h;
+}
+function cardProspect(r){var T=TABS.prospects;
+  return '<div class="card2" data-id="'+r.id+'"><div class="r1">'
+   +'<div><div class="nm">'+esc(r.nom||'—')+'</div><div class="sub">'+esc(r.dirigeant||'')+(r.ville?' · '+esc(r.ville):'')+(r.agent?' · <b>'+esc(r.agent)+'</b>':'')+'</div></div>'
+   +'<div class="acts">'+phoneActs(r.tel,r.email,r.nom)+'</div></div>'
+   +'<div class="r2">'
+   +'<label class="chk"><input type="checkbox" data-f="Appelé" '+(r.appele?'checked':'')+'> Appelé</label>'
+   +'<select data-f="Intérêt"><option value="">Intérêt…</option>'+opt(T.interetOpts,r.interet)+'</select>'
+   +'<select data-f="Statut prospection">'+opt(T.statutOpts,r.statut)+'</select>'
+   +'<select data-f="Appelé par"><option value="">Appelé par…</option>'+opt(T.agentOpts,r.appelePar)+'</select>'
+   +'<button class="ic" data-note="1" title="Commentaire">📝</button>'
+   +'<span class="savepill">enregistré ✓</span></div>'
+   +noteBox(r)+'</div>';
+}
+function cardContrat(r){var T=TABS.contrats;
+  return '<div class="card2" data-id="'+r.id+'"><div class="r1">'
+   +'<div><div class="nm">'+esc(r.apprenant||'—')+'</div><div class="sub">'+esc(r.entreprise||'')+(r.montant?' · <b>'+Number(r.montant).toLocaleString("fr-FR")+' €</b>':'')+'</div></div></div>'
+   +'<div class="r2">'
+   +'<select data-f="Statut">'+opt(T.statutOpts,r.statut)+'</select>'
+   +'<select data-f="Financeur"><option value="">Financeur…</option>'+opt(T.financeurOpts,r.financeur)+'</select>'
+   +'<button class="ic" data-note="1" title="Note">📝</button>'
+   +'<span class="savepill">enregistré ✓</span></div>'+noteBox(r,'note','Blocage / note')+'</div>';
+}
+function cardChauffeur(r){var T=TABS.chauffeurs;
+  return '<div class="card2" data-id="'+r.id+'"><div class="r1">'
+   +'<div><div class="nm">'+esc(r.nom||'—')+'</div><div class="sub">'+esc(r.zone||'')+(r.poste?' · '+esc(r.poste):'')+'</div></div>'
+   +'<div class="acts">'+phoneActs(r.tel,r.email,r.nom)+'</div></div>'
+   +'<div class="r2">'
+   +'<select data-f="Statut">'+opt(T.statutOpts,r.statut)+'</select>'
+   +'<select data-f="Type de poste"><option value="">Poste…</option>'+opt(T.posteOpts,r.poste)+'</select>'
+   +'<button class="ic" data-note="1" title="Note">📝</button>'
+   +'<span class="savepill">enregistré ✓</span></div>'+noteBox(r)+'</div>';
+}
+function cardTache(r){var T=TABS.taches;
+  return '<div class="card2" data-id="'+r.id+'"><div class="r1">'
+   +'<div><div class="nm">'+esc(r.tache||'—')+'</div><div class="sub">'+esc(r.dossier||'')+'</div></div></div>'
+   +'<div class="r2">'
+   +'<select data-f="Statut">'+opt(T.statutOpts,r.statut)+'</select>'
+   +'<select data-f="Assigné à"><option value="">Assigner…</option>'+opt(T.assigneOpts,r.assigne)+'</select>'
+   +'<select data-f="Priorité"><option value="">Priorité…</option>'+opt(T.prioriteOpts,r.priorite)+'</select>'
+   +'<button class="ic" data-note="1" title="Note">📝</button>'
+   +'<span class="savepill">enregistré ✓</span></div>'+noteBox(r)+'</div>';
+}
+function noteBox(r,key,field){key=key||'notes';field=field||(cur==='prospects'?'Notes prospect':'Notes');
+  var v=r[key]||'';
+  return '<div class="notebox" data-field="'+esc(field)+'"><div class="mini">Ajouter un commentaire (pendant l\'appel)</div>'
+   +'<textarea placeholder="Ce qui s\'est dit, prochaine action, date de rappel…"></textarea>'
+   +'<div style="margin-top:6px;display:flex;gap:8px"><button class="btnadd" data-savenote="1" style="padding:8px 14px">Enregistrer</button></div>'
+   +(v?'<div class="notehist">'+esc(v)+'</div>':'')+'</div>';
+}
+
+/* ============ interactions ============ */
+function bind(){
+  document.querySelectorAll('.card2').forEach(function(c){
+    var id=c.getAttribute('data-id');
+    c.querySelectorAll('select').forEach(function(s){s.addEventListener('change',function(){
+      save(id,s.getAttribute('data-f'),s.value,c.querySelector('.savepill'));
+    });});
+    c.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.addEventListener('change',function(){
+      save(id,cb.getAttribute('data-f'),cb.checked,c.querySelector('.savepill'));
+    });});
+    var nb=c.querySelector('[data-note]');if(nb)nb.addEventListener('click',function(){c.querySelector('.notebox').classList.toggle('on');});
+    var sn=c.querySelector('[data-savenote]');if(sn)sn.addEventListener('click',function(){
+      var box=c.querySelector('.notebox'),ta=box.querySelector('textarea'),field=box.getAttribute('data-field');
+      if(!ta.value.trim())return;
+      var hist=box.querySelector('.notehist'),old=hist?hist.textContent:'';
+      var val='['+today()+'] '+ta.value.trim()+(old?'\n'+old:'');
+      save(id,field,val,c.querySelector('.savepill')).then(function(){
+        if(!hist){hist=document.createElement('div');hist.className='notehist';box.appendChild(hist);}
+        hist.textContent=val;ta.value='';
+      }).catch(function(){});
+    });
+    var ai=c.querySelector('[data-ai]');if(ai)ai.addEventListener('click',function(){aiMsg(ai.getAttribute('data-ai'));});
+  });
+}
+function toast(m){var t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#11362b;color:#fff;padding:11px 18px;border-radius:12px;z-index:300;font-size:.9rem;box-shadow:0 12px 30px -10px rgba(0,0,0,.5)';document.body.appendChild(t);setTimeout(function(){t.remove()},2600);}
+
+/* ============ assistant message (IA-templates) ============ */
+function aiMsg(data){
+  var p=data.split('|'),nm=p[0]||'',tel=p[1]||'';var pren=nm.split(' ')[0];
+  var msgs=[
+   {t:'Prise de contact',x:'Bonjour, je vous contacte de la part de Paris Sud Formation (organisme habilité OPCO Mobilités). On accompagne les dirigeants du transport à piloter avec l\'IA — 100% financé, 0 € pour vous. Auriez-vous 2 minutes cette semaine pour un échange rapide ?'},
+   {t:'Relance douce',x:'Bonjour, je reviens vers vous suite à mon appel. Vous avez une enveloppe formation OPCO qui dort (~1 500 €) qu\'on peut débloquer en 2 semaines. On cale 30 min d\'audit gratuit avec Abdel ?'},
+   {t:'Confirmation RDV',x:'Bonjour, petit rappel de notre RDV audit IA (30 min, visio). Rien à préparer, on regarde ensemble vos droits OPCO et 2-3 usages concrets pour votre activité. À tout à l\'heure !'}
+  ];
+  var wn=waNum(tel);
+  var html='<h3>🤖 Message pour '+esc(nm||'ce contact')+'</h3><p class="mini">Choisis, édite si besoin, envoie.</p>';
+  msgs.forEach(function(m,i){
+    html+='<label>'+m.t+'</label><textarea id="m'+i+'" rows="4">'+esc(m.x)+'</textarea>'
+     +'<div style="display:flex;gap:8px;margin:6px 0 10px">'
+     +(wn?'<a class="btnadd" style="text-decoration:none;text-align:center;flex:1" target="_blank" rel="noopener" href="https://wa.me/'+wn+'?text=" data-wa="'+i+'">💬 WhatsApp</a>':'')
+     +'<button class="btncfg" data-copy="'+i+'" style="flex:1">Copier</button></div>';
+  });
+  openModal(html);
+  document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+    var t=document.getElementById('m'+b.getAttribute('data-copy')).value;navigator.clipboard.writeText(t);b.textContent='Copié ✓';});});
+  document.querySelectorAll('[data-wa]').forEach(function(a){a.addEventListener('click',function(e){
+    var t=document.getElementById('m'+a.getAttribute('data-wa')).value;a.href='https://wa.me/'+wn+'?text='+encodeURIComponent(t);});});
+}
+
+/* ============ ajouter ============ */
+function openAdd(){
+  var T=TABS[cur],fields;
+  if(cur==='prospects')fields=[['Entreprise','nom','text'],['Téléphone','telephone','text'],['Email','email','text'],['Dirigeant','dirigeants','text'],['Ville','ville','text'],['Canal d\'acquisition','Source base','select',['LinkedIn','WhatsApp','Cold mail','Téléphone','Site web','Salon / réseau','Recommandation']],['Notes','Notes prospect','area']];
+  else if(cur==='contrats')fields=[['Apprenant','Apprenant','text'],['Entreprise','Entreprise','text'],['Financeur','Financeur','select',T.financeurOpts],['Montant (€)','Montant convention','text'],['Statut','Statut','select',T.statutOpts],['Note','Blocage / note','area']];
+  else if(cur==='chauffeurs')fields=[['Nom','Nom','text'],['Téléphone','Téléphone','text'],['Email','Email','text'],['Zone','Zone','text'],['Poste','Type de poste','select',T.posteOpts],['Statut','Statut','select',T.statutOpts],['Source','Source','select',T.sourceOpts],['Notes','Notes','area']];
+  else fields=[['Tâche','Tâche','text'],['Assigné à','Assigné à','select',T.assigneOpts],['Priorité','Priorité','select',T.prioriteOpts],['Statut','Statut','select',T.statutOpts],['Dossier lié','Dossier lié','text'],['Notes','Notes','area']];
+  var h='<h3>➕ Ajouter — '+T.label.replace(/^[^ ]+ /,'')+'</h3>';
+  fields.forEach(function(f,i){
+    h+='<label>'+f[0]+'</label>';
+    if(f[2]==='select')h+='<select id="af'+i+'"><option value=""></option>'+opt(f[3],'')+'</select>';
+    else if(f[2]==='area')h+='<textarea id="af'+i+'" rows="2"></textarea>';
+    else h+='<input id="af'+i+'" type="text">';
+  });
+  h+='<div class="go"><button class="ok" id="addok">Créer la ligne</button><button class="no" id="addno">Annuler</button></div>';
+  openModal(h);
+  $('#addno').addEventListener('click',closeModal);
+  $('#addok').addEventListener('click',function(){
+    var payload={};fields.forEach(function(f,i){var v=document.getElementById('af'+i).value.trim();if(v)payload[f[1]]=v;});
+    if(cur==='contrats'&&payload['Montant convention'])payload['Montant convention']=Number(payload['Montant convention'].replace(/[^0-9.]/g,''))||undefined;
+    if(cur==='prospects'&&!payload['Statut prospection'])payload['Statut prospection']='À appeler';
+    if(!LIVE){toast('⚠️ Connecte le CRM (⚙️) pour créer en direct');return;}
+    $('#addok').textContent='Création…';
+    createRow(T.table,payload).then(function(){closeModal();refresh();toast('✅ Ligne ajoutée');}).catch(function(e){toast('Erreur: '+e.message);$('#addok').textContent='Créer la ligne';});
+  });
+}
+
+/* ============ config proxy ============ */
+function openCfg(){
+  var h='<h3>⚙️ Connecter le CRM à Airtable (live)</h3>'
+   +'<p class="mini" style="text-transform:none;font-size:.85rem;color:#5f6b62">Une fois le proxy déployé (voir README), colle son URL + la clé. Tout reste dans ton navigateur.</p>'
+   +'<label>URL du proxy</label><input id="cApi" type="text" placeholder="https://xxx.vercel.app/api/records" value="'+esc(CFG.api)+'">'
+   +'<label>Clé CRM (CRM_KEY)</label><input id="cKey" type="text" placeholder="votre mot de passe secret" value="'+esc(CFG.key)+'">'
+   +'<div class="go"><button class="ok" id="cSave">Enregistrer & connecter</button><button class="no" id="cNo">Fermer</button></div>'
+   +'<p class="mini" style="text-transform:none;font-size:.8rem;color:#8a978f;margin-top:8px">Pas encore de proxy ? Le CRM marche en <b>mode aperçu</b> (lecture). Guide : dossier <kbd>~/psf-crm-proxy</kbd>.</p>';
+  openModal(h);
+  $('#cNo').addEventListener('click',closeModal);
+  $('#cSave').addEventListener('click',function(){
+    CFG.api=$('#cApi').value.trim();CFG.key=$('#cKey').value.trim();
+    localStorage.setItem('crm_api',CFG.api);localStorage.setItem('crm_key',CFG.key);
+    LIVE=!!(CFG.api&&CFG.key);setConn();closeModal();refresh();toast(LIVE?'✅ Connecté en live':'Mode aperçu');
+  });
+}
+
+/* ============ modal ============ */
+function openModal(h){$('#modal').innerHTML=h;$('#ov').classList.add('on');}
+function closeModal(){$('#ov').classList.remove('on');}
+$('#ov').addEventListener('click',function(e){if(e.target===$('#ov'))closeModal();});
+
+/* ============ tabs ============ */
+function buildTabs(){$('#tabs').innerHTML=Object.keys(TABS).map(function(k){
+  return '<button class="crmtab'+(k===cur?' on':'')+'" data-t="'+k+'">'+TABS[k].label+' <span class="b" id="cnt-'+k+'">·</span></button>';
+}).join('');
+$('#tabs').querySelectorAll('.crmtab').forEach(function(b){b.addEventListener('click',function(){
+  cur=b.getAttribute('data-t');$('#search').value='';filter='';
+  $('#tabs').querySelectorAll('.crmtab').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+  if(DATA[cur])render();else refresh();
+});});}
+function updateTabCounts(){Object.keys(TABS).forEach(function(k){var el=document.getElementById('cnt-'+k);if(el&&DATA[k])el.textContent=DATA[k].length;});}
+
+/* ============ init ============ */
+$('#search').addEventListener('input',function(){filter=this.value;render();});
+$('#add').addEventListener('click',openAdd);
+$('#cfg').addEventListener('click',openCfg);
+buildTabs();
+loadSnap().then(refresh);
+</script>
+</body></html>
