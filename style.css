@@ -13,41 +13,37 @@
 html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-/* ===== LAYOUT type site (header haut, pas de sidebar) ===== */
-.app{display:block;min-height:100dvh}
-.scrim{display:none}
-.side{position:sticky;top:0;z-index:40;display:block;width:100%;height:auto;background:transparent;padding:0}
-/* barre utilitaire vert foncé */
-.utilbar{background:var(--dark);color:#bcd6c8}
-.utilbar .w{max-width:1100px;margin:0 auto;padding:7px 24px;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
-.utilbar .w a{color:#bcd6c8;margin-left:16px}.utilbar .w a:hover{color:#fff}
-.utilbar .gps{display:inline-flex;align-items:center;gap:.5rem;color:#8fb8a0}
-.utilbar .gps svg{width:16px;height:16px;flex:none}
-/* header blanc */
-.brandbar{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-.brandbar .w{max-width:1100px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:20px}
-.brand{display:flex;align-items:center;gap:.6rem;font-family:var(--serif);font-size:1.35rem;font-weight:700;color:var(--dark)}
-.brand .g{color:var(--primary);font-weight:600}
-.brand svg{width:30px;height:30px;flex:none}
-.brandbar .cta{margin-left:auto;display:inline-flex;align-items:center;gap:.5rem;background:var(--primary);color:#fff;font-weight:700;font-size:.86rem;padding:10px 18px;border-radius:999px;white-space:nowrap;box-shadow:0 10px 22px -12px rgba(31,138,92,.9)}
-.brandbar .cta:hover{background:var(--primary-d)}
-/* nav horizontale (onglets outils) */
-.topnav{background:rgba(245,241,234,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-.topnav .w{max-width:1100px;margin:0 auto;padding:9px 20px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}
-.topnav .w::-webkit-scrollbar{display:none}
-.nav{display:contents}
-.topnav a{white-space:nowrap;display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:600;color:var(--muted);padding:7px 13px;border-radius:999px;border:1px solid transparent;transition:.15s}
-.topnav a svg{width:15px;height:15px;stroke-width:2}
-.topnav a:hover{color:var(--dark);background:#fff;border-color:var(--border)}
-.topnav a.active{background:var(--primary);color:#fff}
-.side .foot{display:none}
-/* main + topbar (titre de page) */
-.main{display:block}
-.topbar{position:static;background:transparent;border:none;padding:22px 24px 0;display:flex;align-items:center;gap:14px;max-width:1100px;margin:0 auto}
-.topbar h1{font-size:1.9rem;font-weight:700;font-family:var(--serif);color:var(--dark);letter-spacing:-.01em}
-.topbar .tag{margin-left:auto;font-size:.72rem;color:var(--muted);background:var(--soft);border:1px solid var(--border);padding:5px 12px;border-radius:999px}
-.burger{display:none!important}
-.content{padding:18px 24px 40px;max-width:1100px;width:100%;margin:0 auto}
+/* ===== LAYOUT — sidebar gauche (CRM premium) ===== */
+.app{display:flex;min-height:100dvh}
+.side{width:258px;flex:none;position:sticky;top:0;height:100dvh;overflow-y:auto;display:flex;flex-direction:column;
+  background:linear-gradient(185deg,#11362b 0%,#12402f 55%,#0d2c22 100%);color:#cfe3d7;z-index:60;box-shadow:2px 0 24px -14px rgba(0,0,0,.5)}
+.side::-webkit-scrollbar{width:6px}.side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:3px}
+.sb-brand{display:flex;align-items:center;gap:.6rem;padding:20px 20px 12px;font-family:var(--serif);color:#fff}
+.sb-brand svg{width:38px;height:38px;flex:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+.sb-bt{display:flex;flex-direction:column;line-height:1.02;font-size:1.18rem;font-weight:700}
+.sb-bt b{color:var(--lime);font-weight:600;font-size:1.02rem}
+.sb-nav{flex:1;padding:4px 12px 12px}
+.sb-grp{font-size:.63rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:700;margin:15px 10px 5px}
+.sb-link{display:flex;align-items:center;gap:.7rem;padding:9px 12px;border-radius:11px;color:#bcd6c8;font-size:.9rem;font-weight:600;margin:2px 0;transition:.14s;position:relative}
+.sb-link svg{width:18px;height:18px;flex:none;stroke-width:2;opacity:.9}
+.sb-link:hover{background:rgba(255,255,255,.08);color:#fff}
+.sb-link.active{background:linear-gradient(90deg,rgba(140,198,63,.22),rgba(255,255,255,.05));color:#fff}
+.sb-link.active::before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:4px;border-radius:0 4px 4px 0;background:var(--lime)}
+.sb-foot{padding:12px 16px 18px;border-top:1px solid rgba(255,255,255,.1)}
+.sb-cta{display:flex;justify-content:center;gap:.4rem;background:var(--primary);color:#fff;font-weight:700;font-size:.86rem;padding:11px;border-radius:12px;box-shadow:0 10px 22px -12px rgba(0,0,0,.6);transition:.15s}
+.sb-cta:hover{background:var(--lime);color:#11362b}
+.sb-badge{margin:12px 0 8px;font-size:.78rem}
+.sb-legal{font-size:.66rem;color:rgba(255,255,255,.42);line-height:1.5}
+.opco-badge{display:inline-flex;align-items:center;gap:.45rem;font-weight:700}
+.scrim{display:none;position:fixed;inset:0;background:rgba(11,36,28,.5);z-index:55}
+/* main + topbar */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(245,241,234,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:15px 30px;display:flex;align-items:center;gap:14px}
+.topbar h1{font-size:1.5rem;font-weight:700;font-family:var(--serif);color:var(--dark);letter-spacing:-.01em}
+.topbar .tag{margin-left:auto;font-size:.72rem;color:var(--muted);background:#fff;border:1px solid var(--border);padding:5px 12px;border-radius:999px}
+.burger{display:none;width:38px;height:38px;border:1px solid var(--border);background:#fff;border-radius:10px;align-items:center;justify-content:center;cursor:pointer;flex:none;color:var(--dark)}
+.burger svg{width:20px;height:20px}
+.content{padding:24px 30px 48px;max-width:1180px;width:100%;margin:0 auto}
 /* bouton flottant WhatsApp */
 .fabwa{position:fixed;right:22px;bottom:22px;width:56px;height:56px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7);z-index:50;transition:transform .15s}
 .fabwa:hover{transform:scale(1.07)}.fabwa svg{width:30px;height:30px;fill:#fff}
@@ -135,7 +131,7 @@ textarea{min-height:64px;resize:vertical}
 .btn-g{background:#fff;border-color:var(--border);color:var(--fg)}.btn-g:hover{border-color:#bcd1c4}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}.actions .btn{flex:1;min-width:160px}
 /* status */
-.status{position:sticky;top:118px;z-index:10;border-radius:13px;padding:13px 16px;margin-bottom:16px;font-weight:700;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)}
+.status{position:sticky;top:70px;z-index:10;border-radius:13px;padding:13px 16px;margin-bottom:16px;font-weight:700;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)}
 .status small{display:block;font-weight:500;color:var(--muted);font-size:.8rem;margin-top:2px}
 .status.q{border-color:var(--primary);background:#e9f6ef;color:#125b3c}.status.q small{color:#156047}
 .status.no{border-color:var(--danger);background:#fcece8;color:#9b3322}.status.no small{color:#b3433a}
@@ -173,11 +169,16 @@ td{border:1px solid var(--border);padding:9px 11px;color:#33453d;vertical-align:
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .reveal{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
 @media(prefers-reduced-motion:reduce){.reveal,.tool{animation:none}}
+@media(max-width:900px){
+  .side{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .25s ease;box-shadow:8px 0 34px -8px rgba(0,0,0,.55)}
+  body.sb-open .side{transform:none}
+  body.sb-open .scrim{display:block}
+  .burger{display:inline-flex}
+  .status{top:74px}
+}
 @media(max-width:640px){
-  .utilbar .w .ulinks{display:none}
-  .brandbar .w{padding:10px 16px}.brand{font-size:1.15rem}
-  .topbar,.content{padding-left:16px;padding-right:16px}
-  .topbar h1{font-size:1.5rem}
+  .topbar{padding:12px 16px}.topbar h1{font-size:1.25rem}
+  .content{padding:18px 16px 44px}
   .status{top:8px}
   .launch{grid-template-columns:1fr}
 }
