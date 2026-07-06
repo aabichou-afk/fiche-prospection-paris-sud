@@ -71,7 +71,7 @@ kbd{background:#eef1ef;border-radius:5px;padding:1px 6px;font-size:.8rem}
 <script src="nav.js"></script>
 <script>
 /* ================= CONFIG ================= */
-var CFG={api:localStorage.getItem('crm_api')||'',key:localStorage.getItem('crm_key')||''};
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
 var LIVE=!!(CFG.api&&CFG.key);
 var TABS={
  prospects:{table:'Prospects',label:'📞 Prospects',snap:'prospects',
