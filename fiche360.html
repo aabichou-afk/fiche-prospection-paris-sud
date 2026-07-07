@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fiche 360° · Paris Sud — Vue client complète</title>
+<link rel="stylesheet" href="style.css">
+<script src="gate.js"></script>
+<style>
+.wrap{display:grid;grid-template-columns:290px 1fr;gap:16px}
+@media(max-width:860px){.wrap{grid-template-columns:1fr}}
+.lft{background:#fff;border:1px solid #e6ebe8;border-radius:16px;padding:13px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5);max-height:76vh;overflow-y:auto}
+.srch{width:100%;padding:11px 13px;border:1px solid #dbe6e0;border-radius:11px;font-size:.93rem;font-family:inherit;margin-bottom:9px}
+.ent{padding:10px 12px;border-radius:11px;cursor:pointer;transition:.12s;border:1px solid transparent}
+.ent:hover{background:#f2f8f4}
+.ent.on{background:#e9f6ef;border-color:#bfe3cd}
+.ent .n{font-weight:700;color:#11362b;font-size:.9rem}
+.ent .s{font-size:.74rem;color:#8a978f}
+.hero360{background:linear-gradient(135deg,#114c39,#0f5138);color:#fff;border-radius:18px;padding:20px 22px;margin-bottom:14px}
+.hero360 h2{color:#fff;margin:0 0 4px;font-size:1.5rem}
+.hero360 .m{font-size:.86rem;opacity:.9}
+.hero360 .acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.hero360 .acts a,.hero360 .acts button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:9px 16px;font-weight:700;font-size:.86rem;text-decoration:none;cursor:pointer;font-family:inherit}
+.hero360 .acts a:hover,.hero360 .acts button:hover{background:rgba(255,255,255,.24)}
+.sec360{background:#fff;border:1px solid #e6ebe8;border-radius:15px;padding:15px 17px;margin-bottom:12px;box-shadow:0 5px 15px -12px rgba(17,54,43,.45)}
+.sec360 h3{margin:0 0 9px;color:#11362b;font-size:1.02rem;display:flex;gap:.5rem;align-items:center}
+.sec360 h3 .n{background:#eaf3ee;color:#1f6f5c;border-radius:999px;padding:0 9px;font-size:.76rem;font-family:var(--font)}
+.li360{display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:10px;background:#f8faf9;margin-bottom:7px;font-size:.88rem}
+.li360 .t{font-weight:600;color:#11362b}.li360 .d{font-size:.76rem;color:#8a978f}
+.li360 .mt{margin-left:auto;font-weight:700;color:#1f8a5c;white-space:nowrap}
+.badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;background:#eef1ef;color:#4a5a52;white-space:nowrap}
+.notebox{white-space:pre-wrap;font-size:.85rem;color:#4a5a52;background:#f6f9f7;border-radius:10px;padding:11px 13px;max-height:220px;overflow:auto}
+.cmt{display:flex;gap:8px;margin-top:9px}
+.cmt textarea{flex:1;padding:10px 12px;border:1px solid #dbe6e0;border-radius:10px;font-family:inherit;font-size:.9rem;min-height:0;resize:vertical}
+.cmt button{background:#1f8a5c;color:#fff;border:none;border-radius:11px;padding:0 18px;font-weight:700;cursor:pointer;font-family:inherit}
+.empty{color:#8a978f;font-size:.85rem;padding:4px 2px}
+.conn{font-size:.78rem;padding:4px 11px;border-radius:999px;font-weight:700}.conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fdf3df;color:#9a7212}
+.hint360{text-align:center;color:#8a978f;padding:60px 20px}
+</style>
+</head><body data-page="fiche360">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Fiche 360°</h1><span class="conn demo" id="conn">Aperçu</span>
+    </div>
+    <div class="content">
+      <div class="wrap">
+        <div class="lft">
+          <input class="srch" id="srch" placeholder="🔎 Chercher une entreprise…">
+          <div id="entlist"></div>
+        </div>
+        <div id="view"><div class="hint360">👈 Choisissez une entreprise pour voir <b>tout son historique</b> : contact, qualification, contrats, factures, tâches, notes.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var $=function(s){return document.querySelector(s)};
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+(function(){var c=$('#conn');if(LIVE){c.className='conn live';c.textContent='● Live';}else{c.className='conn demo';c.textContent='Aperçu';}})();
+function apic(method,payload,q){var o={method:method,headers:{'x-crm-key':CFG.key}};if(payload){o.headers['Content-Type']='application/json';o.body=JSON.stringify(payload);}
+ return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+function nrm(v){return (v&&v.name)?v.name:v;}
+function waNum(t){if(!t)return'';var n=String(t).replace(/[^0-9+]/g,'');if(n.indexOf('+')===0)return n.slice(1);if(n.indexOf('00')===0)return n.slice(2);if(n[0]==='0')return '33'+n.slice(1);return n;}
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim();}
+function today(){var d=new Date();return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2);}
+
+var D=null,ENTS=[],cur=null;
+function loadAll(){
+ if(LIVE){
+  return Promise.all(['Prospects','Entreprises','Contrats','Factures','Taches'].map(function(t){return apic('GET',null,'?table='+t+'&max=900');}))
+  .then(function(rs){
+   return {
+    prospects:(rs[0].records||[]).map(function(r){var f=r.fields;return {id:r.id,nom:f['nom'],tel:f['telephone'],email:f['email'],dirigeant:f['dirigeants'],ville:f['ville'],statut:nrm(f['Statut prospection']),interet:nrm(f['Intérêt']),appelePar:nrm(f['Appelé par']),notes:f['Notes prospect']};}),
+    entreprises:(rs[1].records||[]).map(function(r){var f=r.fields;return {id:r.id,nom:f['Raison Sociale'],tel:f['Portable entreprise'],email:f['Email entreprise'],ville:f['Ville'],statut:nrm(f['Statut qualification']),source:nrm(f['Source du lead']),interet:nrm(f["Niveau d'intérêt"]),notes:f['Notes agent']};}),
+    contrats:(rs[2].records||[]).map(function(r){var f=r.fields;return {id:r.id,apprenant:f['Apprenant'],entreprise:f['Entreprise'],statut:nrm(f['Statut']),financeur:nrm(f['Financeur']),montant:f['Montant convention'],note:f['Blocage / note']};}),
+    factures:(rs[3].records||[]).map(function(r){var f=r.fields;return {id:r.id,lib:f['Libellé'],fin:nrm(f['Client / financeur']),dossier:f['Dossier lié'],montant:f['Montant'],statut:nrm(f['Statut'])};}),
+    taches:(rs[4].records||[]).map(function(r){var f=r.fields;return {id:r.id,tache:f['Tâche'],assigne:nrm(f['Assigné à']),statut:nrm(f['Statut']),priorite:nrm(f['Priorité']),dossier:f['Dossier lié']};})
+   };
+  });
+ }
+ return fetch('crm_snapshot.json?cb='+Date.now()).then(function(r){return r.json()}).then(function(j){
+  return {prospects:j.prospects||[],entreprises:j.entreprises||[],contrats:j.contrats||[],factures:j.factures||[],taches:j.taches||[]};});
+}
+function buildIndex(){
+ var map={};
+ function add(nom,src,rec){var k=norm(nom);if(!k)return;if(!map[k])map[k]={nom:nom,srcs:{}};map[k].srcs[src]=rec;}
+ (D.entreprises||[]).forEach(function(r){add(r.nom,'entreprise',r);});
+ (D.prospects||[]).forEach(function(r){add(r.nom,'prospect',r);});
+ (D.contrats||[]).forEach(function(r){if(r.entreprise)add(r.entreprise,'contratEnt',r);});
+ ENTS=Object.keys(map).map(function(k){var e=map[k];e.key=k;
+  var base=e.srcs.entreprise||e.srcs.prospect||{};
+  e.tel=base.tel;e.email=base.email;e.ville=base.ville;e.dirigeant=base.dirigeant;
+  e.tag=e.srcs.entreprise?'Lead qualifié':(e.srcs.prospect?'Prospect':'Client (contrat)');
+  return e;}).sort(function(a,b){
+   var pa=a.srcs.contratEnt?0:(a.srcs.entreprise?1:2),pb=b.srcs.contratEnt?0:(b.srcs.entreprise?1:2);
+   return pa-pb||a.nom.localeCompare(b.nom);});
+}
+function renderList(f){
+ f=norm(f);
+ var rows=ENTS.filter(function(e){return !f||e.key.indexOf(f)>-1}).slice(0,80);
+ $('#entlist').innerHTML=rows.map(function(e){
+  return '<div class="ent'+(cur&&cur.key===e.key?' on':'')+'" data-k="'+esc(e.key)+'"><div class="n">'+esc(e.nom)+'</div><div class="s">'+esc(e.tag)+(e.ville?' · '+esc(e.ville):'')+'</div></div>';
+ }).join('')||'<div class="empty">Aucun résultat.</div>';
+ document.querySelectorAll('.ent').forEach(function(el){el.addEventListener('click',function(){
+  cur=ENTS.filter(function(e){return e.key===el.getAttribute('data-k')})[0];renderList($('#srch').value);render360();});});
+}
+function match(hay){var h=norm(hay);if(!h||!cur)return false;
+ var k=cur.key;var kw=k.split(' ').filter(function(w){return w.length>3});
+ if(h.indexOf(k)>-1)return true;
+ return kw.length&&kw.every(function(w){return h.indexOf(w)>-1});}
+function render360(){
+ if(!cur)return;
+ var e=cur;
+ var cts=(D.contrats||[]).filter(function(c){return match(c.entreprise)});
+ var fxs=(D.factures||[]).filter(function(f){return match(f.dossier)||match(f.lib)});
+ var tks=(D.taches||[]).filter(function(t){return match(t.dossier)||match(t.tache)});
+ var wn=waNum(e.tel);
+ var pr=e.srcs.prospect,en=e.srcs.entreprise;
+ var statutLine=[];
+ if(en&&en.statut)statutLine.push('Qualification : '+en.statut);
+ if(pr&&pr.statut)statutLine.push('Prospection : '+pr.statut);
+ if((en&&en.interet)||(pr&&pr.interet))statutLine.push('Intérêt : '+((en&&en.interet)||(pr&&pr.interet)));
+ var h='<div class="hero360"><h2>'+esc(e.nom)+'</h2><div class="m">'
+  +(e.dirigeant?esc(e.dirigeant)+' · ':'')+(e.ville?esc(e.ville)+' · ':'')+esc(e.tag)
+  +(statutLine.length?'<br>'+esc(statutLine.join(' · ')):'')+'</div>'
+  +'<div class="acts">'
+  +(e.tel?'<a href="tel:'+esc(e.tel)+'">📞 Appeler</a><a href="https://wa.me/'+wn+'" target="_blank" rel="noopener">💬 WhatsApp</a>':'')
+  +(e.email?'<a href="mailto:'+esc(e.email)+'">📧 Email</a>':'')
+  +'<a href="qualification.html">📋 Fiche qualif</a>'
+  +'</div></div>';
+ // Contrats
+ h+='<div class="sec360"><h3>📁 Contrats <span class="n">'+cts.length+'</span></h3>'+(cts.length?cts.map(function(c){
+  return '<div class="li360"><span><span class="t">'+esc(c.apprenant||'—')+'</span><br><span class="d">'+esc(c.financeur||'')+'</span></span><span class="badge">'+esc(c.statut||'')+'</span>'+(c.montant?'<span class="mt">'+Number(c.montant).toLocaleString('fr-FR')+' €</span>':'')+'</div>';
+ }).join(''):'<div class="empty">Aucun contrat — <a href="crm.html" style="color:var(--primary);font-weight:700">en créer un dans le CRM</a>.</div>')+'</div>';
+ // Factures
+ h+='<div class="sec360"><h3>💶 Factures <span class="n">'+fxs.length+'</span></h3>'+(fxs.length?fxs.map(function(f){
+  return '<div class="li360"><span><span class="t">'+esc(f.lib||'—')+'</span><br><span class="d">'+esc(f.fin||'')+'</span></span><span class="badge">'+esc(f.statut||'')+'</span><span class="mt">'+Number(f.montant||0).toLocaleString('fr-FR')+' €</span></div>';
+ }).join(''):'<div class="empty">Aucune facture liée.</div>')+'</div>';
+ // Tâches
+ h+='<div class="sec360"><h3>✅ Tâches <span class="n">'+tks.length+'</span></h3>'+(tks.length?tks.map(function(t){
+  return '<div class="li360"><span><span class="t">'+esc(t.tache)+'</span><br><span class="d">'+esc(t.assigne||'')+'</span></span><span class="badge">'+esc(t.statut||'')+'</span></div>';
+ }).join(''):'<div class="empty">Aucune tâche liée.</div>')+'</div>';
+ // Notes + commentaire
+ var notes=(en&&en.notes)||(pr&&pr.notes)||'';
+ h+='<div class="sec360"><h3>💬 Notes & historique</h3>'+(notes?'<div class="notebox">'+esc(notes)+'</div>':'<div class="empty">Pas encore de note.</div>')
+  +'<div class="cmt"><textarea id="c360" rows="2" placeholder="Ajouter un commentaire (pendant l\'appel)…"></textarea><button id="c360go">➕</button></div></div>';
+ $('#view').innerHTML=h;
+ $('#c360go').addEventListener('click',function(){
+  var v=$('#c360').value.trim();if(!v)return;
+  if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');return;}
+  var target=en?{table:'Entreprises',id:en.id,field:'Notes agent',rec:en}:(pr?{table:'Prospects',id:pr.id,field:'Notes prospect',rec:pr}:null);
+  if(!target){alert('Cette entreprise n\'a pas de fiche prospect/lead — ajoutez-la dans le CRM d\'abord.');return;}
+  var nv='['+today()+'] '+v+(target.rec.notes?'\n'+target.rec.notes:'');
+  var fields={};fields[target.field]=nv;
+  apic('PATCH',{table:target.table,id:target.id,fields:fields}).then(function(){target.rec.notes=nv;render360();});
+ });
+}
+$('#srch').addEventListener('input',function(){renderList(this.value);});
+loadAll().then(function(d){D=d;buildIndex();renderList('');}).catch(function(e){$('#view').innerHTML='<div class="hint360">Erreur : '+esc(e.message)+'</div>';});
+</script>
+</body></html>
