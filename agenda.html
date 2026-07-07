@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agenda · Paris Sud — Échéancier</title>
+<link rel="stylesheet" href="style.css">
+<script src="gate.js"></script>
+<style>
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:2px 0 16px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
+.kpi .v{font-family:var(--serif);font-size:1.7rem;font-weight:700;color:var(--primary);line-height:1}
+.kpi .l{font-size:.76rem;color:var(--muted);margin-top:3px}
+.sec{margin-bottom:6px}
+.sec h2{display:flex;align-items:center;gap:.5rem}
+.sec h2 .n{background:#eaf3ee;color:#1f6f5c;border-radius:999px;padding:1px 10px;font-size:.8rem;font-family:var(--font)}
+.it{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #e6ebe8;border-left:4px solid #dbe6e0;border-radius:13px;padding:12px 15px;margin-bottom:9px;box-shadow:0 5px 15px -12px rgba(17,54,43,.45)}
+.it.late{border-left-color:#d1543a}.it.today{border-left-color:#c9a24a}.it.rappel{border-left-color:#18BFFF}.it.contrat{border-left-color:#1f8a5c}
+.it .em{font-size:1.15rem;flex:none}
+.it .t{font-weight:700;color:#11362b;font-size:.93rem}
+.it .d{font-size:.78rem;color:#8a978f}
+.it .who{margin-left:auto;display:flex;gap:8px;align-items:center;flex:none}
+.badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;background:#eef1ef;color:#4a5a52;white-space:nowrap}
+.badge.late{background:#fde8e3;color:#c0432a}.badge.today{background:#fdf3df;color:#9a7212}
+.done{width:34px;height:34px;border-radius:10px;border:1px solid #dbe6e0;background:#fff;cursor:pointer;font-size:1rem;display:grid;place-items:center}
+.done:hover{border-color:#1f8a5c;background:#eef7f2}
+.empty{color:#8a978f;font-size:.88rem;padding:6px 4px 14px}
+.conn{font-size:.78rem;padding:4px 11px;border-radius:999px;font-weight:700}.conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fdf3df;color:#9a7212}
+</style>
+</head><body data-page="agenda">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Agenda — Échéancier</h1><span class="conn demo" id="conn">Aperçu</span>
+    </div>
+    <div class="content">
+      <div class="kpis" id="kpis"></div>
+      <div id="out"><div class="empty">Chargement…</div></div>
+      <div class="callout c-info">📅 Cet échéancier agrège tout ce qui est daté ou urgent : <b>tâches</b> (échéance), <b>prospects à rappeler</b>, <b>dossiers bloqués</b>. Cochez ✓ pour marquer une tâche faite. Le calendrier des RDV reste dans <a href="https://calendar.google.com" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">Google Agenda</a> / <a href="https://calendly.com/paris-sud/com" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">Calendly</a>.</div>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var $=function(s){return document.querySelector(s)};
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+(function(){var c=$('#conn');if(LIVE){c.className='conn live';c.textContent='● Live';}else{c.className='conn demo';c.textContent='Aperçu';}})();
+function apic(method,payload,q){var o={method:method,headers:{'x-crm-key':CFG.key}};if(payload){o.headers['Content-Type']='application/json';o.body=JSON.stringify(payload);}
+ return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+function nrm(v){return (v&&v.name)?v.name:v;}
+
+function loadAll(){
+ if(LIVE){
+  return Promise.all([
+   apic('GET',null,'?table=Taches&max=300'),
+   apic('GET',null,'?table=Prospects&max=900'),
+   apic('GET',null,'?table=Contrats&max=200')
+  ]).then(function(rs){
+   var taches=(rs[0].records||[]).map(function(r){var f=r.fields;return {id:r.id,tache:f['Tâche'],assigne:nrm(f['Assigné à']),statut:nrm(f['Statut']),priorite:nrm(f['Priorité']),dossier:f['Dossier lié'],echeance:f['Échéance']};});
+   var pros=(rs[1].records||[]).map(function(r){var f=r.fields;return {id:r.id,nom:f['nom'],tel:f['telephone'],statut:nrm(f['Statut prospection']),date:f['Date dernier contact'],appelePar:nrm(f['Appelé par'])};});
+   var cts=(rs[2].records||[]).map(function(r){var f=r.fields;return {id:r.id,apprenant:f['Apprenant'],entreprise:f['Entreprise'],statut:nrm(f['Statut']),note:f['Blocage / note']};});
+   return {taches:taches,prospects:pros,contrats:cts};
+  });
+ }
+ return fetch('crm_snapshot.json?cb='+Date.now()).then(function(r){return r.json()}).then(function(j){
+  return {taches:j.taches||[],prospects:j.prospects||[],contrats:j.contrats||[]};});
+}
+function dstr(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+function frdate(s){if(!s)return '';var p=s.split('-');return p.length===3?(p[2]+'/'+p[1]):s;}
+
+var DATA=null;
+function render(){
+ var now=new Date(),today=dstr(now);
+ var in7=new Date(now.getTime()+7*864e5),week=dstr(in7);
+ var buckets={late:[],today:[],week:[],later:[],nodate:[]};
+
+ (DATA.taches||[]).forEach(function(t){
+  if(t.statut==='✅ Fait')return;
+  var item={type:'tache',em:'✅',id:t.id,title:t.tache,sub:(t.dossier||'')+(t.assigne?' · '+t.assigne:''),date:t.echeance||'',prio:t.priorite};
+  if(!t.echeance){ if(t.priorite==='🔥 Haute')buckets.today.push(item); else buckets.nodate.push(item); return; }
+  if(t.echeance<today)buckets.late.push(item);
+  else if(t.echeance===today)buckets.today.push(item);
+  else if(t.echeance<=week)buckets.week.push(item);
+  else buckets.later.push(item);
+ });
+ (DATA.prospects||[]).forEach(function(p){
+  if(p.statut!=='À rappeler')return;
+  var item={type:'rappel',em:'📞',id:p.id,title:'Rappeler '+(p.nom||''),sub:(p.tel||'')+(p.appelePar?' · vu par '+p.appelePar:''),date:p.date||'',tel:p.tel};
+  if(p.date&&p.date<today)buckets.late.push(item); else buckets.today.push(item);
+ });
+ (DATA.contrats||[]).forEach(function(c){
+  if(c.statut!=='⚠️ Bloqué'&&c.statut!=='🟠 Corrections')return;
+  buckets.late.push({type:'contrat',em:'📁',id:c.id,title:(c.statut==='⚠️ Bloqué'?'Débloquer ':'Corriger ')+(c.apprenant||''),sub:(c.entreprise||'')+(c.note?' · '+String(c.note).split('\n')[0].slice(0,70):''),date:''});
+ });
+
+ $('#kpis').innerHTML=kpi(buckets.late.length,'🔴 En retard')+kpi(buckets.today.length,'📅 Aujourd\'hui')+kpi(buckets.week.length,'Cette semaine')+kpi(buckets.nodate.length+buckets.later.length,'À planifier');
+ var SEC=[['🔴 En retard / bloqué','late'],['📅 Aujourd\'hui & prioritaire','today'],['🗓 Cette semaine','week'],['⏭ Plus tard','later'],['📥 Sans date','nodate']];
+ $('#out').innerHTML=SEC.map(function(s){
+  var rows=buckets[s[1]];
+  return '<div class="sec"><h2>'+s[0]+' <span class="n">'+rows.length+'</span></h2>'+(rows.length?rows.map(function(it){
+   var cls=it.type==='rappel'?'rappel':(it.type==='contrat'?'contrat':(s[1]==='late'?'late':(s[1]==='today'?'today':'')));
+   var badge=it.date?'<span class="badge '+(s[1]==='late'?'late':(s[1]==='today'?'today':''))+'">'+frdate(it.date)+'</span>':(it.prio?'<span class="badge">'+esc(it.prio)+'</span>':'');
+   var act='';
+   if(it.type==='tache')act='<button class="done" title="Marquer fait" data-done="'+it.id+'">✓</button>';
+   if(it.type==='rappel'&&it.tel)act='<a class="done" title="Appeler" href="tel:'+esc(it.tel)+'">📞</a>';
+   if(it.type==='contrat')act='<a class="done" title="Voir le pipeline" href="financement.html">→</a>';
+   return '<div class="it '+cls+'"><span class="em">'+it.em+'</span><span><span class="t">'+esc(it.title)+'</span><br><span class="d">'+esc(it.sub)+'</span></span><span class="who">'+badge+act+'</span></div>';
+  }).join(''):'<div class="empty">Rien ici 🎉</div>')+'</div>';
+ }).join('');
+ document.querySelectorAll('[data-done]').forEach(function(b){b.addEventListener('click',function(){
+  if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');return;}
+  b.textContent='…';
+  apic('PATCH',{table:'Taches',id:b.getAttribute('data-done'),fields:{'Statut':'✅ Fait'}}).then(function(){
+   var t=(DATA.taches||[]).filter(function(x){return x.id===b.getAttribute('data-done')})[0];if(t)t.statut='✅ Fait';render();
+  }).catch(function(e){alert('Erreur: '+e.message);b.textContent='✓';});
+ });});
+}
+function kpi(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
+loadAll().then(function(d){DATA=d;render();}).catch(function(e){$('#out').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>';});
+</script>
+</body></html>
