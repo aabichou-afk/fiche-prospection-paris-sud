@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Documents · Paris Sud — GED</title>
+<link rel="stylesheet" href="style.css">
+<script src="gate.js"></script>
+<style>
+.idcard{background:linear-gradient(135deg,#114c39,#0f5138);color:#fff;border-radius:18px;padding:20px 22px;margin-bottom:18px;box-shadow:0 14px 34px -20px rgba(17,54,43,.7)}
+.idcard h3{color:#fff;margin:0 0 10px;font-family:var(--serif);font-size:1.25rem}
+.idrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px}
+.idit{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:11px;padding:9px 13px;cursor:pointer;transition:.13s}
+.idit:hover{background:rgba(255,255,255,.18)}
+.idit .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;opacity:.75}
+.idit .v{font-weight:700;font-size:.92rem;word-break:break-all}
+.idit .c{font-size:.68rem;opacity:.6}
+.dsearch{width:100%;padding:12px 15px;border:1px solid #dbe6e0;border-radius:12px;font-size:.98rem;font-family:inherit;margin-bottom:14px}
+.dgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.ditem{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #e6ebe8;border-radius:14px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.4);transition:.14s;text-decoration:none}
+.ditem:hover{transform:translateY(-2px);border-color:#1f8a5c;box-shadow:0 14px 28px -18px rgba(31,138,92,.5)}
+.ditem .em{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:1.25rem;background:#eaf3ee;flex:none}
+.ditem .t{font-weight:700;color:#11362b;font-size:.9rem}
+.ditem .d{font-size:.75rem;color:#8a978f}
+</style>
+</head><body data-page="documents">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Documents & modèles</h1><span class="tag">Tout au même endroit</span>
+    </div>
+    <div class="content">
+
+      <div class="idcard">
+        <h3>🪪 Identité de l'organisme — cliquez pour copier</h3>
+        <div class="idrow" id="idrow"></div>
+      </div>
+
+      <input class="dsearch" id="dsearch" placeholder="🔎 Chercher un document, un formulaire, une plateforme…">
+      <div id="docs"></div>
+
+      <div class="callout c-warn" style="margin-top:18px"><b>Règle GED :</b> tout document envoyé à un prospect/une entreprise part de cette page (dernière version). Si un doc manque ici → le signaler à Abdel (tâche dans le CRM).</div>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+<script>
+var $=function(s){return document.querySelector(s)};
+/* identité copiable */
+var IDS=[
+ ['Organisme','Paris Sud Formation'],
+ ['N° DA (déclaration d\'activité)','11911094991'],
+ ['Titre','RNCP 38575 — Responsable PME (niv. 5)'],
+ ['UAI','0912524Z'],
+ ['Certification','Qualiopi'],
+ ['Email officiel','formation@paris-sud.com'],
+ ['Site','https://paris-sud.com'],
+ ['Calendly audit','https://calendly.com/paris-sud/com']
+];
+$('#idrow').innerHTML=IDS.map(function(x,i){return '<div class="idit" data-i="'+i+'"><div class="k">'+x[0]+'</div><div class="v">'+x[1]+'</div><div class="c">copier ⧉</div></div>';}).join('');
+document.querySelectorAll('.idit').forEach(function(el){el.addEventListener('click',function(){
+ var v=IDS[+el.getAttribute('data-i')][1];navigator.clipboard.writeText(v).then(function(){el.querySelector('.c').textContent='copié ✓';setTimeout(function(){el.querySelector('.c').textContent='copier ⧉';},1200);});});});
+
+/* bibliothèque */
+var LIB=[
+ ['📋 Formulaires (à remplir en appel / adhésion)',[
+  ['📞','Fiche de qualification','Pendant l\'appel — part dans Airtable','qualification.html'],
+  ['🧠','Audit IA (questionnaire)','Score + reco en direct','audit.html'],
+  ['🏢','Adhésion — Entreprise','Infos pour convention + CERFA','https://airtable.com/appaAZXNf5RFf89WV/pagliROW5NttiqP9c/form'],
+  ['👤','Adhésion — Salarié','Infos du salarié formé (RPMS)','https://airtable.com/appv3OIuP1STIpVgz/pagaIdjkbRKz9ztJK/form']]],
+ ['📕 Guides internes (dernière version)',[
+  ['📕','Bible commerciale (PDF)','Approche · questions · objections · closing','Bible_Commerciale.pdf'],
+  ['🗣️','Scripts & pitch','Parcours d\'appel interactif','scripts.html'],
+  ['🛡️','Mur d\'objections','14 objections + réponses','playbook.html'],
+  ['🎓','Formation agent (onboarding)','De zéro à opérationnelle','formation.html'],
+  ['⚙️','SOP — autres missions','Réseaux · mailing · WhatsApp · relances','sop.html'],
+  ['📣','Banque de contenu','Posts · mails · stories prêts','contenu.html']]],
+ ['🏛 Officiel & réglementaire',[
+  ['📄','CERFA apprentissage (FA13)','Formulaire officiel du contrat','https://www.service-public.fr/particuliers/vosdroits/R1319'],
+  ['🎓','Fiche RNCP 38575','France Compétences — le titre officiel','https://www.francecompetences.fr/recherche/rncp/38575/'],
+  ['🏛','Précis de l\'apprentissage','Références légales (ministère)','https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage'],
+  ['✅','Aide compte OPCO (pas-à-pas)','Guide interne étape par étape','opco.html']]],
+ ['🔗 Plateformes du circuit',[
+  ['🖥️','YPAREO Neo','Saisie contrats + CERFA','https://paris-sud.ypareo-neo.com'],
+  ['🏦','Espace OPCO Mobilités','Dépôt & suivi prise en charge','https://mgestion.opcomobilites.fr'],
+  ['🆕','Créer un compte OPCO','Lien direct d\'inscription entreprise','https://sso.opcomobilites.fr/sign-up?redirect=https://mgestion.opcomobilites.fr/login-check'],
+  ['✍️','jesignexpert','Signature électronique','https://www.jesignexpert.com'],
+  ['🗂️','EDOF','Compte Formation OF','https://www.of.moncompteformation.gouv.fr'],
+  ['📊','BPF','Bilan pédagogique & financier','https://www.bpf.emploi.gouv.fr']]]
+];
+function render(f){
+ f=(f||'').toLowerCase();
+ $('#docs').innerHTML=LIB.map(function(g){
+  var items=g[1].filter(function(it){return !f||it[1].toLowerCase().indexOf(f)>-1||it[2].toLowerCase().indexOf(f)>-1;});
+  if(!items.length)return '';
+  return '<h2 class="grp-title">'+g[0]+'</h2><div class="dgrid">'+items.map(function(it){
+   var ext=it[3].indexOf('http')===0;
+   return '<a class="ditem" href="'+it[3]+'"'+(ext||it[3].indexOf('.pdf')>-1?' target="_blank" rel="noopener"':'')+'><span class="em">'+it[0]+'</span><span><span class="t">'+it[1]+(ext?' ↗':'')+'</span><br><span class="d">'+it[2]+'</span></span></a>';
+  }).join('')+'</div>';
+ }).join('')||'<p style="color:#8a978f;text-align:center;padding:24px">Aucun résultat.</p>';
+}
+render();
+$('#dsearch').addEventListener('input',function(){render(this.value);});
+</script>
+</body></html>

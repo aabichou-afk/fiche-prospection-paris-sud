@@ -14,6 +14,8 @@
     tag:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0l-7-7A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
     flow:'<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><path d="M9 6h6a2 2 0 0 1 2 2v7"/>',
     opco:'<path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/>',
+    euro:'<path d="M17.5 5.5a7 7 0 1 0 0 13"/><path d="M3 10h9M3 14h9"/>',
+    doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/>',
     mega:'<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8a4 4 0 0 1 0 8"/>',
     sop:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.2V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.2-2.7H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.2 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>'
   };
@@ -22,7 +24,9 @@
 
   var META={
     accueil:['Accueil','index.html',I.home], pilotage:['Pilotage','pilotage.html',I.rocket],
-    crm:['CRM','crm.html',I.crm], contrats:['Contrats','contrats.html',I.folder], journee:['Ma journée','journee.html',I.day],
+    crm:['CRM','crm.html',I.crm], contrats:['Contrats','contrats.html',I.folder],
+    financement:['Financement','financement.html',I.euro], documents:['Documents','documents.html',I.doc],
+    journee:['Ma journée','journee.html',I.day],
     qualif:['Qualification','qualification.html',I.phone], audit:['Audit IA','audit.html',I.audit],
     scripts:['Scripts & Pitch','scripts.html',I.script], playbook:['Objections','playbook.html',I.book],
     formation:['Formation','formation.html',I.grad], offres:['Offres','offres.html',I.tag],
@@ -30,10 +34,10 @@
     contenu:['Contenu','contenu.html',I.mega], sop:['SOP','sop.html',I.sop]
   };
   var GROUPS=[
-    ['Pilotage',['accueil','pilotage','crm','contrats','journee']],
+    ['Pilotage',['accueil','pilotage','crm','contrats','financement','journee']],
     ['Vente',['qualif','audit','scripts','playbook']],
     ['Formation & offre',['formation','offres','process','opco']],
-    ['Contenu',['contenu','sop']]
+    ['Contenu',['contenu','sop','documents']]
   ];
   var page=document.body.getAttribute('data-page')||'';
   var navHtml=GROUPS.map(function(g){

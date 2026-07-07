@@ -105,6 +105,12 @@ var TABS={
    interetOpts:['🔥 Intéressé','🟡 À relancer','❄️ Pas intéressé','📵 Injoignable','❌ Faux numéro / hors cible'],
    agentOpts:['Agente 1','Agente 2','Abdel','Souleyman'],
    kanban:'statut'},
+ entreprises:{table:'Entreprises',label:'🏢 Leads',snap:'entreprises',view:'list',
+   cols:{nom:'Raison Sociale',tel:'Portable entreprise',email:'Email entreprise',ville:'Ville',statut:'Statut qualification',source:'Source du lead',interet:"Niveau d'intérêt",notes:'Notes agent'},
+   statutOpts:['RDV qualifié','À rappeler','Pas intéressé','Non éligible'],
+   interetOpts:['🔥 Chaud','🟡 Tiède','❄️ Froid'],
+   sourceOpts:["Centre d'appel (CallTech)",'LinkedIn','WhatsApp','Cold mail','Site web','Salon / réseau','Recommandation'],
+   kanban:'statut'},
  contrats:{table:'Contrats',label:'📁 Contrats',snap:'contrats',view:'list',
    cols:{apprenant:'Apprenant',entreprise:'Entreprise',statut:'Statut',financeur:'Financeur',montant:'Montant convention',note:'Blocage / note'},
    statutOpts:['📝 À saisir','⏳ Envoyé entreprise','🟠 Corrections','⚠️ Bloqué','✅ Signé'],
@@ -143,10 +149,11 @@ function toast(m){var t=document.createElement('div');t.className='drto';t.textC
 /* ============ filtres/tri ============ */
 var CHIPS={
  prospects:[['','Tous'],['me','Mes fiches'],['À appeler','À appeler'],['À rappeler','À rappeler'],['non','Non appelés'],['🔥','🔥 Intéressés'],['RDV pris','RDV pris']],
+ entreprises:[['','Tous'],['RDV qualifié','RDV qualifiés'],['À rappeler','À rappeler'],['🔥','🔥 Chauds']],
  contrats:[['','Tous'],['⚠️ Bloqué','🔴 Bloqués'],['✅ Signé','Signés'],['📝 À saisir','À saisir']],
  taches:[['','Toutes'],['me','Les miennes'],['🔴 À faire','À faire'],['🟠 En cours','En cours'],['🔥 Haute','Prioritaires'],['✅ Fait','Faites']]
 };
-var SORTS={prospects:['Nom A-Z','Ville','Statut'],contrats:['Apprenant','Montant ↓','Statut'],taches:['Priorité','Statut','Assigné']};
+var SORTS={prospects:['Nom A-Z','Ville','Statut'],entreprises:['Nom A-Z','Ville','Statut'],contrats:['Apprenant','Montant ↓','Statut'],taches:['Priorité','Statut','Assigné']};
 function applyFilterSort(rows){var T=TABS[cur];
   if(chip){rows=rows.filter(function(r){
     if(chip==='me')return (r.appelePar===ME||r.agent===ME||r.assigne===ME);
@@ -167,6 +174,8 @@ function applyFilterSort(rows){var T=TABS[cur];
 function computeKpis(){var rows=DATA[cur]||[],h='';
   if(cur==='prospects'){var ap=rows.filter(function(r){return r.appele}).length,it=rows.filter(function(r){return (r.interet||'').indexOf('🔥')>-1}).length,rd=rows.filter(function(r){return r.statut==='RDV pris'}).length,rap=rows.filter(function(r){return r.statut==='À rappeler'}).length;
     h=kpi(rows.length,'Prospects')+kpi(ap,'Appelés')+kpi(it,'🔥 Intéressés')+kpi(rap,'À rappeler')+kpi(rd,'RDV pris');}
+  else if(cur==='entreprises'){var rq=rows.filter(function(r){return r.statut==='RDV qualifié'}).length,ar=rows.filter(function(r){return r.statut==='À rappeler'}).length,ch=rows.filter(function(r){return (r.interet||'').indexOf('🔥')>-1}).length;
+    h=kpi(rows.length,'Leads')+kpi(rq,'RDV qualifiés')+kpi(ar,'À rappeler')+kpi(ch,'🔥 Chauds');}
   else if(cur==='contrats'){var sig=rows.filter(function(r){return r.statut==='✅ Signé'}),bl=rows.filter(function(r){return r.statut==='⚠️ Bloqué'}).length;var eur=sig.reduce(function(a,r){return a+(Number(r.montant)||0)},0);
     h=kpi(rows.length,'Contrats')+kpi(sig.length,'Signés')+kpi(eur.toLocaleString('fr-FR')+' €','Montant signé')+kpi(bl,'🔴 Bloqués');}
   else{var af=rows.filter(function(r){return r.statut==='🔴 À faire'}).length,ec=rows.filter(function(r){return r.statut==='🟠 En cours'}).length,ft=rows.filter(function(r){return r.statut==='✅ Fait'}).length,ht=rows.filter(function(r){return r.priorite==='🔥 Haute'&&r.statut!=='✅ Fait'}).length;
@@ -187,7 +196,12 @@ function phoneActs(tel,email,nm){var h='',wn=waNum(tel);
   if(tel){h+='<a class="ic tel" href="tel:'+esc(tel)+'" title="Appeler" onclick="event.stopPropagation()">📞</a><a class="ic wa" href="https://wa.me/'+wn+'" target="_blank" rel="noopener" title="WhatsApp" onclick="event.stopPropagation()">💬</a><a class="ic" href="sms:'+esc(tel)+'" title="SMS" onclick="event.stopPropagation()">✉️</a>';}
   if(email)h+='<a class="ic" href="mailto:'+esc(email)+'" title="Email" onclick="event.stopPropagation()">📧</a>';
   h+='<button class="ic ai" data-ai="'+esc(nm||'')+'|'+esc(tel||'')+'" title="Message" onclick="event.stopPropagation()">🤖</button>';return h;}
-function card(r){if(cur==='prospects')return cardP(r);if(cur==='contrats')return cardC(r);return cardT(r);}
+function card(r){if(cur==='prospects')return cardP(r);if(cur==='entreprises')return cardE(r);if(cur==='contrats')return cardC(r);return cardT(r);}
+function cardE(r){var T=TABS.entreprises;
+ return '<div class="card2" data-id="'+r.id+'"><div class="r1"><div><div class="nm">'+esc(r.nom||'—')+'</div><div class="sub">'+(r.ville?esc(r.ville):'')+(r.source?' · '+esc(r.source):'')+'</div></div><div class="acts">'+phoneActs(r.tel,r.email,r.nom)+'</div></div>'
+  +'<div class="r2" onclick="event.stopPropagation()"><select data-f="Statut qualification"><option value="">Statut…</option>'+opt(T.statutOpts,r.statut)+'</select>'
+  +'<select data-f="Niveau d\'intérêt"><option value="">Intérêt…</option>'+opt(T.interetOpts,r.interet)+'</select>'
+  +'<span class="savepill">✓</span></div></div>';}
 function cardP(r){var T=TABS.prospects;
  return '<div class="card2" data-id="'+r.id+'"><div class="r1"><div><div class="nm">'+esc(r.nom||'—')+'</div><div class="sub">'+esc(r.dirigeant||'')+(r.ville?' · '+esc(r.ville):'')+(r.appelePar?' · <b>'+esc(r.appelePar)+'</b>':'')+'</div></div><div class="acts">'+phoneActs(r.tel,r.email,r.nom)+'</div></div>'
   +'<div class="r2" onclick="event.stopPropagation()"><label class="chk"><input type="checkbox" data-f="Appelé" '+(r.appele?'checked':'')+'> Appelé</label>'
@@ -232,7 +246,7 @@ function openDrawer(id){var rec=(DATA[cur]||[]).filter(function(r){return r.id==
  if(rec.tel)h+='<div class="dact">'+phoneActs(rec.tel,rec.email,title)+'</div>';
  var fieldDefs={
    nom:['Entreprise','text'],tel:['Téléphone','text'],email:['Email','text'],dirigeant:['Dirigeant','text'],ville:['Ville','text'],
-   statut:['Statut','select',T.statutOpts],interet:['Intérêt','select',T.interetOpts],appelePar:['Appelé par','select',T.agentOpts],agent:['Propriétaire','select',T.agentOpts],
+   statut:['Statut','select',T.statutOpts],interet:['Intérêt','select',T.interetOpts],source:['Canal d\'acquisition','select',T.sourceOpts],appelePar:['Appelé par','select',T.agentOpts],agent:['Propriétaire','select',T.agentOpts],
    apprenant:['Apprenant','text'],entreprise:['Entreprise','text'],financeur:['Financeur','select',T.financeurOpts],montant:['Montant (€)','text'],note:['Blocage / note','area'],
    tache:['Tâche','text'],assigne:['Assigné à','select',T.assigneOpts],priorite:['Priorité','select',T.prioriteOpts],dossier:['Dossier lié','text'],notes:['Notes','area']
  };
@@ -266,6 +280,7 @@ function aiMsg(data){var p=data.split('|'),nm=p[0]||'',tel=p[1]||'';var wn=waNum
 /* ============ ajouter ============ */
 function openAdd(){var T=TABS[cur],fields;
  if(cur==='prospects')fields=[['Entreprise','nom','text'],['Téléphone','telephone','text'],['Email','email','text'],['Dirigeant','dirigeants','text'],['Ville','ville','text'],['Canal d\'acquisition','Source base','select',['LinkedIn','WhatsApp','Cold mail','Téléphone','Site web','Salon / réseau','Recommandation']],['Notes','Notes prospect','area']];
+ else if(cur==='entreprises')fields=[['Raison sociale','Raison Sociale','text'],['Téléphone','Portable entreprise','text'],['Email','Email entreprise','text'],['Ville','Ville','text'],['Canal d\'acquisition','Source du lead','select',T.sourceOpts],['Statut','Statut qualification','select',T.statutOpts],['Niveau d\'intérêt',"Niveau d'intérêt",'select',T.interetOpts],['Notes','Notes agent','area']];
  else if(cur==='contrats')fields=[['Apprenant','Apprenant','text'],['Entreprise','Entreprise','text'],['Financeur','Financeur','select',T.financeurOpts],['Montant (€)','Montant convention','text'],['Statut','Statut','select',T.statutOpts],['Note','Blocage / note','area']];
  else fields=[['Tâche','Tâche','text'],['Assigné à','Assigné à','select',T.assigneOpts],['Priorité','Priorité','select',T.prioriteOpts],['Statut','Statut','select',T.statutOpts],['Dossier lié','Dossier lié','text'],['Notes','Notes','area']];
  var h='<h3>➕ Ajouter</h3>';fields.forEach(function(f,i){h+='<label>'+f[0]+'</label>';if(f[2]==='select')h+='<select id="af'+i+'"><option value=""></option>'+opt(f[3],'')+'</select>';else if(f[2]==='area')h+='<textarea id="af'+i+'" rows="2"></textarea>';else h+='<input id="af'+i+'" type="text">';});
