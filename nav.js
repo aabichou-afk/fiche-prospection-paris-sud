@@ -25,7 +25,8 @@
   var META={
     accueil:['Accueil','index.html',I.home], pilotage:['Pilotage','pilotage.html',I.rocket],
     crm:['CRM','crm.html',I.crm], contrats:['Contrats','contrats.html',I.folder],
-    financement:['Financement','financement.html',I.euro], documents:['Documents','documents.html',I.doc],
+    financement:['Financement','financement.html',I.euro], facturation:['Facturation','facturation.html',I.euro],
+    documents:['Documents','documents.html',I.doc],
     agenda:['Agenda','agenda.html',I.day],
     journee:['Ma journée','journee.html',I.day],
     qualif:['Qualification','qualification.html',I.phone], audit:['Audit IA','audit.html',I.audit],
@@ -35,7 +36,7 @@
     contenu:['Contenu','contenu.html',I.mega], sop:['SOP','sop.html',I.sop]
   };
   var GROUPS=[
-    ['Pilotage',['accueil','pilotage','crm','contrats','financement','agenda','journee']],
+    ['Pilotage',['accueil','pilotage','crm','contrats','financement','facturation','agenda','journee']],
     ['Vente',['qualif','audit','scripts','playbook']],
     ['Formation & offre',['formation','offres','process','opco']],
     ['Contenu',['contenu','sop','documents']]

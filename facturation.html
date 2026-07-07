@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Facturation · Paris Sud — Suivi OPCO</title>
+<link rel="stylesheet" href="style.css">
+<script src="gate.js"></script>
+<style>
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:2px 0 16px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
+.kpi .v{font-family:var(--serif);font-size:1.55rem;font-weight:700;color:var(--primary);line-height:1}
+.kpi .l{font-size:.76rem;color:var(--muted);margin-top:3px}
+.fx{background:#fff;border:1px solid #e6ebe8;border-left:4px solid #dbe6e0;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 5px 15px -12px rgba(17,54,43,.45)}
+.fx.blocked{border-left-color:#d1543a}.fx.todo{border-left-color:#8a978f}.fx.sent{border-left-color:#c9a24a}.fx.paid{border-left-color:#1f8a5c}
+.fx .hd{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.fx .t{font-weight:700;color:#11362b}
+.fx .d{font-size:.79rem;color:#8a978f}
+.fx .mt{margin-left:auto;font-family:var(--serif);font-weight:700;color:#1f8a5c;font-size:1.25rem;white-space:nowrap}
+.fx .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.fx select{padding:7px 10px;border:1px solid #dbe6e0;border-radius:9px;font-size:.84rem;font-family:inherit;background:#fff;min-height:0;width:auto}
+.fx .note{font-size:.8rem;color:#5f6b62;background:#f6f9f7;border-radius:9px;padding:7px 11px;margin-top:8px}
+.badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;background:#eef1ef;color:#4a5a52;white-space:nowrap}
+.savepill{font-size:.72rem;color:#1f8a5c;font-weight:700;opacity:0;transition:.2s}.savepill.show{opacity:1}
+.btnadd{background:#1f8a5c;color:#fff;border:none;border-radius:999px;padding:11px 18px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}
+.conn{font-size:.78rem;padding:4px 11px;border-radius:999px;font-weight:700}.conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fdf3df;color:#9a7212}
+.overlay{position:fixed;inset:0;background:rgba(17,54,43,.5);display:none;place-items:center;z-index:220;padding:16px}.overlay.on{display:grid}
+.modal{background:#fff;border-radius:18px;padding:22px;max-width:440px;width:100%;box-shadow:0 30px 70px -20px rgba(0,0,0,.5);max-height:88vh;overflow:auto}
+.modal h3{margin:0 0 12px;color:#11362b}.modal label{display:block;font-size:.78rem;color:#5f6b62;font-weight:600;margin:9px 0 3px}
+.modal input,.modal select,.modal textarea{width:100%;padding:10px 12px;border:1px solid #dbe6e0;border-radius:10px;font-family:inherit;font-size:.92rem}
+.modal .go{margin-top:14px;display:flex;gap:9px}.modal .go button{flex:1;border:none;border-radius:999px;padding:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.modal .go .ok{background:#1f8a5c;color:#fff}.modal .go .no{background:#eee;color:#333}
+</style>
+</head><body data-page="facturation">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Facturation — l'argent qui rentre</h1><span class="conn demo" id="conn">Aperçu</span>
+    </div>
+    <div class="content">
+      <div class="kpis" id="kpis"></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px"><button class="btnadd" id="add">➕ Nouvelle facture</button></div>
+      <div id="list"><div style="text-align:center;color:#8a978f;padding:30px">Chargement…</div></div>
+
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><h3 style="color:var(--primary-3)">📤 Le circuit de facturation OPCO</h3><ul class="clean">
+          <li>Accord de prise en charge reçu → <b>certificat de réalisation</b> dans YPAREO</li>
+          <li>Générer la facture (échéancier apprentissage : ex. 40% / 30% / 30%)</li>
+          <li>Déposer / transmettre à l'OPCO → suivre le paiement</li>
+          <li>Pas payé sous 30 jours → passer en <b>🔁 Relancée</b></li>
+        </ul></div>
+        <div class="card"><h3 style="color:var(--gold-d)">⚠️ Règles</h3><ul class="clean">
+          <li>On ne facture <b>jamais avant l'accord</b> de prise en charge.</li>
+          <li>Chaque facture liée à un dossier (contrat / apprenant).</li>
+          <li>Blocage technique (comptes de vente YPAREO…) = statut <b>⏳ Bloquée</b> + note.</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="ov"><div class="modal" id="modal"></div></div>
+<script src="nav.js"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var $=function(s){return document.querySelector(s)};
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+(function(){var c=$('#conn');if(LIVE){c.className='conn live';c.textContent='● Live';}else{c.className='conn demo';c.textContent='Aperçu';}})();
+function apic(method,payload,q){var o={method:method,headers:{'x-crm-key':CFG.key}};if(payload){o.headers['Content-Type']='application/json';o.body=JSON.stringify(payload);}
+ return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+function nrm(v){return (v&&v.name)?v.name:v;}
+var STATUTS=['📝 À émettre','⏳ Bloquée','📤 Émise','🔁 Relancée','✅ Payée'];
+var FIN=["OPCO Mobilités","AKTO","Op'Commerce","OPCO EP","ATLAS","Entreprise (direct)","Autre"];
+var ROWS=[];
+function load(){
+ if(LIVE)return apic('GET',null,'?table=Factures&max=300').then(function(j){return (j.records||[]).map(function(r){var f=r.fields;return {id:r.id,lib:f['Libellé'],num:f['N° facture'],fin:nrm(f['Client / financeur']),dossier:f['Dossier lié'],montant:f['Montant'],statut:nrm(f['Statut']),emission:f['Date émission'],echeance:f['Échéance'],notes:f['Notes']};});});
+ return fetch('crm_snapshot.json?cb='+Date.now()).then(function(r){return r.json()}).then(function(j){return j.factures||[];});
+}
+function kpi(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
+function eur(n){return (Number(n)||0).toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:2})+' €';}
+function clsOf(st){if(st==='⏳ Bloquée')return 'blocked';if(st==='📝 À émettre')return 'todo';if(st==='✅ Payée')return 'paid';return 'sent';}
+function render(){
+ var rows=ROWS;
+ var tot=function(f){return rows.filter(f).reduce(function(a,r){return a+(Number(r.montant)||0)},0);};
+ var enc=tot(function(r){return r.statut!=='✅ Payée'});
+ var paye=tot(function(r){return r.statut==='✅ Payée'});
+ var bloq=tot(function(r){return r.statut==='⏳ Bloquée'});
+ var emise=tot(function(r){return r.statut==='📤 Émise'||r.statut==='🔁 Relancée'});
+ $('#kpis').innerHTML=kpi(eur(enc),'À encaisser')+kpi(eur(emise),'Émises (en attente)')+kpi(eur(bloq),'🔴 Bloquées')+kpi(eur(paye),'✅ Payées');
+ var order={'⏳ Bloquée':0,'🔁 Relancée':1,'📤 Émise':2,'📝 À émettre':3,'✅ Payée':4};
+ rows=rows.slice().sort(function(a,b){return (order[a.statut]||9)-(order[b.statut]||9)});
+ $('#list').innerHTML=rows.map(function(r){
+  return '<div class="fx '+clsOf(r.statut)+'"><div class="hd"><div><div class="t">'+esc(r.lib||'—')+(r.num?' <span class="badge">'+esc(r.num)+'</span>':'')+'</div><div class="d">'+esc(r.dossier||'')+(r.fin?' · '+esc(r.fin):'')+(r.emission?' · émise le '+esc(r.emission):'')+'</div></div><div class="mt">'+eur(r.montant)+'</div></div>'
+   +'<div class="row"><select data-id="'+r.id+'">'+STATUTS.map(function(s){return '<option'+(s===r.statut?' selected':'')+'>'+s+'</option>'}).join('')+'</select><span class="savepill">✓</span></div>'
+   +(r.notes?'<div class="note">'+esc(String(r.notes).split('\n')[0])+'</div>':'')+'</div>';
+ }).join('')||'<div style="text-align:center;color:#8a978f;padding:30px">Aucune facture. Clique ➕.</div>';
+ document.querySelectorAll('.fx select').forEach(function(s){s.addEventListener('change',function(){
+  if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');return;}
+  var id=s.getAttribute('data-id');var rec=ROWS.filter(function(x){return x.id===id})[0];if(rec)rec.statut=s.value;
+  var fields={'Statut':s.value};
+  if(s.value==='📤 Émise'&&rec&&!rec.emission){var d=new Date();fields['Date émission']=d.toISOString().slice(0,10);rec.emission=fields['Date émission'];}
+  apic('PATCH',{table:'Factures',id:id,fields:fields}).then(function(){var p=s.parentElement.querySelector('.savepill');p.classList.add('show');setTimeout(function(){p.classList.remove('show')},1300);render();});
+ });});
+}
+$('#add').addEventListener('click',function(){
+ var h='<h3>➕ Nouvelle facture</h3><label>Libellé</label><input id="f0" type="text" placeholder="Ex. AOUN — solde 60%"><label>Dossier lié</label><input id="f1" type="text"><label>Financeur</label><select id="f2">'+FIN.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><label>Montant (€)</label><input id="f3" type="text" inputmode="decimal"><label>Statut</label><select id="f4">'+STATUTS.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><label>Notes</label><textarea id="f5" rows="2"></textarea><div class="go"><button class="ok" id="ok">Créer</button><button class="no" id="no">Annuler</button></div>';
+ $('#modal').innerHTML=h;$('#ov').classList.add('on');
+ $('#no').addEventListener('click',function(){$('#ov').classList.remove('on');});
+ $('#ok').addEventListener('click',function(){
+  if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour créer.');return;}
+  var payload={'Libellé':$('#f0').value.trim(),'Dossier lié':$('#f1').value.trim(),'Client / financeur':$('#f2').value,'Montant':Number($('#f3').value.replace(',','.').replace(/[^0-9.]/g,''))||0,'Statut':$('#f4').value};
+  if($('#f5').value.trim())payload['Notes']=$('#f5').value.trim();
+  $('#ok').textContent='…';
+  apic('POST',{table:'Factures',fields:payload}).then(function(){$('#ov').classList.remove('on');return load();}).then(function(rows){ROWS=rows;render();}).catch(function(e){alert('Erreur: '+e.message);$('#ok').textContent='Créer';});
+ });
+});
+$('#ov').addEventListener('click',function(e){if(e.target===$('#ov'))$('#ov').classList.remove('on');});
+load().then(function(rows){ROWS=rows;render();}).catch(function(e){$('#list').innerHTML='<div style="text-align:center;color:#c0432a;padding:30px">Erreur : '+esc(e.message)+'</div>';});
+</script>
+</body></html>
