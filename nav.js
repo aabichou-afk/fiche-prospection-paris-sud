@@ -55,6 +55,14 @@
     side.innerHTML=
       '<a class="sb-brand" href="index.html">'+logoSVG('lgb')+'<span class="sb-bt">Paris Sud<b>Formation</b></span></a>'
       +'<div class="sb-nav">'+navHtml+'</div>'
+      +'<div class="sb-quickwrap"><div class="sb-grp">⚡ Liens à copier</div>'
+        +[['🏢','Adhésion entreprise','https://airtable.com/appaAZXNf5RFf89WV/pagliROW5NttiqP9c/form'],
+          ['👤','Adhésion salarié','https://airtable.com/appv3OIuP1STIpVgz/pagaIdjkbRKz9ztJK/form'],
+          ['📅','RDV audit (Calendly)','https://calendly.com/paris-sud/com'],
+          ['📧','formation@paris-sud.com','formation@paris-sud.com']]
+        .map(function(q){return '<div class="sb-quick" data-copy="'+q[2]+'"><span class="qi">'+q[0]+'</span><span class="qt">'+q[1]+'</span><span class="qc">⧉</span>'
+          +(q[2].indexOf('http')===0?'<a class="qo" href="'+q[2]+'" target="_blank" rel="noopener" title="Ouvrir">↗</a>':'')+'</div>';}).join('')
+      +'</div>'
       +'<div class="sb-foot">'
         +'<a class="sb-cta" href="https://calendly.com/paris-sud/com" target="_blank" rel="noopener">🎯 Audit gratuit</a>'
         +'<div class="sb-badge">'+opco('#eafff3')+'</div>'
@@ -70,6 +78,18 @@
   if(burger)burger.addEventListener('click',function(){toggle(!document.body.classList.contains('sb-open'));});
   scrim.addEventListener('click',function(){toggle(false);});
   document.querySelectorAll('.sb-link').forEach(function(a){a.addEventListener('click',function(){toggle(false);});});
+
+  // liens rapides — clic = copier
+  document.querySelectorAll('.sb-quick').forEach(function(el){
+    el.addEventListener('click',function(e){
+      if(e.target.closest('.qo'))return; // la flèche ouvre le lien, ne copie pas
+      var v=el.getAttribute('data-copy');
+      navigator.clipboard.writeText(v).then(function(){
+        var c=el.querySelector('.qc');c.textContent='✓';el.classList.add('copied');
+        setTimeout(function(){c.textContent='⧉';el.classList.remove('copied');},1300);
+      });
+    });
+  });
 
   // bouton flottant WhatsApp
   var wa=document.createElement('a');wa.className='fabwa';wa.href='https://web.whatsapp.com';wa.target='_blank';wa.rel='noopener';wa.title='WhatsApp';
