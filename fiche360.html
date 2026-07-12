@@ -160,6 +160,10 @@ function render360(){
  });
 }
 $('#srch').addEventListener('input',function(){renderList(this.value);});
-loadAll().then(function(d){D=d;buildIndex();renderList('');}).catch(function(e){$('#view').innerHTML='<div class="hint360">Erreur : '+esc(e.message)+'</div>';});
+loadAll().then(function(d){D=d;buildIndex();
+ var q=new URLSearchParams(location.search).get('q')||'';
+ if(q){$('#srch').value=q;var f=norm(q);var m=ENTS.filter(function(e){return e.key.indexOf(f)>-1});if(m.length){cur=m[0];}}
+ renderList(q);if(cur)render360();
+}).catch(function(e){$('#view').innerHTML='<div class="hint360">Erreur : '+esc(e.message)+'</div>';});
 </script>
 </body></html>

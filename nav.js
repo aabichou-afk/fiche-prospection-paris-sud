@@ -65,7 +65,7 @@
       +'</div>'
       +'<div class="sb-foot">'
         +'<a class="sb-cta" href="https://calendly.com/paris-sud/com" target="_blank" rel="noopener">🎯 Audit gratuit</a>'
-        +'<div class="sb-badge">'+opco('#eafff3')+'</div>'
+        +'<div class="sb-badge">'+opco('#1f6f5c')+'</div>'
         +'<div class="sb-legal">Habilité OPCO Mobilités · Qualiopi · RNCP 38575<br>Outil interne — ne pas diffuser.</div>'
       +'</div>';
   }
@@ -78,6 +78,21 @@
   if(burger)burger.addEventListener('click',function(){toggle(!document.body.classList.contains('sb-open'));});
   scrim.addEventListener('click',function(){toggle(false);});
   document.querySelectorAll('.sb-link').forEach(function(a){a.addEventListener('click',function(){toggle(false);});});
+
+  // recherche globale + avatar (topbar)
+  var tb=document.querySelector('.topbar');
+  if(tb){
+    var gs=document.createElement('div');gs.className='gsearch';
+    gs.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="gsearchInput" placeholder="Chercher une entreprise…"><span class="kbd">↵</span>';
+    var h1=tb.querySelector('h1');
+    if(h1)h1.insertAdjacentElement('afterend',gs);else tb.prepend(gs);
+    gs.querySelector('input').addEventListener('keydown',function(e){
+      if(e.key==='Enter'&&this.value.trim())location.href='fiche360.html?q='+encodeURIComponent(this.value.trim());
+    });
+    var av=document.createElement('div');av.className='avatar';
+    av.innerHTML='<span class="ava">A</span><span class="avn">Abdel</span>';
+    tb.appendChild(av);
+  }
 
   // liens rapides — clic = copier
   document.querySelectorAll('.sb-quick').forEach(function(el){
