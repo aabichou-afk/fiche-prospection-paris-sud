@@ -19,7 +19,7 @@
     mega:'<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8a4 4 0 0 1 0 8"/>',
     sop:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.2V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.2-2.7H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.2 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>'
   };
-  function logoSVG(id){return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="'+id+'"><circle cx="40" cy="50" r="18"/></clipPath></defs><circle cx="50" cy="50" r="45" fill="#fff" stroke="#11362b" stroke-width="8"/><circle cx="40" cy="50" r="18" fill="#00e676"/><circle cx="60" cy="50" r="18" fill="#0a7d6e"/><g clip-path="url(#'+id+')"><circle cx="60" cy="50" r="18" fill="#fff"/></g></svg>';}
+  function logoSVG(id){return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="38" cy="50" r="27" fill="#A7E8C6"/><circle cx="60" cy="50" r="27" fill="#156047"/><path d="M49 26.4a27 27 0 0 1 0 47.2 27 27 0 0 1 0-47.2z" fill="#0c4130"/></svg>';}
   function opco(txt){return '<span class="opco-badge" style="color:'+txt+'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#8cc63f"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/><path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#8cc63f"/><circle cx="12" cy="12" r="3.1" fill="#00a88e" stroke="none"/></svg>OPCO Mobilités</span>';}
 
   var META={
@@ -79,19 +79,34 @@
   scrim.addEventListener('click',function(){toggle(false);});
   document.querySelectorAll('.sb-link').forEach(function(a){a.addEventListener('click',function(){toggle(false);});});
 
-  // recherche globale + avatar (topbar)
+  // topbar façon maquette : recherche à gauche (⌘F) · cloche · avatar ▾ — le titre descend dans le contenu
   var tb=document.querySelector('.topbar');
   if(tb){
+    var h1=tb.querySelector('h1'),tag=tb.querySelector('.tag')||tb.querySelector('.conn');
+    var content=document.querySelector('.content');
+    if(h1&&content){
+      if(document.querySelector('.hero-banner')){h1.remove();if(tag&&tag.className.indexOf('conn')<0)tag.remove();}
+      else{
+        var ph=document.createElement('div');ph.className='page-head';
+        ph.appendChild(h1);if(tag)ph.appendChild(tag);
+        content.insertBefore(ph,content.firstChild);
+      }
+    }
     var gs=document.createElement('div');gs.className='gsearch';
-    gs.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="gsearchInput" placeholder="Chercher une entreprise…"><span class="kbd">↵</span>';
-    var h1=tb.querySelector('h1');
-    if(h1)h1.insertAdjacentElement('afterend',gs);else tb.prepend(gs);
-    gs.querySelector('input').addEventListener('keydown',function(e){
+    gs.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="gsearchInput" placeholder="Chercher"><span class="kbd">⌘</span><span class="kbd">F</span>';
+    var burger=tb.querySelector('.burger');
+    if(burger)burger.insertAdjacentElement('afterend',gs);else tb.prepend(gs);
+    var inp=gs.querySelector('input');
+    inp.addEventListener('keydown',function(e){
       if(e.key==='Enter'&&this.value.trim())location.href='fiche360.html?q='+encodeURIComponent(this.value.trim());
     });
-    var av=document.createElement('div');av.className='avatar';
-    av.innerHTML='<span class="ava">A</span><span class="avn">Abdel</span>';
-    tb.appendChild(av);
+    document.addEventListener('keydown',function(e){
+      if((e.metaKey||e.ctrlKey)&&(e.key==='f'||e.key==='F')){e.preventDefault();inp.focus();}
+    });
+    var right=document.createElement('div');right.className='tb-right';
+    right.innerHTML='<a class="bell" href="agenda.html" title="Échéancier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="dot"></span></a>'
+      +'<div class="avatar"><span class="ava">A</span><span class="avn">Abdel</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></div>';
+    tb.appendChild(right);
   }
 
   // liens rapides — clic = copier
