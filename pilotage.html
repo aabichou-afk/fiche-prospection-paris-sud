@@ -14,9 +14,27 @@
     </div>
     <div class="content">
       <div class="hero-banner">
-        <h1>Bonjour, Abdel 👋</h1>
-        <p>Vos statistiques du jour — priorités cash, outils en 1 clic, automatisations. Objectif : <b>un maximum de contrats signés.</b></p>
-        <div class="opco-hero"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#8cc63f"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/><path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#8cc63f"/><circle cx="12" cy="12" r="3.1" fill="#00a88e"/></svg> Organisme habilité OPCO Mobilités</div>
+        <h1 id="helloName">Bonjour, Abdel 👋</h1>
+        <p>Vos statistiques du jour</p>
+      </div>
+
+      <div class="dashrow">
+        <div class="dcard">
+          <h3>Chiffre d'affaires</h3>
+          <div class="dleg"><span><i style="background:#1f6f5c"></i>Facturation</span><span><i style="background:#F2E8D5"></i>Encaissé</span></div>
+          <div id="caChart" class="dchart"></div>
+        </div>
+        <div class="dcard">
+          <h3>Signatures</h3>
+          <div class="dsel">Contrats saisis</div>
+          <div id="gauge" class="dgauge"></div>
+          <div class="dgtxt">Taux de signature : <b id="gaugeVal">—</b></div>
+        </div>
+        <div class="dcard">
+          <h3>À traiter</h3>
+          <div id="todo" class="dtodo"></div>
+          <a href="agenda.html" class="dall">Tout voir →</a>
+        </div>
       </div>
 
       <div class="card" style="border-left:4px solid #18BFFF;background:linear-gradient(180deg,#fff,#f7fcff)">
@@ -171,5 +189,59 @@ $('#launch').innerHTML=T.map(function(t){
   var logobg=si?'':'background:'+col;
   return '<a class="tool" href="'+url+'"'+(url.indexOf('http')===0?' target="_blank" rel="noopener"':'')+'><span class="logo'+(si?'':' brand')+'" style="'+logobg+'">'+logo+'</span><span class="meta"><span class="t">'+nom+ext+'</span><span class="d">'+desc+'</span></span></a>';
 }).join('');
+</script>
+<script>
+// ===== Dashboard « statistiques du jour » (données réelles Airtable/snapshot) =====
+(function(){
+  var me=(window.PSF_AUTH&&window.PSF_AUTH.current());
+  if(me)document.getElementById('helloName').textContent='Bonjour, '+me.id+' 👋';
+  var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+  var LIVE=!!(CFG.api&&CFG.key);
+  function apic(method,payload,q){var o={method:method,headers:{'x-crm-key':CFG.key}};if(payload){o.headers['Content-Type']='application/json';o.body=JSON.stringify(payload);}
+    return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+  function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  fetch('crm_snapshot.json?cb='+Date.now()).then(function(r){return r.json()}).then(function(S){
+    // --- barres facturation par statut ---
+    var F=S.factures||[];
+    var groups=[['À émettre','📝 À émettre'],['Bloquée','⏳ Bloquée'],['Émise','📤 Émise'],['Payée','✅ Payée']];
+    var vals=groups.map(function(g){return F.filter(function(f){return f.statut===g[1]}).reduce(function(a,f){return a+(Number(f.montant)||0)},0);});
+    var max=Math.max.apply(null,vals.concat([1]));
+    document.getElementById('caChart').innerHTML=groups.map(function(g,i){
+      var h=Math.round(vals[i]/max*100);
+      var eur=vals[i]?vals[i].toLocaleString('fr-FR')+' €':'0 €';
+      return '<div class="dbar" title="'+g[0]+' : '+eur+'">'
+        +'<div class="dbv">'+(vals[i]?(Math.round(vals[i]/100)/10)+'k':'')+'</div>'
+        +'<div class="dbwrap"><div class="dbfill" style="height:'+Math.max(h,3)+'%"></div></div>'
+        +'<div class="dbl">'+g[0]+'</div></div>';
+    }).join('');
+    // --- jauge signatures ---
+    var C=(S.contrats||[]);
+    var saisis=C.filter(function(c){return c.statut!=='📝 À saisir'});
+    var signes=saisis.filter(function(c){return c.statut==='✅ Signé'});
+    var pct=saisis.length?Math.round(signes.length/saisis.length*100):0;
+    var ang=Math.PI*(1-pct/100);
+    var x=100+80*Math.cos(ang),y=95-80*Math.sin(ang);
+    document.getElementById('gauge').innerHTML=
+      '<svg viewBox="0 0 200 110"><path d="M20 95 A80 80 0 0 1 180 95" fill="none" stroke="#F2E8D5" stroke-width="15" stroke-linecap="round"/>'
+      +'<path d="M20 95 A80 80 0 0 1 '+x+' '+y+'" fill="none" stroke="#1f6f5c" stroke-width="15" stroke-linecap="round"/>'
+      +'<circle cx="100" cy="95" r="7" fill="none" stroke="#e8a955" stroke-width="3"/>'
+      +'<line x1="100" y1="95" x2="'+(100+58*Math.cos(ang))+'" y2="'+(95-58*Math.sin(ang))+'" stroke="#e8a955" stroke-width="3" stroke-linecap="round"/></svg>';
+    document.getElementById('gaugeVal').textContent=pct+'% ('+signes.length+'/'+saisis.length+' signés)';
+    // --- à traiter (tâches réelles cochables) ---
+    var T=(S.taches||[]).filter(function(t){return t.statut!=='✅ Fait'});
+    var order={'🔥 Haute':0,'🟠 Moyenne':1,'🟡 Basse':2};
+    T.sort(function(a,b){return (order[a.priorite]||9)-(order[b.priorite]||9)});
+    document.getElementById('todo').innerHTML=T.slice(0,5).map(function(t){
+      return '<label class="dt"><input type="checkbox" data-id="'+t.id+'"><span><b>'+esc(t.tache)+'</b><br><small>'+esc(t.assigne||'')+(t.priorite?' · '+esc(t.priorite):'')+'</small></span></label>';
+    }).join('')||'<div style="color:#8a978f;font-size:.85rem">Rien à traiter 🎉</div>';
+    document.querySelectorAll('.dt input').forEach(function(cb){cb.addEventListener('change',function(){
+      if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');cb.checked=false;return;}
+      cb.closest('.dt').classList.add('done');
+      apic('PATCH',{table:'Taches',id:cb.getAttribute('data-id'),fields:{'Statut':'✅ Fait'}})
+        .catch(function(e){alert('Erreur : '+e.message);cb.checked=false;cb.closest('.dt').classList.remove('done');});
+    });});
+  });
+})();
 </script>
 </body></html>

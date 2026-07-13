@@ -103,10 +103,56 @@
     document.addEventListener('keydown',function(e){
       if((e.metaKey||e.ctrlKey)&&(e.key==='f'||e.key==='F')){e.preventDefault();inp.focus();}
     });
+    var me=(window.PSF_AUTH&&window.PSF_AUTH.current())||{id:'Invité',role:''};
+    var photo='';try{photo=localStorage.getItem('psf_avatar_'+me.id)||'';}catch(e){}
+    var avaInner=photo?'<img src="'+photo+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':me.id[0];
     var right=document.createElement('div');right.className='tb-right';
     right.innerHTML='<a class="bell" href="agenda.html" title="Échéancier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="dot"></span></a>'
-      +'<div class="avatar"><span class="ava">A</span><span class="avn">Abdel</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></div>';
+      +'<div class="avatar" id="avBtn" style="cursor:pointer"><span class="ava">'+avaInner+'</span><span class="avn">'+me.id+'</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>'
+      +'<div class="avmenu" id="avMenu">'
+        +'<div class="avhead"><b>'+me.id+'</b><span>'+(me.role||'')+'</span></div>'
+        +'<button data-act="photo">🖼️ Changer ma photo</button>'
+        +'<button data-act="pw">🔑 Changer mon mot de passe</button>'
+        +'<button data-act="out" class="danger">🚪 Se déconnecter</button>'
+      +'</div>'
+      +'<input type="file" id="avFile" accept="image/*" style="display:none">'
+      +'</div>';
     tb.appendChild(right);
+    var menu=document.getElementById('avMenu');
+    document.getElementById('avBtn').addEventListener('click',function(e){
+      if(e.target.closest('.avmenu'))return;
+      menu.classList.toggle('on');
+    });
+    document.addEventListener('click',function(e){if(!e.target.closest('#avBtn'))menu.classList.remove('on');});
+    menu.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){
+      var act=b.getAttribute('data-act');menu.classList.remove('on');
+      if(act==='out'&&window.PSF_AUTH)window.PSF_AUTH.logout();
+      if(act==='photo')document.getElementById('avFile').click();
+      if(act==='pw'){
+        var oldPw=prompt('Mot de passe actuel :');if(oldPw===null)return;
+        var newPw=prompt('Nouveau mot de passe (8 caractères min) :');if(!newPw||newPw.length<8){alert('Trop court.');return;}
+        window.PSF_AUTH.changePassword(me.id,oldPw,newPw).then(function(){
+          alert('✅ Mot de passe changé sur cet appareil.');
+        }).catch(function(err){alert('❌ '+err);});
+      }
+    });});
+    document.getElementById('avFile').addEventListener('change',function(){
+      var f=this.files[0];if(!f)return;
+      var r=new FileReader();
+      r.onload=function(){
+        // réduction pour tenir dans le stockage navigateur
+        var img=new Image();
+        img.onload=function(){
+          var c=document.createElement('canvas');var s=Math.min(img.width,img.height);
+          c.width=c.height=128;var x=c.getContext('2d');
+          x.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,128,128);
+          try{localStorage.setItem('psf_avatar_'+me.id,c.toDataURL('image/jpeg',.85));location.reload();}
+          catch(e){alert('Image trop lourde.');}
+        };
+        img.src=r.result;
+      };
+      r.readAsDataURL(f);
+    });
   }
 
   // liens rapides — clic = copier

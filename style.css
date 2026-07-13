@@ -69,6 +69,16 @@ a{color:inherit;text-decoration:none}
 .avatar .ava{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f4ce8a,#e8a955);color:#5a3b12;font-weight:800;display:grid;place-items:center;font-size:.92rem}
 .avatar .avn{font-weight:700;color:var(--dark);font-size:.92rem}
 .avatar .chev{width:15px;height:15px;color:#7a8781}
+.avatar{position:relative}
+.avmenu{position:absolute;top:46px;right:0;min-width:230px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 18px 44px -18px rgba(17,54,43,.35);padding:8px;display:none;z-index:80}
+.avmenu.on{display:block}
+.avmenu .avhead{padding:9px 11px;border-bottom:1px solid var(--border);margin-bottom:6px}
+.avmenu .avhead b{display:block;color:var(--dark);font-size:.92rem}
+.avmenu .avhead span{color:var(--muted);font-size:.76rem}
+.avmenu button{display:block;width:100%;text-align:left;background:none;border:none;padding:9px 11px;border-radius:9px;font-family:inherit;font-size:.88rem;font-weight:600;color:#33453d;cursor:pointer}
+.avmenu button:hover{background:#F0F5F2}
+.avmenu button.danger{color:#c0432a}
+.avmenu button.danger:hover{background:#FDECE7}
 .page-head{display:flex;align-items:center;gap:12px;margin:4px 0 14px;flex-wrap:wrap}
 .page-head h1{font-family:var(--serif);font-size:1.7rem;font-weight:800;color:var(--dark);letter-spacing:-.02em}
 @media(max-width:820px){.gsearch .kbd,.avatar .avn,.avatar .chev{display:none}.topbar .tag{display:none}}
@@ -195,6 +205,31 @@ td{border:1px solid var(--border);padding:9px 11px;color:#33453d;vertical-align:
 .foot-badge{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:7px 11px;font-size:.74rem;color:#fff;font-weight:600;display:inline-flex;align-items:center;gap:.45rem}
 .foot-legal{border-top:1px solid rgba(255,255,255,.14);margin:18px auto 0;padding-top:13px;font-size:.72rem;color:#8fb09e;max-width:1100px;line-height:1.6}
 .foot-legal b{color:var(--lime)}
+/* ===== dashboard maquette (pilotage) ===== */
+.dashrow{display:grid;grid-template-columns:1.4fr 1fr 1.1fr;gap:16px;margin:6px 0 18px}
+@media(max-width:980px){.dashrow{grid-template-columns:1fr}}
+.dcard{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow)}
+.dcard h3{margin:0 0 10px;font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--dark)}
+.dleg{display:flex;gap:14px;font-size:.74rem;color:var(--muted);margin-bottom:8px}
+.dleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.dchart{display:flex;align-items:flex-end;gap:18px;height:170px;padding:6px 8px 0}
+.dbar{flex:1;display:flex;flex-direction:column;align-items:center;height:100%}
+.dbar .dbv{font-size:.7rem;font-weight:700;color:#33453d;min-height:16px}
+.dbar .dbwrap{flex:1;width:70%;max-width:46px;display:flex;flex-direction:column;justify-content:flex-end;background:#F7F3EA;border-radius:12px;overflow:hidden}
+.dbar .dbfill{background:#1f6f5c;border-radius:12px 12px 0 0;transition:height .5s ease}
+.dbar .dbl{font-size:.7rem;color:var(--muted);margin-top:7px;text-align:center}
+.dsel{display:inline-block;font-size:.74rem;color:var(--muted);border:1px solid var(--border);border-radius:9px;padding:3px 10px;margin-bottom:6px}
+.dgauge svg{width:100%;max-width:220px;display:block;margin:4px auto 0}
+.dgtxt{text-align:center;font-size:.9rem;color:var(--muted)}
+.dgtxt b{color:var(--dark);font-family:var(--serif)}
+.dtodo{display:grid;gap:2px}
+.dt{display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-bottom:1px solid #F0F3F1;cursor:pointer}
+.dt:last-child{border-bottom:none}
+.dt input{width:19px;height:19px;min-height:0;accent-color:#1f6f5c;margin-top:2px;flex:none;cursor:pointer}
+.dt b{font-size:.86rem;color:var(--dark);font-weight:600}
+.dt small{color:var(--muted);font-size:.74rem}
+.dt.done b{text-decoration:line-through;color:var(--muted)}
+.dall{display:inline-block;margin-top:8px;color:var(--primary);font-weight:700;font-size:.84rem}
 /* anim */
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .reveal{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
