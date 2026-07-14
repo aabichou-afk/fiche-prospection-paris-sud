@@ -4,6 +4,22 @@
 <title>Accueil · Espace Agents — Paris Sud Formation</title>
 <link rel="stylesheet" href="style.css">
 <script src="gate.js"></script>
+<style>
+.hometiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:6px 0 40px}
+.hometile{display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid var(--border);border-radius:20px;padding:26px 24px;box-shadow:var(--shadow);transition:.16s;text-decoration:none}
+.hometile:hover{transform:translateY(-3px);border-color:var(--primary);box-shadow:0 22px 44px -26px rgba(31,138,92,.45)}
+.hometile .hi{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:1.5rem;background:#EAF3EE}
+.hometile .ht{font-family:var(--serif);font-weight:700;font-size:1.14rem;color:var(--dark)}
+.hometile .hd{font-size:.86rem;color:var(--muted);line-height:1.45;flex:1}
+.hometile .ha{font-weight:700;color:var(--primary);font-size:.85rem}
+.outcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:8px 0 36px}
+.outcard{display:block;background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px;text-decoration:none;transition:.15s}
+.outcard:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:var(--shadow)}
+.outcard .ot{font-family:var(--serif);font-weight:700;color:var(--dark);font-size:1.05rem;margin-bottom:5px}
+.outcard .od{color:var(--muted);font-size:.86rem}
+.outcard .oa{display:inline-block;margin-top:10px;color:var(--primary);font-weight:700;font-size:.84rem}
+@media(max-width:640px){.hometiles,.outcards{grid-template-columns:1fr}}
+</style>
 </head><body data-page="accueil">
 <div class="app">
   <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
@@ -15,30 +31,24 @@
     <div class="content">
 
       <div class="hero-banner">
-        <span class="pill">Paris Sud Formation</span>
-        <h1>Votre poste de travail.<br>Tous vos outils, un seul endroit.</h1>
-        <p>Prospecter, qualifier, signer, accompagner — la formation transport <b>100% financée OPCO Mobilités, 0&nbsp;€</b>. Cliquez sur un outil pour l'ouvrir.</p>
-        <div class="opco-hero"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#8cc63f"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/><path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#8cc63f"/><circle cx="12" cy="12" r="3.1" fill="#00a88e"/></svg> Organisme habilité OPCO Mobilités</div>
-        <svg class="ill" viewBox="0 0 120 70" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.4">
-          <path d="M4 50h66V26h20l14 14v10h-8" stroke="rgba(255,255,255,.7)"/>
-          <circle cx="34" cy="54" r="7" fill="#f4ce1e" stroke="none"/><circle cx="92" cy="54" r="7" fill="#f4ce1e" stroke="none"/>
-          <circle cx="34" cy="54" r="3" fill="#19633e" stroke="none"/><circle cx="92" cy="54" r="3" fill="#19633e" stroke="none"/>
-          <path d="M76 32h10l8 8h-18z" fill="rgba(255,255,255,.18)" stroke="none"/>
-          <path d="M14 20h30M8 30h24" stroke="rgba(244,206,30,.55)"/>
-        </svg>
+        <h1 id="helloName">Bonjour 👋</h1>
+        <p>Votre poste de travail — tout ce dont vous avez besoin chaque jour, en un clic. La formation transport <b>100% financée OPCO Mobilités, 0&nbsp;€</b>.</p>
       </div>
-      <div class="trust">
+
+      <div class="trust" style="margin:14px 0 36px">
         <span class="b gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 6"/></svg>Certifié Qualiopi</span>
         <span class="b">Habilité OPCO Mobilités</span>
-        <span class="b">Partenaire CCI Île-de-France</span>
-        <span class="b">France Compétences · RNCP 38575</span>
-        <span class="b">Reconnu Ministère de la Transition Écologique</span>
+        <span class="b">RNCP 38575</span>
         <span class="b">N° DA 11911094991</span>
       </div>
 
-      <div class="card" style="border-left:4px solid #1f8a5c;background:linear-gradient(180deg,#fff,#f4faf6)">
-        <h3 style="margin-top:0;color:#11362b;font-size:1.3rem">👋 Bienvenue — Jour 1, commencez ici</h3>
-        <p style="margin:.2rem 0 .9rem;color:#4a5a52">Votre mission : appeler les transporteurs, qualifier, décrocher des RDV d'audit. Suivez ces 6 étapes chaque jour.</p>
+      <h2 class="grp-title">Votre journée, en un coup d'œil</h2>
+      <div class="grp-sub">Cliquez sur une carte pour ouvrir l'outil — tout le reste est dans « 🧰 Tous les outils » à gauche.</div>
+      <div class="hometiles" id="dailyTiles"></div>
+
+      <div class="card" style="border-left:4px solid #1f8a5c;background:linear-gradient(180deg,#fff,#f4faf6);margin-bottom:38px">
+        <h3 style="margin-top:0;color:#11362b;font-size:1.22rem">👋 Nouveau ? Commencez ici</h3>
+        <p style="margin:.2rem 0 1rem;color:#4a5a52">6 étapes pour être opérationnel dès aujourd'hui.</p>
         <div class="circuit" style="margin:0">
           <div class="c"><div class="n">1</div><div class="x">Lire la Bible</div><div class="o"><a href="Bible_Commerciale.pdf" target="_blank" rel="noopener" style="color:#1f8a5c;font-weight:700">le guide 📕</a></div></div>
           <div class="c"><div class="n">2</div><div class="x">Ma liste d'appels</div><div class="o"><a href="https://airtable.com/appaAZXNf5RFf89WV/pagjaeMjeC1CBFWXv" target="_blank" rel="noopener" style="color:#1f8a5c;font-weight:700">suivi des appels ↗</a></div></div>
@@ -47,121 +57,36 @@
           <div class="c"><div class="n">5</div><div class="x">Remplir la fiche</div><div class="o"><a href="qualification.html" style="color:#1f8a5c;font-weight:700">à chaque appel</a></div></div>
           <div class="c"><div class="n">6</div><div class="x">Suivre ma journée</div><div class="o"><a href="journee.html" style="color:#1f8a5c;font-weight:700">ma checklist</a></div></div>
         </div>
-        <div class="callout c-ok" style="margin:12px 0 0">🎯 <b>Objectif quotidien :</b> <b>10 appels le matin + 10 l'après-midi</b> (qualité &gt; quantité) · viser 2-3 RDV d'audit · <b>100 % des appels tracés</b> (Appelé + Intérêt + note).</div>
+        <div class="callout c-ok" style="margin:14px 0 0">🎯 <b>Objectif quotidien :</b> 10 appels le matin + 10 l'après-midi (qualité &gt; quantité) · viser 2-3 RDV d'audit · <b>100 % des appels tracés</b>.</div>
       </div>
 
-      <h2 class="grp-title">Le guichet unique du transporteur</h2>
-      <div class="grp-sub">Ce que Paris Sud vend — à connaître pour pitcher (repris du site paris-sud.com).</div>
-      <div class="grid g3">
-        <div class="card"><h3>Trouver de nouveaux clients</h3><p class="muted">Prospection, mise en relation, nouvelles lignes régulières.</p></div>
-        <div class="card"><h3>Piloter avec l'IA</h3><p class="muted">Exploitation & cotation, flotte & chauffeurs, pilotage & marge.</p></div>
-        <div class="card"><h3>Vous former, vous et vos salariés</h3><p class="muted">Formation IA + diplôme d'État, 100% financé.</p></div>
-        <div class="card"><h3>Refondre votre image</h3><p class="muted">Site, identité, présence en ligne.</p></div>
-        <div class="card"><h3>Transition & valorisation</h3><p class="muted">Flotte, financement, valeur de la société.</p></div>
-        <div class="card"><h3>Le bon réseau, les bons contacts</h3><p class="muted">L'entraide entre transporteurs (à l'adhésion).</p></div>
+      <h2 class="grp-title">Aller plus loin</h2>
+      <div class="grp-sub">Le détail de l'offre, du process et du pilotage.</div>
+      <div class="outcards">
+        <a class="outcard" href="offres.html"><div class="ot">💼 Ce que Paris Sud vend</div><div class="od">Les 2 offres, l'accompagnement 360°, le financement OPCO expliqué.</div><span class="oa">Découvrir →</span></a>
+        <a class="outcard" href="process.html"><div class="ot">🔁 Le circuit A à Z</div><div class="od">De la prospection au contrat signé, chaque étape détaillée.</div><span class="oa">Voir le process →</span></a>
+        <a class="outcard" href="crm.html"><div class="ot">🧠 Le CRM complet</div><div class="od">Prospects, leads, contrats, tâches — piloter toute l'activité.</div><span class="oa">Ouvrir le CRM →</span></a>
       </div>
 
-      <h2 class="grp-title">Le système, en 4 étapes</h2>
-      <div class="circuit">
-        <div class="c"><div class="n">1</div><div class="x">Audit IA gratuit</div><div class="o">30 min avec Abdel</div></div>
-        <div class="c"><div class="n">2</div><div class="x">Plan sur-mesure</div><div class="o">feuille de route</div></div>
-        <div class="c"><div class="n">3</div><div class="x">Accompagnement hebdo</div><div class="o">ateliers chaque semaine</div></div>
-        <div class="c"><div class="n">4</div><div class="x">Diplôme d'État</div><div class="o">RPMS reconnu</div></div>
-      </div>
-
-      <h2 class="grp-title">Le circuit, de A à Z</h2>
-      <div class="circuit">
-        <div class="c"><div class="n">1</div><div class="x">Trouver</div><div class="o">base, mailing, réseaux</div></div>
-        <div class="c"><div class="n">2</div><div class="x">Qualifier</div><div class="o">formulaire en appel</div></div>
-        <div class="c"><div class="n">3</div><div class="x">Relancer</div><div class="o">tel · WhatsApp · mail</div></div>
-        <div class="c"><div class="n">4</div><div class="x">Audit / RDV</div><div class="o">closing ou Abdel</div></div>
-        <div class="c"><div class="n">5</div><div class="x">Adhésion</div><div class="o">formulaires Airtable</div></div>
-        <div class="c"><div class="n">6</div><div class="x">Contrat</div><div class="o">YPAREO + signature</div></div>
-        <div class="c"><div class="n">7</div><div class="x">Prise en charge</div><div class="o">dépôt OPCO → 0&nbsp;€</div></div>
-      </div>
-
-      <div id="groups"></div>
-
-      <div class="callout c-warn" style="margin-top:20px;"><b>Rappels :</b> B2B transport uniquement · jamais « CPF » · jamais se présenter comme « OPCO » (on dit « habilité OPCO Mobilités ») · le réseau se révèle seulement à l'adhésion · une fiche remplie à chaque appel.</div>
+      <div class="callout c-warn"><b>Rappels :</b> B2B transport uniquement · jamais « CPF » · jamais se présenter comme « OPCO » (on dit « habilité OPCO Mobilités ») · le réseau se révèle seulement à l'adhésion · une fiche remplie à chaque appel.</div>
     </div>
   </div>
 </div>
 <script src="nav.js"></script>
 <script>
-var ICN={
- phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/>',
- audit:'<path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
- script:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/>',
- book:'<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
- gear:'<circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.5H10.4l-.3 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4L6 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.5h3.2l.3-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4L18.9 13a7 7 0 0 0 .1-1z"/>'
-};
-var GROUPS=[
- {t:'Pilotage & prospection',s:'Le cœur de votre journée — ouvrez votre suivi des appels en arrivant.',tools:[
-   {n:'📞 Suivi des appels',d:'Cocher · intérêt · notes',u:'https://airtable.com/appaAZXNf5RFf89WV/pagjaeMjeC1CBFWXv',si:'airtable',c:'#18BFFF'},
-   {n:'Cockpit — mes leads',d:'Vos leads du jour',u:'https://airtable.com/appaAZXNf5RFf89WV/pagFIIF8dl5vDMjV6',si:'airtable',c:'#18BFFF'},
-   {n:'Cockpit — Prospects',d:'Base à appeler / relancer',u:'https://airtable.com/appaAZXNf5RFf89WV/pagj9RlR1OveO6TAi',si:'airtable',c:'#18BFFF'},
-   {n:'Formulaire de qualification',d:'Pendant l\'appel',u:'qualification.html',int:'phone'},
-   {n:'Audit IA',d:'Diagnostic transporteur',u:'audit.html',int:'audit'},
-   {n:'Scripts & Pitch',d:'À dégainer au tel',u:'scripts.html',int:'script'},
-   {n:'Playbook',d:'Manuel + objections',u:'playbook.html',int:'book'},
-   {n:'SOP',d:'Réseaux · mailing · WhatsApp',u:'sop.html',int:'gear'},
-   {n:'Base leads (Airtable)',d:'Toutes les fiches',u:'https://airtable.com/appaAZXNf5RFf89WV',si:'airtable',c:'#18BFFF'}
- ]},
- {t:'Vente, contrat & financement',s:'Du oui du prospect jusqu\'au financement OPCO.',tools:[
-   {n:'Adhésion — Entreprise',d:'Infos pour le contrat',u:'https://airtable.com/appaAZXNf5RFf89WV/pagliROW5NttiqP9c/form',si:'airtable',c:'#18BFFF'},
-   {n:'Adhésion — Salarié',d:'Si formation salarié',u:'https://airtable.com/appv3OIuP1STIpVgz/pagaIdjkbRKz9ztJK/form',si:'airtable',c:'#18BFFF'},
-   {n:'YPAREO Neo',d:'Générer le contrat',u:'https://paris-sud.ypareo-neo.com',mono:'Y',c:'#1f7a4d'},
-   {n:'OPCO Mobilités',d:'Espace prise en charge',u:'https://mgestion.opcomobilites.fr',mono:'OM',c:'#e96252'},
-   {n:'Aide compte OPCO',d:'Créer le compte (2 min)',u:'opco.html',int:'book'},
-   {n:'Calendly',d:'RDV audit avec Abdel',u:'https://calendly.com/paris-sud/com',si:'calendly',c:'#006BFF'}
- ]},
- {t:'Acquisition & contenu',s:'Remplir le haut du tunnel : mailing, WhatsApp, réseaux, pubs.',tools:[
-   {n:'Postiz',d:'Planifier les posts (5 réseaux)',u:'https://postiz.com',mono:'Po',c:'#7c3aed'},
-   {n:'Metricool',d:'Programmation & stats réseaux',u:'https://app.metricool.com',mono:'M',c:'#ff4d5e'},
-   {n:'lemlist',d:'Cold mail + LinkedIn',u:'https://app.lemlist.com/login',mono:'lem',c:'#1f7a4d'},
-   {n:'WATI',d:'WhatsApp business',u:'https://app.wati.io',si:'whatsapp',c:'#25D366'},
-   {n:'Notion — Hub',d:'Groupe Paris Sud',u:'https://app.notion.com/p/Groupe-Paris-Sud-Hub-362f6a5b99ef81bebcc6e32b6f046906',si:'notion',c:'#000000'},
-   {n:'Meta Business',d:'Facebook + Instagram + Ads',u:'https://business.facebook.com',si:'meta',c:'#0467DF'},
-   {n:'Instagram',d:'Publier / gérer',u:'https://www.instagram.com',si:'instagram',c:'#E4405F'},
-   {n:'Facebook',d:'Publier / gérer',u:'https://www.facebook.com',si:'facebook',c:'#1877F2'},
-   {n:'LinkedIn',d:'Publier / gérer',u:'https://www.linkedin.com',mono:'in',c:'#0A66C2'},
-   {n:'Google Ads',d:'Campagnes',u:'https://ads.google.com',si:'googleads',c:'#4285F4'},
-   {n:'Canva',d:'Visuels & posts',u:'https://www.canva.com',si:'canva',c:'#00C4CC'},
-   {n:'Trustpilot',d:'Avis clients',u:'https://www.trustpilot.com',si:'trustpilot',c:'#00B67A'},
-   {n:'Site Paris Sud',d:'paris-sud.com',u:'https://paris-sud.com',mono:'PS',c:'#1f7a4d'}
- ]},
- {t:'Communication & organisation',s:'Vos boîtes, agenda et documents.',tools:[
-   {n:'Hostinger Mail',d:'contact@paris-sud.fr (agentes)',u:'https://webmail.hostinger.com',mono:'H',c:'#673de6'},
-   {n:'Gmail',d:'formation@paris-sud.com',u:'https://mail.google.com',si:'gmail',c:'#EA4335'},
-   {n:'WhatsApp Web',d:'Messages directs',u:'https://web.whatsapp.com',si:'whatsapp',c:'#25D366'},
-   {n:'Agenda Google',d:'RDV & planning',u:'https://calendar.google.com',si:'googlecalendar',c:'#4285F4'},
-   {n:'Google Drive',d:'Documents partagés',u:'https://drive.google.com',si:'googledrive',c:'#4285F4'}
- ]}
+var me=(window.PSF_AUTH&&window.PSF_AUTH.current());
+document.getElementById('helloName').textContent='Bonjour'+(me?', '+me.id:'')+' 👋';
+
+var DAILY=[
+ ['📞','Mes appels du jour','Suivi des appels — cocher, noter, relancer','https://airtable.com/appaAZXNf5RFf89WV/pagjaeMjeC1CBFWXv',true],
+ ['📋','Qualifier un prospect','La fiche à remplir pendant l\'appel','qualification.html',false],
+ ['🗣️','Scripts & objections','Le pitch + 14 objections traitées','scripts.html',false],
+ ['✅','Mon échéancier','Tâches, relances, RDV du jour','agenda.html',false],
+ ['🧠','CRM complet','Piloter toute l\'activité, tout modifiable','crm.html',false],
+ ['📕','Bible commerciale','Le guide complet, en PDF','Bible_Commerciale.pdf',true]
 ];
-var root=document.getElementById('groups');
-GROUPS.forEach(function(g){
-  var h=document.createElement('h2');h.className='grp-title';h.textContent=g.t;root.appendChild(h);
-  var sub=document.createElement('div');sub.className='grp-sub';sub.textContent=g.s;root.appendChild(sub);
-  var grid=document.createElement('div');grid.className='launch';
-  g.tools.forEach(function(t){
-    var a=document.createElement('a');a.className='tool';a.href=t.u;
-    var ext=!t.int;if(ext){a.target='_blank';a.rel='noopener';}
-    var logo=document.createElement('span');logo.className='logo';
-    if(t.int){logo.style.background='#e7f3ec';logo.style.borderColor='#bfe3cd';
-      logo.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1f7a4d" stroke-width="2">'+ICN[t.int]+'</svg>';
-    } else if(t.si){
-      var img=document.createElement('img');img.alt=t.n;img.src='https://cdn.simpleicons.org/'+t.si;
-      img.onerror=function(){logo.classList.add('brand');logo.style.background=t.c||'#1f7a4d';logo.innerHTML='<span class="mono">'+(t.mono||t.n[0])+'</span>';};
-      logo.appendChild(img);
-    } else {
-      logo.classList.add('brand');logo.style.background=t.c||'#1f7a4d';
-      logo.innerHTML='<span class="mono">'+(t.mono||t.n[0])+'</span>';
-    }
-    var meta=document.createElement('div');meta.className='meta';
-    meta.innerHTML='<div class="t">'+t.n+(ext?' <span class="ext">↗</span>':'')+'</div><div class="d">'+t.d+'</div>';
-    a.appendChild(logo);a.appendChild(meta);grid.appendChild(a);
-  });
-  root.appendChild(grid);
-});
+document.getElementById('dailyTiles').innerHTML=DAILY.map(function(t){
+  return '<a class="hometile" href="'+t[3]+'"'+(t[4]?' target="_blank" rel="noopener"':'')+'><span class="hi">'+t[0]+'</span><span class="ht">'+t[1]+'</span><span class="hd">'+t[2]+'</span><span class="ha">Ouvrir →</span></a>';
+}).join('');
 </script>
 </body></html>

@@ -42,6 +42,55 @@
     ['Formation & offre',['formation','offres','process','opco']],
     ['Contenu',['contenu','sop','documents']]
   ];
+  // Tous les outils externes — liste défilante dans la sidebar (recherche incluse)
+  var TOOLS=[
+   ['Pilotage & prospection',[
+     ['📞','Suivi des appels','https://airtable.com/appaAZXNf5RFf89WV/pagjaeMjeC1CBFWXv'],
+     ['🎯','Cockpit — mes leads','https://airtable.com/appaAZXNf5RFf89WV/pagFIIF8dl5vDMjV6'],
+     ['📇','Cockpit — Prospects','https://airtable.com/appaAZXNf5RFf89WV/pagj9RlR1OveO6TAi'],
+     ['🗂️','Base leads (Airtable)','https://airtable.com/appaAZXNf5RFf89WV']
+   ]],
+   ['Vente, contrat & financement',[
+     ['🏢','Adhésion — Entreprise','https://airtable.com/appaAZXNf5RFf89WV/pagliROW5NttiqP9c/form'],
+     ['👤','Adhésion — Salarié','https://airtable.com/appv3OIuP1STIpVgz/pagaIdjkbRKz9ztJK/form'],
+     ['📝','YPAREO Neo','https://paris-sud.ypareo-neo.com'],
+     ['🏛️','OPCO Mobilités','https://mgestion.opcomobilites.fr'],
+     ['📅','Calendly','https://calendly.com/paris-sud/com']
+   ]],
+   ['Acquisition & contenu',[
+     ['📣','Postiz','https://postiz.com'],
+     ['📊','Metricool','https://app.metricool.com'],
+     ['✉️','lemlist','https://app.lemlist.com/login'],
+     ['💬','WATI','https://app.wati.io'],
+     ['📓','Notion — Hub','https://app.notion.com/p/Groupe-Paris-Sud-Hub-362f6a5b99ef81bebcc6e32b6f046906'],
+     ['📘','Meta Business','https://business.facebook.com'],
+     ['📷','Instagram','https://www.instagram.com'],
+     ['📘','Facebook','https://www.facebook.com'],
+     ['💼','LinkedIn','https://www.linkedin.com'],
+     ['🔎','Google Ads','https://ads.google.com'],
+     ['🎨','Canva','https://www.canva.com'],
+     ['⭐','Trustpilot','https://www.trustpilot.com'],
+     ['🌐','Site Paris Sud','https://paris-sud.com']
+   ]],
+   ['Communication & organisation',[
+     ['📧','Hostinger Mail','https://webmail.hostinger.com'],
+     ['✉️','Gmail','https://mail.google.com'],
+     ['💬','WhatsApp Web','https://web.whatsapp.com'],
+     ['📆','Agenda Google','https://calendar.google.com'],
+     ['📁','Google Drive','https://drive.google.com']
+   ]]
+  ];
+  var toolCount=TOOLS.reduce(function(a,g){return a+g[1].length;},0);
+  var toolsHtml='<div class="sb-toolsbox"><div class="sb-toolshead">🧰 Tous les outils <span class="cnt">'+toolCount+'</span></div>'
+    +'<input class="sb-toolsearch" id="toolSearch" placeholder="Chercher un outil…">'
+    +'<div class="sb-toolslist" id="toolList">'
+    +TOOLS.map(function(g){
+      return '<div class="sb-toolgrp">'+g[0]+'</div>'+g[1].map(function(t){
+        return '<a class="sb-toolrow" href="'+t[2]+'" target="_blank" rel="noopener" data-name="'+t[1].toLowerCase()+'"><span class="ic">'+t[0]+'</span><span class="nm">'+t[1]+'</span><span class="ext">↗</span></a>';
+      }).join('');
+    }).join('')
+    +'</div></div>';
+
   var page=document.body.getAttribute('data-page')||'';
   var navHtml=GROUPS.map(function(g){
     return '<div class="sb-grp">'+g[0]+'</div>'+g[1].map(function(k){var it=META[k];
@@ -55,6 +104,7 @@
     side.innerHTML=
       '<a class="sb-brand" href="index.html">'+logoSVG('lgb')+'<span class="sb-bt">Paris Sud<b>Formation</b></span></a>'
       +'<div class="sb-nav">'+navHtml+'</div>'
+      +toolsHtml
       +'<div class="sb-quickwrap"><div class="sb-grp">⚡ Liens à copier</div>'
         +[['🏢','Adhésion entreprise','https://airtable.com/appaAZXNf5RFf89WV/pagliROW5NttiqP9c/form'],
           ['👤','Adhésion salarié','https://airtable.com/appv3OIuP1STIpVgz/pagaIdjkbRKz9ztJK/form'],
@@ -152,6 +202,21 @@
         img.src=r.result;
       };
       r.readAsDataURL(f);
+    });
+  }
+
+  // recherche dans la liste défilante d'outils
+  var tsearch=document.getElementById('toolSearch');
+  if(tsearch){
+    tsearch.addEventListener('input',function(){
+      var f=this.value.toLowerCase().trim();
+      var rows=document.querySelectorAll('#toolList .sb-toolrow');
+      rows.forEach(function(r){r.style.display=(!f||r.getAttribute('data-name').indexOf(f)>-1)?'flex':'none';});
+      document.querySelectorAll('#toolList .sb-toolgrp').forEach(function(g){
+        var next=g.nextElementSibling,any=false;
+        while(next&&!next.classList.contains('sb-toolgrp')){if(next.style.display!=='none')any=true;next=next.nextElementSibling;}
+        g.style.display=any?'block':'none';
+      });
     });
   }
 
