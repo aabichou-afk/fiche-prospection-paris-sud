@@ -42,6 +42,21 @@ a{color:inherit;text-decoration:none}
 .sb-quick .qc{flex:none;font-size:.82rem;color:#8aa295;font-weight:700}
 .sb-quick .qo{flex:none;font-size:.82rem;color:#8aa295;text-decoration:none;padding:2px 5px;border-radius:6px}
 .sb-quick .qo:hover{background:#ECF2EF;color:var(--dark)}
+/* liste défilante des outils (sidebar) */
+.sb-toolsbox{padding:12px 14px 4px;border-top:1px solid #EAEFEC}
+.sb-toolshead{font-size:.63rem;letter-spacing:.16em;text-transform:uppercase;color:#9aa8a1;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sb-toolshead .cnt{background:#ECF2EF;color:#7a8781;border-radius:999px;padding:0 7px;font-size:.68rem;letter-spacing:0;text-transform:none;font-weight:700}
+.sb-toolsearch{width:100%;padding:7px 10px;border:1px solid #E4EAE7;border-radius:9px;font-size:.78rem;font-family:inherit;margin-bottom:6px;background:#fff}
+.sb-toolsearch:focus{outline:none;border-color:#1f8a5c}
+.sb-toolslist{max-height:230px;overflow-y:auto;padding-right:2px}
+.sb-toolslist::-webkit-scrollbar{width:5px}.sb-toolslist::-webkit-scrollbar-thumb{background:#d8e2dd;border-radius:3px}
+.sb-toolgrp{font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;color:#9aa8a1;font-weight:700;margin:9px 6px 3px}
+.sb-toolgrp:first-child{margin-top:2px}
+.sb-toolrow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;font-size:.79rem;color:#4a5a52;font-weight:600;text-decoration:none}
+.sb-toolrow:hover{background:#ECF2EF;color:var(--dark)}
+.sb-toolrow .ic{font-size:.88rem;flex:none;width:18px;text-align:center}
+.sb-toolrow .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-toolrow .ext{color:#c3cfc9;font-size:.62rem;flex:none}
 .sb-foot{padding:12px 16px 18px;border-top:1px solid #EAEFEC}
 .sb-cta{display:flex;justify-content:center;gap:.4rem;background:var(--primary);color:#fff;font-weight:700;font-size:.86rem;padding:11px;border-radius:12px;box-shadow:0 10px 22px -12px rgba(31,138,92,.55);transition:.15s}
 .sb-cta:hover{background:var(--primary-d)}
