@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Contrats & dossiers en cours · Paris Sud Formation</title>
+<title>Contrats & Tâches · Paris Sud Formation</title>
 <link rel="stylesheet" href="style.css">
 <script src="gate.js"></script>
 <style>
@@ -10,17 +10,23 @@
 .kpi{background:#fff;border:1px solid var(--line,#E8E4D8);border-radius:16px;padding:16px 18px;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
 .kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:700;color:var(--primary,#1f8a5c);line-height:1}
 .kpi .l{font-size:.82rem;color:#5f6b62;margin-top:4px}
-.ctab{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 10px 30px -22px rgba(17,54,43,.6);font-size:.9rem}
-.ctab th{background:#11362b;color:#fff;text-align:left;padding:11px 12px;font-weight:600;font-size:.8rem}
-.ctab td{padding:11px 12px;border-top:1px solid #EDEAE0;vertical-align:top}
-.ctab tr:hover td{background:#FAF8F2}
-.st{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.74rem;font-weight:700;white-space:nowrap}
-.st-signe{background:#e3f5ea;color:#1f7a4d}.st-envoye{background:#fdf3df;color:#9a7212}.st-corrections{background:#fde7d3;color:#b5621a}.st-bloque{background:#fde8e3;color:#c0432a}.st-asaisir{background:#eef0f2;color:#4a5a52}
+.rowcard{background:#fff;border:1px solid #EDEAE0;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 6px 18px -16px rgba(17,54,43,.4)}
+.rowcard .r1{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.rowcard .nm{font-weight:700;color:#11362b}
+.rowcard .sub{font-size:.82rem;color:#5f6b62;margin-top:2px;max-width:520px}
+.rowcard select{border:1px solid #E0DED2;border-radius:9px;padding:6px 8px;font-size:.82rem;font-family:inherit;background:#FAF8F2}
+.rowcard .savepill{opacity:0;color:#1f8a5c;font-weight:700;transition:.2s;margin-left:6px;font-size:.78rem;white-space:nowrap}
+.rowcard .savepill.show{opacity:1}
 .money{font-weight:700;color:#11362b;white-space:nowrap}
 .livebtn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;background:#11362b;color:#fff;font-weight:700;font-size:.9rem;text-decoration:none}
 .livebtn:hover{background:#1f6f5c}
 .synced{font-size:.8rem;color:#5f6b62;margin-left:10px}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1f8a5c;margin-right:5px;vertical-align:middle}
+.conn{font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:999px}
+.conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fde8e3;color:#c0432a}
+.chipbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.chip{padding:6px 13px;border-radius:999px;background:#fff;border:1px solid #E0DED2;font-size:.8rem;font-weight:600;color:#5f6b62;cursor:pointer}
+.chip.on{background:#11362b;color:#fff;border-color:#11362b}
 </style>
 </head><body data-page="contrats">
 <div class="app">
@@ -28,50 +34,41 @@
   <div class="main">
     <div class="topbar">
       <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
-      <h1>Contrats & dossiers en cours</h1><span class="tag">Cash en vol</span>
+      <h1>Contrats & Tâches</h1><span class="conn" id="conn">…</span>
     </div>
     <div class="content">
       <div class="hero-banner">
-        <span class="pill">Pipeline signatures</span>
-        <h1>Vos contrats, du CERFA à la facture OPCO.</h1>
-        <p>L'état réel de chaque dossier apprentissage — signé, bloqué, à saisir. Données <b>synchronisées depuis Airtable</b> : modifiez là-bas, la page suit.</p>
+        <span class="pill">Live Airtable</span>
+        <h1>Vos dossiers et vos tâches, en direct.</h1>
+        <p>Modifiez ici ou dans Airtable — c'est la même donnée, à jour des deux côtés, instantanément.</p>
         <div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap">
-          <a class="livebtn" id="editbtn" href="https://airtable.com/appaAZXNf5RFf89WV/paguMocSPAlHEMgrS" target="_blank" rel="noopener"><span class="dot" style="background:#8cc63f"></span>Éditer / commenter dans Airtable →</a>
-          <a class="livebtn" href="https://airtable.com/appaAZXNf5RFf89WV/pagJaOpzp1Nd4W00y" target="_blank" rel="noopener" style="background:#18BFFF;margin-left:8px">✅ Tâches équipe →</a>
+          <a class="livebtn" href="https://airtable.com/appaAZXNf5RFf89WV/paguMocSPAlHEMgrS" target="_blank" rel="noopener"><span class="dot" style="background:#8cc63f"></span>Contrats dans Airtable →</a>
+          <a class="livebtn" href="https://airtable.com/appaAZXNf5RFf89WV/pagJaOpzp1Nd4W00y" target="_blank" rel="noopener" style="background:#18BFFF;margin-left:8px">Tâches dans Airtable →</a>
           <span class="synced" id="synced"></span>
         </div>
       </div>
 
-      <div class="kpis" id="kpis"></div>
+      <div id="offline" class="callout c-warn" style="display:none">⚠️ CRM pas encore connecté sur cet appareil — <a href="crm.html">ouvre le CRM</a> et clique ⚙️ Connecter une fois, ça vaudra aussi pour cette page (même connexion, partagée).</div>
 
-      <h2 class="grp-title">Détail des dossiers</h2>
-      <div class="grp-sub" id="sub">Chargement…</div>
-      <div style="overflow-x:auto"><table class="ctab" id="ctab"></table></div>
+      <h2 class="grp-title">📁 Contrats</h2>
+      <div class="kpis" id="kpisC"></div>
+      <div class="chipbar" id="chipsC"></div>
+      <div id="listC"><div class="rowcard">Chargement…</div></div>
 
-      <h2 class="grp-title">Dossiers par financeur (OPCO)</h2>
+      <h2 class="grp-title" style="margin-top:34px">✅ Tâches à faire</h2>
+      <div class="kpis" id="kpisT"></div>
+      <div class="chipbar" id="chipsT"></div>
+      <div id="listT"><div class="rowcard">Chargement…</div></div>
+
+      <h2 class="grp-title" style="margin-top:34px">Repères — financeurs & agréments</h2>
       <div class="grid g2">
-        <div class="card"><h3 style="color:var(--primary-3,#11362b)">OPCO Mobilités</h3><ul class="clean"><li>Travels Partners ✅ · GTS ✅</li><li>Euro Trans · Laya Cars</li></ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#11362b)">OPCO Mobilités</h3><ul class="clean"><li>Travels Partners · GTS · Euro Trans · Laya Cars</li></ul></div>
         <div class="card"><h3 style="color:var(--primary-3,#11362b)">AKTO</h3><ul class="clean"><li>Betra Services · Anya Clean Service · Laya Clean</li></ul></div>
         <div class="card"><h3 style="color:var(--primary-3,#11362b)">Op'Commerce</h3><ul class="clean"><li>SAFE · Kalishop · Global Trading Company</li></ul></div>
-        <div class="card"><h3 style="color:var(--primary-3,#11362b)">OPCO EP</h3><ul class="clean"><li>Quick Évasion Beauté (Sahli) · Maison des Pains (à relancer) · Laya Bat · N Fournil</li></ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#11362b)">OPCO EP</h3><ul class="clean"><li>Quick Évasion Beauté (Sahli) · Maison des Pains · Laya Bat · N Fournil</li></ul></div>
         <div class="card"><h3 style="color:var(--primary-3,#11362b)">ATLAS</h3><ul class="clean"><li>Laya Consulting (RPMS)</li></ul></div>
-        <div class="card"><h3 style="color:var(--gold-d,#9a7212)">À trancher</h3><ul class="clean"><li>RK Service 🚫 FIFPL · Tavares Rendy ⚠️ à refaire</li></ul></div>
+        <div class="card"><h3 style="color:var(--gold-d,#9a7212)">🎓 Agréments</h3><ul class="clean"><li>TP RPMS RNCP 38575 (Niveau 5)</li><li>DRIEETS n°27230466 — 2ᵉ TP en instruction</li><li>N° DA 11911094991 · UAI 0912524Z · Qualiopi</li></ul></div>
       </div>
-
-      <h2 class="grp-title">Développement formation — en cours</h2>
-      <div class="grid g2">
-        <div class="card"><h3 style="color:var(--gold-d,#9a7212)">⚡ Démarches à relancer</h3><ul class="clean">
-          <li><b>EDOF</b> — refaire la demande ⚠️</li><li><b>Kairos</b> — se reconnecter</li>
-          <li><b>Soltea</b> — demande de référencement</li><li><b>Op'Commerce</b> — création du compte</li>
-        </ul></div>
-        <div class="card"><h3 style="color:var(--primary-3,#11362b)">🎓 Agréments / titres</h3><ul class="clean">
-          <li><b>TP RPMS</b> — RNCP 38575 (Niveau 5) validé</li>
-          <li><b>DRIEETS n°27230466</b> — 2ᵉ TP en instruction 🟡</li>
-          <li>N° DA 11911094991 · UAI 0912524Z · Qualiopi</li>
-        </ul></div>
-      </div>
-
-      <div class="callout c-warn" style="margin-top:16px" id="prio"></div>
 
       <div class="launch" id="launch" style="margin-top:18px"></div>
     </div>
@@ -79,38 +76,118 @@
 </div>
 <script src="nav.js"></script>
 <script>
-var STL={signe:['✅ Signé','st-signe'],envoye:['⏳ Envoyé entreprise','st-envoye'],corrections:['🟠 Corrections','st-corrections'],bloque:['⚠️ Bloqué','st-bloque'],asaisir:['📝 À saisir','st-asaisir']};
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function eur(n){return n?n.toLocaleString('fr-FR')+' €':'—';}
-fetch('contrats.json?cb='+Date.now()).then(function(r){return r.json()}).then(function(d){
-  var C=d.contrats||[];
-  document.getElementById('editbtn').href=d.interface||'#';
-  document.getElementById('synced').textContent='Sync '+(d.updated||'')+' · '+d.source;
-  var saisis=C.filter(function(c){return c.statut!=='asaisir'}).length;
-  var asaisir=C.filter(function(c){return c.statut==='asaisir'}).length;
-  var bloq=C.filter(function(c){return c.statut==='bloque'||c.statut==='corrections'}).length;
-  var signeMt=C.filter(function(c){return c.statut==='signe'&&c.montant}).reduce(function(a,c){return a+c.montant},0);
-  document.getElementById('kpis').innerHTML=
-    '<div class="kpi"><div class="v">'+saisis+'</div><div class="l">Contrats saisis YPAREO</div></div>'
-   +'<div class="kpi"><div class="v">'+asaisir+'</div><div class="l">À saisir</div></div>'
-   +'<div class="kpi"><div class="v">'+eur(signeMt).replace(' €','&nbsp;€')+'</div><div class="l">Conventions signées</div></div>'
-   +'<div class="kpi"><div class="v">'+bloq+'</div><div class="l">Dossiers à débloquer 🔴</div></div>';
-  document.getElementById('sub').innerHTML='<span class="dot"></span>'+C.length+' dossiers · source live Airtable';
-  var head='<tr><th>Apprenant</th><th>Entreprise</th><th>Formation</th><th>Début → fin</th><th>Financeur</th><th>Montant</th><th>Statut</th><th>Note</th></tr>';
-  var order={bloque:0,corrections:1,envoye:2,signe:3,asaisir:4};
-  C.sort(function(a,b){return (order[a.statut]||9)-(order[b.statut]||9)});
-  var rows=C.map(function(c){
-    var st=STL[c.statut]||['—','st-asaisir'];
-    var per=esc(c.debut)+(c.fin?'<br>→'+esc(c.fin):'');
-    var mt=c.montant?'<span class="money">'+eur(c.montant)+'</span>':'—';
-    return '<tr><td><b>'+esc(c.apprenant)+'</b>'+(c.num?'<br><span class="muted" style="font-size:.76rem">'+esc(c.num)+'</span>':'')+'</td>'
-      +'<td>'+esc(c.entreprise)+'</td><td>'+esc(c.formation||'—')+'</td><td>'+per+'</td>'
-      +'<td>'+esc(c.financeur)+'</td><td>'+mt+'</td><td><span class="st '+st[1]+'">'+st[0]+'</span></td>'
-      +'<td style="font-size:.82rem;color:#5f6b62;max-width:230px">'+esc(c.note)+'</td></tr>';
-  }).join('');
-  document.getElementById('ctab').innerHTML=head+rows;
-  document.getElementById('prio').innerHTML='<b>Priorité cash :</b> lever les blocages ('+bloq+') — renvoyer les signatures Sahli, débloquer le N° DECA de Rosco (ou rompre + refaire Atlas), saisir les '+asaisir+' contrats en attente. Les conventions signées ('+eur(signeMt)+') partent en facturation OPCO dès accord.';
-}).catch(function(){document.getElementById('sub').textContent='Impossible de charger les données.';});
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var ME=(window.PSF_AUTH&&window.PSF_AUTH.current()&&window.PSF_AUTH.current().id)||'';
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function eur(n){return n?Number(n).toLocaleString('fr-FR')+' €':'—';}
+function apic(method,payload,q){var opt={method:method,headers:{'x-crm-key':CFG.key}};if(payload){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(payload);}
+  return fetch(CFG.api+(q||''),opt).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+
+var COLS={
+ contrats:{table:'Contrats',cols:{apprenant:'Apprenant',entreprise:'Entreprise',statut:'Statut',financeur:'Financeur',montant:'Montant convention',note:'Blocage / note'},
+   statutOpts:['📝 À saisir','⏳ Envoyé entreprise','🟠 Corrections','⚠️ Bloqué','✅ Signé']},
+ taches:{table:'Taches',cols:{tache:'Tâche',assigne:'Assigné à',statut:'Statut',priorite:'Priorité',dossier:'Dossier lié',notes:'Notes'},
+   statutOpts:['🔴 À faire','🟠 En cours','⏸ En attente','✅ Fait'],
+   prioriteOpts:['🔥 Haute','🟠 Moyenne','🟡 Basse']}
+};
+var DATA={contrats:[],taches:[]},CHIP={contrats:'',taches:''};
+
+function fetchAll(key){var T=COLS[key];
+  return apic('GET',null,'?table='+T.table+'&max=900').then(function(j){
+    return (j.records||[]).map(function(r){var o={id:r.id};for(var k in T.cols){var v=r.fields[T.cols[k]];o[k]=(v&&v.name)?v.name:v;}return o;});
+  });
+}
+function kpi(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
+function save(key,id,fieldName,value,pill){
+  var rec=(DATA[key]||[]).filter(function(r){return r.id===id})[0];
+  if(rec){var fk=Object.keys(COLS[key].cols).filter(function(k){return COLS[key].cols[k]===fieldName})[0];if(fk)rec[fk]=value;}
+  var fields={};fields[fieldName]=value;
+  return apic('PATCH',{table:COLS[key].table,id:id,fields:fields}).then(function(){
+    if(pill){pill.classList.add('show');setTimeout(function(){pill.classList.remove('show');},1400);}
+    renderKpis(key);
+  });
+}
+
+function cardContrat(r){var T=COLS.contrats;
+ return '<div class="rowcard" data-id="'+r.id+'"><div class="r1"><div><div class="nm">'+esc(r.apprenant||'—')+'</div><div class="sub">'+esc(r.entreprise||'')+(r.montant?' · <span class="money">'+eur(r.montant)+'</span>':'')+(r.financeur?' · '+esc(r.financeur):'')+(r.note?' · '+esc(r.note):'')+'</div></div>'
+  +'<div><select data-f="Statut">'+T.statutOpts.map(function(o){return '<option'+(o===r.statut?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select><span class="savepill">✓ enregistré</span></div></div></div>';}
+function cardTache(r){var T=COLS.taches;
+ return '<div class="rowcard" data-id="'+r.id+'"><div class="r1"><div><div class="nm">'+esc(r.tache||'—')+'</div><div class="sub">'+(r.priorite?esc(r.priorite)+' · ':'')+(r.dossier?esc(r.dossier)+' · ':'')+(r.assigne?'<b>'+esc(r.assigne)+'</b>':'')+(r.notes?' · '+esc(r.notes):'')+'</div></div>'
+  +'<div><select data-f="Statut">'+T.statutOpts.map(function(o){return '<option'+(o===r.statut?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select><span class="savepill">✓ enregistré</span></div></div></div>';}
+
+function bind(key,container){
+  container.querySelectorAll('.rowcard').forEach(function(el){
+    el.querySelectorAll('select').forEach(function(sel){
+      sel.addEventListener('change',function(){
+        var pill=el.querySelector('.savepill');
+        save(key,el.getAttribute('data-id'),sel.getAttribute('data-f'),sel.value,pill).then(function(){renderList(key);});
+      });
+    });
+  });
+}
+
+function renderKpis(key){
+  var rows=DATA[key]||[];
+  if(key==='contrats'){
+    var sig=rows.filter(function(r){return r.statut==='✅ Signé';});
+    var bl=rows.filter(function(r){return r.statut==='⚠️ Bloqué'||r.statut==='🟠 Corrections';}).length;
+    var asaisir=rows.filter(function(r){return r.statut==='📝 À saisir';}).length;
+    var eurSum=sig.reduce(function(a,r){return a+(Number(r.montant)||0);},0);
+    document.getElementById('kpisC').innerHTML=kpi(rows.length,'Contrats')+kpi(sig.length,'Signés')+kpi(eur(eurSum),'Montant signé')+kpi(bl,'🔴 À débloquer')+kpi(asaisir,'📝 À saisir');
+  }else{
+    var af=rows.filter(function(r){return r.statut==='🔴 À faire';}).length;
+    var ec=rows.filter(function(r){return r.statut==='🟠 En cours';}).length;
+    var ft=rows.filter(function(r){return r.statut==='✅ Fait';}).length;
+    var ht=rows.filter(function(r){return r.priorite==='🔥 Haute'&&r.statut!=='✅ Fait';}).length;
+    document.getElementById('kpisT').innerHTML=kpi(af,'À faire')+kpi(ec,'En cours')+kpi(ht,'🔥 Prioritaires')+kpi(ft,'Faites');
+  }
+}
+function renderChips(key){
+  var opts=key==='contrats'?[['','Tous'],['⚠️ Bloqué','🔴 Bloqués/corrections'],['📝 À saisir','À saisir'],['✅ Signé','Signés']]
+                            :[['','Toutes'],['me','Les miennes'],['🔴 À faire','À faire'],['🔥 Haute','🔥 Prioritaires'],['✅ Fait','Faites']];
+  var el=document.getElementById(key==='contrats'?'chipsC':'chipsT');
+  el.innerHTML=opts.map(function(o){return '<span class="chip'+(CHIP[key]===o[0]?' on':'')+'" data-c="'+esc(o[0])+'">'+esc(o[1])+'</span>';}).join('');
+  el.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){CHIP[key]=c.getAttribute('data-c');renderChips(key);renderList(key);});});
+}
+function renderList(key){
+  var rows=(DATA[key]||[]).slice();
+  var c=CHIP[key];
+  if(c==='me')rows=rows.filter(function(r){return r.assigne===ME;});
+  else if(c)rows=rows.filter(function(r){return r.statut===c||r.priorite===c;});
+  if(key==='contrats'){
+    var order={'⚠️ Bloqué':0,'🟠 Corrections':1,'⏳ Envoyé entreprise':2,'📝 À saisir':3,'✅ Signé':4};
+    rows.sort(function(a,b){return (order[a.statut]==null?9:order[a.statut])-(order[b.statut]==null?9:order[b.statut]);});
+  }else{
+    var po={'🔥 Haute':0,'🟠 Moyenne':1,'🟡 Basse':2};
+    rows.sort(function(a,b){return (po[a.priorite]==null?9:po[a.priorite])-(po[b.priorite]==null?9:po[b.priorite]);});
+  }
+  var container=document.getElementById(key==='contrats'?'listC':'listT');
+  if(!rows.length){container.innerHTML='<div class="rowcard">Aucune ligne pour ce filtre.</div>';return;}
+  container.innerHTML=rows.map(key==='contrats'?cardContrat:cardTache).join('');
+  bind(key,container);
+}
+
+function boot(){
+  var conn=document.getElementById('conn');
+  if(!LIVE){
+    conn.className='conn demo';conn.textContent='Aperçu';
+    document.getElementById('offline').style.display='block';
+    document.getElementById('listC').innerHTML='';document.getElementById('listT').innerHTML='';
+    return;
+  }
+  conn.className='conn live';conn.textContent='● Live';
+  document.getElementById('synced').textContent='Sync '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  Promise.all([fetchAll('contrats'),fetchAll('taches')]).then(function(r){
+    DATA.contrats=r[0];DATA.taches=r[1];
+    renderKpis('contrats');renderChips('contrats');renderList('contrats');
+    renderKpis('taches');renderChips('taches');renderList('taches');
+  }).catch(function(e){
+    document.getElementById('listC').innerHTML='<div class="rowcard">Erreur : '+esc(e.message)+'</div>';
+    document.getElementById('listT').innerHTML='';
+  });
+}
+boot();
 
 var T=[
  ['YPAREO Neo','Saisie contrats','https://paris-sud.ypareo-neo.com','','#1f8a5c'],
