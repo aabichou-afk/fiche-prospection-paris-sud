@@ -42,7 +42,7 @@
     }).join('');
     o.innerHTML='<div style="background:#fff;border:1px solid #E9EEEC;border-radius:22px;padding:30px 28px;max-width:380px;width:100%;box-shadow:0 30px 70px -30px rgba(17,54,43,.35)">'
       +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">'
-      +'<svg width="40" height="40" viewBox="0 0 100 100"><circle cx="38" cy="50" r="27" fill="#A7E8C6"/><circle cx="60" cy="50" r="27" fill="#156047"/><path d="M49 26.4a27 27 0 0 1 0 47.2 27 27 0 0 1 0-47.2z" fill="#0c4130"/></svg>'
+      +'<svg width="40" height="40" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#fff"/><circle cx="41" cy="50" r="19" fill="#00E676"/><circle cx="59" cy="50" r="19" fill="#0A7D6E"/><path d="M50 33.3a19 19 0 0 1 0 33.4 19 19 0 0 1 0-33.4z" fill="#fff"/></svg>'
       +'<div style="font-family:Poppins,system-ui,sans-serif;font-size:1.15rem;font-weight:800;color:#1e2a3a">Paris Sud <span style="color:#1f8a5c">Formation</span></div></div>'
       +'<p style="color:#7a8781;font-size:.86rem;margin:2px 0 16px">Choisissez votre profil pour continuer.</p>'
       +'<div id="pusers" style="display:grid;gap:8px">'+userBtns+'</div>'
