@@ -4,19 +4,35 @@
 <title>Pilotage dirigeant · Paris Sud</title>
 <link rel="stylesheet" href="style.css">
 <script src="gate.js"></script>
+<style>
+.conn{font-size:.78rem;font-weight:700;padding:4px 11px;border-radius:999px}
+.conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fde8e3;color:#c0432a}
+.now3{display:grid;gap:12px;margin:6px 0 20px}
+.nowcard{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #EDEAE0;border-left:5px solid #1f8a5c;border-radius:14px;padding:16px 18px;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
+.nowcard .rk{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1.7rem;color:#1f8a5c;line-height:1;min-width:28px}
+.nowcard .nm{font-weight:700;color:#11362b}
+.nowcard .sub{font-size:.84rem;color:#5f6b62;margin-top:3px}
+.nowcard a.go{margin-left:auto;white-space:nowrap;align-self:center;font-weight:700;color:#1f8a5c;text-decoration:none;font-size:.86rem}
+</style>
 </head><body data-page="pilotage">
 <div class="app">
   <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
   <div class="main">
     <div class="topbar">
       <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
-      <h1>Pilotage dirigeant</h1><span class="tag" id="today"></span>
+      <h1>Pilotage dirigeant</h1><span class="conn" id="conn">…</span><span class="tag" id="today"></span>
     </div>
     <div class="content">
       <div class="hero-banner">
         <h1 id="helloName">Bonjour, Abdel 👋</h1>
-        <p>Vos statistiques du jour</p>
+        <p>Vos statistiques du jour — données live Airtable</p>
       </div>
+
+      <div id="offline" class="callout c-warn" style="display:none">⚠️ CRM pas connecté sur cet appareil — <a href="crm.html">ouvre le CRM</a> et clique ⚙️ Connecter une fois, ça vaudra pour toutes les pages.</div>
+
+      <h2 class="grp-title">🎯 Maintenant — top 3 actions</h2>
+      <div class="grp-sub">Calculé en direct : tâches 🔥 prioritaires, contrats bloqués, prospects chauds non rappelés. Cash d'abord.</div>
+      <div class="now3" id="now3"><div class="rowcard">Chargement…</div></div>
 
       <div class="dashrow">
         <div class="dcard">
@@ -52,28 +68,13 @@
       </div>
 
       <h2 class="grp-title">Mes bases prospects</h2>
-      <div class="grp-sub">L'état de la matière première — mise à jour du 30 juin.</div>
-      <div class="circuit">
-        <div class="c"><div class="n">64</div><div class="x">Chargés & prêts à appeler</div><div class="o">dans le cockpit</div></div>
-        <div class="c"><div class="n">691</div><div class="x">Transporteurs contactables</div><div class="o">tél + email</div></div>
-        <div class="c"><div class="n">617</div><div class="x">Prêts cold mail</div><div class="o">lemlist</div></div>
-        <div class="c"><div class="n">1 500</div><div class="x">Base totale (avec tél)</div><div class="o">à charger au fil de l'eau</div></div>
-      </div>
-      <div class="callout c-ok" style="margin-top:6px">👉 <b>64 entreprises de transport</b> avec téléphone sont déjà dans le <a href="https://airtable.com/appaAZXNf5RFf89WV/pagj9RlR1OveO6TAi" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">Cockpit prospects</a> (onglet « À appeler »). Il reste ~627 à charger — demande « encore » quand tu veux.</div>
+      <div class="grp-sub" id="prospSub">Chargement…</div>
+      <div class="circuit" id="prospCircuit"></div>
 
       <h2 class="grp-title">📁 Contrats & cash en cours</h2>
       <div class="grp-sub">Vos dossiers apprentissage — du CERFA à la facture OPCO.</div>
-      <div class="circuit">
-        <div class="c"><div class="n">6</div><div class="x">Saisis YPAREO</div><div class="o">en cours de signature</div></div>
-        <div class="c"><div class="n">16 666 €</div><div class="x">Conventions signées</div><div class="o">AOUN + SAHLI · à facturer OPCO</div></div>
-        <div class="c"><div class="n">3</div><div class="x">À saisir</div><div class="o">Mehdi · Evan · Tamba</div></div>
-        <div class="c"><div class="n">3</div><div class="x">Blocages 🔴</div><div class="o">signatures Sahli · DECA Rosco</div></div>
-      </div>
-      <div class="callout c-warn" style="margin-top:6px">👉 Le détail complet, dossier par dossier, est dans <a href="contrats.html" style="color:var(--primary);font-weight:700">Contrats & dossiers en cours</a> — statuts, financeurs et blocages à lever.</div>
-
-      <h2 class="grp-title">💰 Mes priorités cash — aujourd'hui</h2>
-      <div class="grp-sub">Coche au fur et à mesure. Remise à zéro chaque matin. <span id="prog" style="font-weight:700;color:var(--primary)"></span></div>
-      <div id="tasks"></div>
+      <div class="circuit" id="contratsCircuit"></div>
+      <div class="callout c-warn" style="margin-top:6px">👉 Le détail complet, dossier par dossier, est dans <a href="contrats.html" style="color:var(--primary);font-weight:700">Contrats & Tâches</a> — statuts, financeurs et blocages à lever.</div>
 
       <h2 class="grp-title">Mes outils — accès direct</h2>
       <div class="grp-sub">Tout ce que vous ouvrez chaque jour, en 1 clic.</div>
@@ -109,6 +110,7 @@
         <li><b>2 relances auto puis stop</b> : ne pas s'épuiser sur les silencieux.</li>
         <li><b>Déléguer aux agentes</b> tout ce qui est dans l'espace ; vous = closing + décisions cash.</li>
         <li><b>Une session = un sujet</b> avec Claude (éviter le fourre-tout qui épuise).</li>
+        <li><b>Toute décision orale se note dans TASKS.md tout de suite</b> — sinon une automatisation qui tourne la nuit peut agir contre.</li>
       </ul></div>
     </div>
   </div>
@@ -117,36 +119,114 @@
 <script>
 var $=function(s){return document.querySelector(s)};
 var d=new Date();$('#today').textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-// ---- priorités cash (localStorage par jour) ----
-var TASKS=[
- "💰 Cockpit leads : closer les RDV qualifiés en attente",
- "📞 Cockpit prospects : traiter les « À appeler » & « À rappeler »",
- "✍️ Relancer les signatures électroniques en attente",
- "🏛️ Relancer les dépôts / accords de prise en charge OPCO",
- "✅ Valider les contenus du jour (posts, mails, WhatsApp)",
- "🔁 Lancer / relancer une séquence lemlist",
- "🤝 1 décision cash (devis, relance créance, partenariat)"
-];
-var key='psf_pilotage_'+d.toISOString().slice(0,10);
-var done=JSON.parse(localStorage.getItem(key)||'[]');
-function renderTasks(){
-  var html=TASKS.map(function(t,i){
-    var c=done.indexOf(i)>-1;
-    return '<label class="card" style="display:flex;gap:.7rem;align-items:center;cursor:pointer;margin-bottom:8px;padding:13px 16px'+(c?';opacity:.55':'')+'">'
-      +'<input type="checkbox" data-i="'+i+'" '+(c?'checked':'')+' style="width:20px;height:20px;min-height:0;accent-color:#1f8a5c">'
-      +'<span style="font-size:.95rem;color:var(--dark);'+(c?'text-decoration:line-through':'')+'">'+t+'</span></label>';
-  }).join('');
-  $('#tasks').innerHTML=html;
-  $('#prog').textContent=done.length+' / '+TASKS.length+' fait';
-  document.querySelectorAll('#tasks input').forEach(function(cb){
-    cb.addEventListener('change',function(){
-      var i=+cb.getAttribute('data-i');
-      if(cb.checked){if(done.indexOf(i)<0)done.push(i);}else{done=done.filter(function(x){return x!==i});}
-      localStorage.setItem(key,JSON.stringify(done));renderTasks();
-    });
-  });
+
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+function apic(method,payload,q){var o={method:method,headers:{'x-crm-key':CFG.key}};if(payload){o.headers['Content-Type']='application/json';o.body=JSON.stringify(payload);}
+  return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function eur(n){return n?Number(n).toLocaleString('fr-FR')+' €':'0 €';}
+
+var me=(window.PSF_AUTH&&window.PSF_AUTH.current());
+if(me)document.getElementById('helloName').textContent='Bonjour, '+me.id+' 👋';
+
+var conn=$('#conn');
+if(LIVE){conn.className='conn live';conn.textContent='● Live';}else{conn.className='conn demo';conn.textContent='Aperçu';$('#offline').style.display='block';}
+
+var COLS={
+ prospects:{table:'Prospects',cols:{nom:'nom',statut:'Statut prospection',interet:'Intérêt',appele:'Appelé'}},
+ contrats:{table:'Contrats',cols:{apprenant:'Apprenant',entreprise:'Entreprise',statut:'Statut',financeur:'Financeur',montant:'Montant convention',note:'Blocage / note'}},
+ taches:{table:'Taches',cols:{tache:'Tâche',assigne:'Assigné à',statut:'Statut',priorite:'Priorité',dossier:'Dossier lié',notes:'Notes'}},
+ factures:{table:'Factures',cols:{lib:'Libellé',fin:'Client / financeur',montant:'Montant',statut:'Statut'}}
+};
+function fetchTab(key){var T=COLS[key];
+  if(!LIVE)return Promise.resolve([]);
+  return apic('GET',null,'?table='+T.table+'&max=900').then(function(j){
+    return (j.records||[]).map(function(r){var o={id:r.id};for(var k in T.cols){var v=r.fields[T.cols[k]];o[k]=(v&&v.name)?v.name:v;}return o;});
+  }).catch(function(){return [];});
 }
-renderTasks();
+
+Promise.all([fetchTab('prospects'),fetchTab('contrats'),fetchTab('taches'),fetchTab('factures')]).then(function(r){
+  var P=r[0],C=r[1],T=r[2],F=r[3];
+
+  // ---- Maintenant : top 3 actions (tâches 🔥 + contrats bloqués + prospects chauds) ----
+  var candidats=[];
+  T.filter(function(t){return t.priorite==='🔥 Haute'&&t.statut!=='✅ Fait';}).forEach(function(t){
+    candidats.push({rang:0,nm:t.tache,sub:(t.dossier?t.dossier+' · ':'')+(t.assigne||''),href:'crm.html'});
+  });
+  C.filter(function(c){return c.statut==='⚠️ Bloqué'||c.statut==='🟠 Corrections';}).forEach(function(c){
+    candidats.push({rang:1,nm:'Débloquer : '+(c.apprenant||c.entreprise),sub:(c.entreprise||'')+(c.note?' · '+c.note:''),href:'contrats.html'});
+  });
+  P.filter(function(p){return (p.interet||'').indexOf('🔥')>-1&&!p.appele;}).forEach(function(p){
+    candidats.push({rang:2,nm:'Appeler : '+p.nom,sub:'Prospect 🔥 chaud, pas encore appelé',href:'crm.html'});
+  });
+  var top3=candidats.slice(0,3);
+  $('#now3').innerHTML=top3.length?top3.map(function(c,i){
+    return '<div class="nowcard"><div class="rk">'+(i+1)+'</div><div><div class="nm">'+esc(c.nm)+'</div><div class="sub">'+esc(c.sub)+'</div></div><a class="go" href="'+c.href+'">Ouvrir →</a></div>';
+  }).join(''):(LIVE?'<div class="rowcard">Rien d\'urgent détecté — RAS 🎉</div>':'<div class="rowcard">Connecte le CRM pour voir tes priorités du jour.</div>');
+
+  // ---- CA chart (Factures) ----
+  var groups=[['À émettre','📝 À émettre'],['Bloquée','⏳ Bloquée'],['Émise','📤 Émise'],['Payée','✅ Payée']];
+  var vals=groups.map(function(g){return F.filter(function(f){return f.statut===g[1];}).reduce(function(a,f){return a+(Number(f.montant)||0);},0);});
+  var max=Math.max.apply(null,vals.concat([1]));
+  $('#caChart').innerHTML=groups.map(function(g,i){
+    var h=Math.round(vals[i]/max*100);
+    return '<div class="dbar" title="'+g[0]+' : '+eur(vals[i])+'">'
+      +'<div class="dbv">'+(vals[i]?(Math.round(vals[i]/100)/10)+'k':'')+'</div>'
+      +'<div class="dbwrap"><div class="dbfill" style="height:'+Math.max(h,3)+'%"></div></div>'
+      +'<div class="dbl">'+g[0]+'</div></div>';
+  }).join('');
+
+  // ---- Jauge signatures (Contrats) ----
+  var saisis=C.filter(function(c){return c.statut!=='📝 À saisir';});
+  var signes=saisis.filter(function(c){return c.statut==='✅ Signé';});
+  var pct=saisis.length?Math.round(signes.length/saisis.length*100):0;
+  var ang=Math.PI*(1-pct/100);
+  var x=100+80*Math.cos(ang),y=95-80*Math.sin(ang);
+  $('#gauge').innerHTML=
+    '<svg viewBox="0 0 200 110"><path d="M20 95 A80 80 0 0 1 180 95" fill="none" stroke="#F2E8D5" stroke-width="15" stroke-linecap="round"/>'
+    +'<path d="M20 95 A80 80 0 0 1 '+x+' '+y+'" fill="none" stroke="#1f6f5c" stroke-width="15" stroke-linecap="round"/>'
+    +'<circle cx="100" cy="95" r="7" fill="none" stroke="#e8a955" stroke-width="3"/>'
+    +'<line x1="100" y1="95" x2="'+(100+58*Math.cos(ang))+'" y2="'+(95-58*Math.sin(ang))+'" stroke="#e8a955" stroke-width="3" stroke-linecap="round"/></svg>';
+  $('#gaugeVal').textContent=pct+'% ('+signes.length+'/'+saisis.length+' signés)';
+
+  // ---- À traiter (Taches réelles, cochables) ----
+  var Topen=T.filter(function(t){return t.statut!=='✅ Fait';});
+  var order={'🔥 Haute':0,'🟠 Moyenne':1,'🟡 Basse':2};
+  Topen.sort(function(a,b){return (order[a.priorite]||9)-(order[b.priorite]||9);});
+  $('#todo').innerHTML=Topen.slice(0,5).map(function(t){
+    return '<label class="dt"><input type="checkbox" data-id="'+t.id+'"><span><b>'+esc(t.tache)+'</b><br><small>'+esc(t.assigne||'')+(t.priorite?' · '+esc(t.priorite):'')+'</small></span></label>';
+  }).join('')||'<div style="color:#8a978f;font-size:.85rem">Rien à traiter 🎉</div>';
+  document.querySelectorAll('.dt input').forEach(function(cb){cb.addEventListener('change',function(){
+    if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');cb.checked=false;return;}
+    cb.closest('.dt').classList.add('done');
+    apic('PATCH',{table:'Taches',id:cb.getAttribute('data-id'),fields:{'Statut':'✅ Fait'}})
+      .catch(function(e){alert('Erreur : '+e.message);cb.checked=false;cb.closest('.dt').classList.remove('done');});
+  });});
+
+  // ---- Bases prospects (circuit live) ----
+  var aAppeler=P.filter(function(p){return p.statut==='À appeler';}).length;
+  var rdvPris=P.filter(function(p){return p.statut==='RDV pris';}).length;
+  var chauds=P.filter(function(p){return (p.interet||'').indexOf('🔥')>-1;}).length;
+  $('#prospSub').textContent=LIVE?('Live Airtable · '+P.length+' fiches au total'):'Connecte le CRM pour voir tes chiffres réels.';
+  $('#prospCircuit').innerHTML=
+    '<div class="c"><div class="n">'+P.length+'</div><div class="x">Prospects au total</div><div class="o">base Airtable</div></div>'
+   +'<div class="c"><div class="n">'+aAppeler+'</div><div class="x">À appeler</div><div class="o">jamais traités</div></div>'
+   +'<div class="c"><div class="n">'+chauds+'</div><div class="x">🔥 Chauds</div><div class="o">intérêt marqué</div></div>'
+   +'<div class="c"><div class="n">'+rdvPris+'</div><div class="x">RDV pris</div><div class="o">à closer</div></div>';
+
+  // ---- Contrats & cash (circuit live) ----
+  var csaisis=C.filter(function(c){return c.statut!=='📝 À saisir';}).length;
+  var casaisir=C.filter(function(c){return c.statut==='📝 À saisir';}).length;
+  var cbloq=C.filter(function(c){return c.statut==='⚠️ Bloqué'||c.statut==='🟠 Corrections';}).length;
+  var csigneMt=C.filter(function(c){return c.statut==='✅ Signé';}).reduce(function(a,c){return a+(Number(c.montant)||0);},0);
+  $('#contratsCircuit').innerHTML=
+    '<div class="c"><div class="n">'+csaisis+'</div><div class="x">Saisis YPAREO</div><div class="o">en cours de signature</div></div>'
+   +'<div class="c"><div class="n">'+eur(csigneMt)+'</div><div class="x">Conventions signées</div><div class="o">à facturer OPCO</div></div>'
+   +'<div class="c"><div class="n">'+casaisir+'</div><div class="x">À saisir</div><div class="o">nouveaux dossiers</div></div>'
+   +'<div class="c"><div class="n">'+cbloq+'</div><div class="x">Blocages 🔴</div><div class="o">à débloquer en priorité</div></div>';
+});
+
 // ---- launcher outils Abdel ----
 var T=[
  ['Cockpit leads','RDV à closer','https://airtable.com/appaAZXNf5RFf89WV/pagFIIF8dl5vDMjV6','airtable','#18BFFF'],
@@ -189,59 +269,5 @@ $('#launch').innerHTML=T.map(function(t){
   var logobg=si?'':'background:'+col;
   return '<a class="tool" href="'+url+'"'+(url.indexOf('http')===0?' target="_blank" rel="noopener"':'')+'><span class="logo'+(si?'':' brand')+'" style="'+logobg+'">'+logo+'</span><span class="meta"><span class="t">'+nom+ext+'</span><span class="d">'+desc+'</span></span></a>';
 }).join('');
-</script>
-<script>
-// ===== Dashboard « statistiques du jour » (données réelles Airtable/snapshot) =====
-(function(){
-  var me=(window.PSF_AUTH&&window.PSF_AUTH.current());
-  if(me)document.getElementById('helloName').textContent='Bonjour, '+me.id+' 👋';
-  var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
-  var LIVE=!!(CFG.api&&CFG.key);
-  function apic(method,payload,q){var o={method:method,headers:{'x-crm-key':CFG.key}};if(payload){o.headers['Content-Type']='application/json';o.body=JSON.stringify(payload);}
-    return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
-  function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-  fetch('crm_snapshot.json?cb='+Date.now()).then(function(r){return r.json()}).then(function(S){
-    // --- barres facturation par statut ---
-    var F=S.factures||[];
-    var groups=[['À émettre','📝 À émettre'],['Bloquée','⏳ Bloquée'],['Émise','📤 Émise'],['Payée','✅ Payée']];
-    var vals=groups.map(function(g){return F.filter(function(f){return f.statut===g[1]}).reduce(function(a,f){return a+(Number(f.montant)||0)},0);});
-    var max=Math.max.apply(null,vals.concat([1]));
-    document.getElementById('caChart').innerHTML=groups.map(function(g,i){
-      var h=Math.round(vals[i]/max*100);
-      var eur=vals[i]?vals[i].toLocaleString('fr-FR')+' €':'0 €';
-      return '<div class="dbar" title="'+g[0]+' : '+eur+'">'
-        +'<div class="dbv">'+(vals[i]?(Math.round(vals[i]/100)/10)+'k':'')+'</div>'
-        +'<div class="dbwrap"><div class="dbfill" style="height:'+Math.max(h,3)+'%"></div></div>'
-        +'<div class="dbl">'+g[0]+'</div></div>';
-    }).join('');
-    // --- jauge signatures ---
-    var C=(S.contrats||[]);
-    var saisis=C.filter(function(c){return c.statut!=='📝 À saisir'});
-    var signes=saisis.filter(function(c){return c.statut==='✅ Signé'});
-    var pct=saisis.length?Math.round(signes.length/saisis.length*100):0;
-    var ang=Math.PI*(1-pct/100);
-    var x=100+80*Math.cos(ang),y=95-80*Math.sin(ang);
-    document.getElementById('gauge').innerHTML=
-      '<svg viewBox="0 0 200 110"><path d="M20 95 A80 80 0 0 1 180 95" fill="none" stroke="#F2E8D5" stroke-width="15" stroke-linecap="round"/>'
-      +'<path d="M20 95 A80 80 0 0 1 '+x+' '+y+'" fill="none" stroke="#1f6f5c" stroke-width="15" stroke-linecap="round"/>'
-      +'<circle cx="100" cy="95" r="7" fill="none" stroke="#e8a955" stroke-width="3"/>'
-      +'<line x1="100" y1="95" x2="'+(100+58*Math.cos(ang))+'" y2="'+(95-58*Math.sin(ang))+'" stroke="#e8a955" stroke-width="3" stroke-linecap="round"/></svg>';
-    document.getElementById('gaugeVal').textContent=pct+'% ('+signes.length+'/'+saisis.length+' signés)';
-    // --- à traiter (tâches réelles cochables) ---
-    var T=(S.taches||[]).filter(function(t){return t.statut!=='✅ Fait'});
-    var order={'🔥 Haute':0,'🟠 Moyenne':1,'🟡 Basse':2};
-    T.sort(function(a,b){return (order[a.priorite]||9)-(order[b.priorite]||9)});
-    document.getElementById('todo').innerHTML=T.slice(0,5).map(function(t){
-      return '<label class="dt"><input type="checkbox" data-id="'+t.id+'"><span><b>'+esc(t.tache)+'</b><br><small>'+esc(t.assigne||'')+(t.priorite?' · '+esc(t.priorite):'')+'</small></span></label>';
-    }).join('')||'<div style="color:#8a978f;font-size:.85rem">Rien à traiter 🎉</div>';
-    document.querySelectorAll('.dt input').forEach(function(cb){cb.addEventListener('change',function(){
-      if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');cb.checked=false;return;}
-      cb.closest('.dt').classList.add('done');
-      apic('PATCH',{table:'Taches',id:cb.getAttribute('data-id'),fields:{'Statut':'✅ Fait'}})
-        .catch(function(e){alert('Erreur : '+e.message);cb.checked=false;cb.closest('.dt').classList.remove('done');});
-    });});
-  });
-})();
 </script>
 </body></html>
