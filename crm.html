@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CRM · Paris Sud — Pilotage complet</title>
-<link rel="stylesheet" href="style.css">
-<script src="gate.js"></script>
+<link rel="stylesheet" href="style.css?v=202607290237">
+<script src="gate.js?v=202607290237"></script>
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:2px 0 16px}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
@@ -92,7 +92,7 @@
 <div class="drawer" id="drawer"></div>
 <div class="overlay" id="ov"><div class="modal" id="modal"></div></div>
 
-<script src="nav.js"></script>
+<script src="nav.js?v=202607290237"></script>
 <script>
 /* ============ config ============ */
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
