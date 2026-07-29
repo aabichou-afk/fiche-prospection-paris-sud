@@ -139,11 +139,16 @@ var COLS={
  taches:{table:'Taches',cols:{tache:'Tâche',assigne:'Assigné à',statut:'Statut',priorite:'Priorité',dossier:'Dossier lié',notes:'Notes'}},
  factures:{table:'Factures',cols:{lib:'Libellé',fin:'Client / financeur',montant:'Montant',statut:'Statut'}}
 };
+var SNAPKEY={prospects:'prospects',contrats:'contrats',taches:'taches',factures:'factures'};
+function loadSnap(key){ // repli lisible quand le CRM n'est pas connecté (données de démo, signalées par le bandeau)
+  return fetch('crm_snapshot.json?cb='+Date.now()).then(function(r){return r.json();})
+    .then(function(j){return (j[SNAPKEY[key]]||[]).slice();}).catch(function(){return [];});
+}
 function fetchTab(key){var T=COLS[key];
-  if(!LIVE)return Promise.resolve([]);
+  if(!LIVE)return loadSnap(key);
   return apic('GET',null,'?table='+T.table+'&max=900').then(function(j){
     return (j.records||[]).map(function(r){var o={id:r.id};for(var k in T.cols){var v=r.fields[T.cols[k]];o[k]=(v&&v.name)?v.name:v;}return o;});
-  }).catch(function(){return [];});
+  }).catch(function(){return loadSnap(key);});
 }
 
 Promise.all([fetchTab('prospects'),fetchTab('contrats'),fetchTab('taches'),fetchTab('factures')]).then(function(r){
@@ -208,7 +213,8 @@ Promise.all([fetchTab('prospects'),fetchTab('contrats'),fetchTab('taches'),fetch
   var aAppeler=P.filter(function(p){return p.statut==='À appeler';}).length;
   var rdvPris=P.filter(function(p){return p.statut==='RDV pris';}).length;
   var chauds=P.filter(function(p){return (p.interet||'').indexOf('🔥')>-1;}).length;
-  $('#prospSub').textContent=LIVE?('Live Airtable · '+P.length+' fiches au total'):'Connecte le CRM pour voir tes chiffres réels.';
+  $('#prospSub').textContent=LIVE?('Live Airtable · '+P.length+' fiches au total')
+    :'⚠️ Données de démonstration ('+P.length+' fiches) — reconnectez le CRM pour retrouver la base réelle.';
   $('#prospCircuit').innerHTML=
     '<div class="c"><div class="n">'+P.length+'</div><div class="x">Prospects au total</div><div class="o">base Airtable</div></div>'
    +'<div class="c"><div class="n">'+aAppeler+'</div><div class="x">À appeler</div><div class="o">jamais traités</div></div>'
