@@ -3,7 +3,6 @@
 (function(){
   var USERS=[
     {id:'Abdel',    role:'Direction',   hash:'83b4ac00d574d4b484c45efd3899c72402092e8c54727e09486cb7ff106fcfc0'},
-    {id:'Souleyman',role:'Admin PSF',   hash:'db559c86f264d6d7cf06df9b06cfc66ad69ccf810b4d2b9a93e92b55ebcf295f'},
     {id:'Agente 1', role:'Commerciale', hash:'9fd2f3c6e2349df2e1acd055f520cb9151538cb684efaf3270acf76249359bf9'},
     {id:'Agente 2', role:'Commerciale', hash:'a0a0a9538647e6a1810afd65651b3f3bcc540e77d970e9765579aec80d40263a'}
   ];
