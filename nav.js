@@ -232,6 +232,74 @@
     });
   });
 
+  // ===== Connexion CRM globale (disponible sur TOUTES les pages) =====
+  // La clé vit dans le localStorage de CE navigateur : si on change d'appareil ou qu'on efface
+  // les données de navigation, elle disparaît et tout retombe en « Aperçu » (données de démo).
+  // Ce bandeau permet de se reconnecter depuis n'importe quelle page, pas seulement le CRM.
+  (function(){
+    var api=localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records';
+    var key=localStorage.getItem('crm_key')||'';
+    if(api&&key)return; // déjà connecté : rien à afficher
+
+    var css=document.createElement('style');
+    css.textContent='.crmban{position:sticky;top:0;z-index:60;display:flex;gap:12px;align-items:center;flex-wrap:wrap;'
+      +'background:#FDF1E7;border-bottom:1px solid #F0D3B8;color:#8a4b12;padding:11px 18px;font-size:.88rem;font-weight:600}'
+      +'.crmban b{color:#6d3a0c}'
+      +'.crmban button{margin-left:auto;background:#1f6f5c;color:#fff;border:0;border-radius:999px;padding:8px 16px;'
+      +'font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit}'
+      +'.crmban button:hover{background:#11362b}'
+      +'.crmov{position:fixed;inset:0;z-index:99998;background:rgba(17,54,43,.45);display:none;place-items:center;padding:20px}'
+      +'.crmov.on{display:grid}'
+      +'.crmbox{background:#fff;border-radius:18px;padding:24px 26px;max-width:430px;width:100%;box-shadow:0 30px 70px -30px rgba(17,54,43,.5)}'
+      +'.crmbox h3{margin:0 0 4px;font-family:var(--serif,Poppins),sans-serif;color:#11362b;font-size:1.15rem}'
+      +'.crmbox p{margin:0 0 14px;color:#7a8781;font-size:.85rem;line-height:1.45}'
+      +'.crmbox label{display:block;font-size:.78rem;font-weight:700;color:#5f6b62;margin:10px 0 4px}'
+      +'.crmbox input{width:100%;padding:10px 12px;border:1.5px solid #E0DED2;border-radius:10px;font-family:inherit;font-size:.9rem}'
+      +'.crmbox .go{display:flex;gap:9px;margin-top:16px}'
+      +'.crmbox .go button{flex:1;border:0;border-radius:10px;padding:11px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}'
+      +'.crmbox .ok{background:#1f8a5c;color:#fff}.crmbox .no{background:#EEF1EF;color:#5f6b62}';
+    document.head.appendChild(css);
+
+    var ban=document.createElement('div');
+    ban.className='crmban';
+    ban.innerHTML='<span>⚠️ <b>CRM déconnecté sur cet appareil</b> — les pages affichent des données de démonstration, pas vos 583 prospects réels.</span>'
+      +'<button id="crmReco">🔌 Reconnecter</button>';
+    var mainEl=document.querySelector('.main');
+    if(mainEl)mainEl.insertBefore(ban,mainEl.firstChild);
+
+    var ov=document.createElement('div');
+    ov.className='crmov';
+    ov.innerHTML='<div class="crmbox"><h3>🔌 Reconnecter le CRM</h3>'
+      +'<p>Votre clé CRM est enregistrée dans ce navigateur uniquement. Si vous changez d\'appareil ou effacez vos données de navigation, il faut la ressaisir une fois — les données Airtable, elles, ne bougent pas.</p>'
+      +'<label>URL du proxy</label><input id="crmApi" type="text" value="'+api.replace(/"/g,'&quot;')+'">'
+      +'<label>Clé CRM</label><input id="crmKey" type="password" placeholder="votre clé secrète" autocomplete="off">'
+      +'<div class="go"><button class="ok" id="crmSave">Connecter</button><button class="no" id="crmNo">Plus tard</button></div></div>';
+    document.body.appendChild(ov);
+
+    function open(){ov.classList.add('on');setTimeout(function(){var k=document.getElementById('crmKey');if(k)k.focus();},50);}
+    function close(){ov.classList.remove('on');}
+    document.getElementById('crmReco').addEventListener('click',open);
+    document.getElementById('crmNo').addEventListener('click',close);
+    ov.addEventListener('click',function(e){if(e.target===ov)close();});
+    document.getElementById('crmSave').addEventListener('click',function(){
+      var a=document.getElementById('crmApi').value.trim(),k=document.getElementById('crmKey').value.trim();
+      if(!a||!k){alert('Renseignez l\'URL du proxy et la clé.');return;}
+      var btn=this;btn.textContent='Vérification…';btn.disabled=true;
+      // on teste la clé AVANT de l'enregistrer, pour ne pas laisser une clé fausse en place
+      fetch(a+'?table=Prospects&max=1',{headers:{'x-crm-key':k}}).then(function(r){
+        if(!r.ok)throw new Error(r.status===401?'Clé refusée par le proxy.':'Erreur '+r.status);
+        localStorage.setItem('crm_api',a);localStorage.setItem('crm_key',k);
+        location.reload();
+      }).catch(function(e){
+        alert('❌ '+e.message+'\n\nLa clé n\'a pas été enregistrée.');
+        btn.textContent='Connecter';btn.disabled=false;
+      });
+    });
+    document.getElementById('crmKey').addEventListener('keydown',function(e){
+      if(e.key==='Enter')document.getElementById('crmSave').click();
+    });
+  })();
+
   // bouton flottant WhatsApp
   var wa=document.createElement('a');wa.className='fabwa';wa.href='https://web.whatsapp.com';wa.target='_blank';wa.rel='noopener';wa.title='WhatsApp';
   wa.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm5.7 14.1c-.2.7-1.4 1.3-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .5l-.4.6c-.2.2-.3.4-.1.7.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.6 1.6.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.4.1.2.1.9-.1 1.6z"/></svg>';
