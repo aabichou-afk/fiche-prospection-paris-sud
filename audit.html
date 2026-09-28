@@ -2,12 +2,13 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Audit IA · Espace Agents — Paris Sud Formation</title>
-<link rel="stylesheet" href="style.css?v=202607301709">
-<script src="gate.js?v=202607301709"></script>
+<link rel="stylesheet" href="style.css?v=202609281059">
+<script src="gate.js?v=202609281059"></script>
 <style>
 .qz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
 .qz .qt{font-weight:700;color:#11362b;font-size:1.02rem;margin-bottom:4px}
 .qz .qs{font-size:.82rem;color:#5f6b62;margin-bottom:10px}
+.qz.done{border-color:#bfe3cd;background:#fcfffd}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid #d7e5dd;background:#fff;color:#33453d;border-radius:999px;padding:9px 15px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.13s;font-family:inherit}
 .chip:hover{border-color:#1f8a5c;background:#f2faf5}
@@ -19,11 +20,28 @@
 .scorewrap .lbl{font-size:.85rem;opacity:.92}
 .bar{height:12px;background:rgba(255,255,255,.22);border-radius:999px;overflow:hidden;margin-top:8px}
 .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8cc63f,#f4ce1e);transition:.35s}
+.prog{font-size:.78rem;opacity:.85;margin-top:6px}
 .reco{background:#eef7f2;border:1px solid #bfe3cd;border-radius:14px;padding:16px 18px;margin:12px 0}
 .reco h3{margin:0 0 6px;color:#11362b}
-.act{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.act button{border:none;border-radius:999px;padding:12px 20px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
-.copybtn{background:#18BFFF;color:#fff}.resetbtn{background:#fff;border:1px solid #d7e5dd!important;color:#33453d}
+.act{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.act button,.act a{border:none;border-radius:999px;padding:12px 20px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+.savebtn{background:#1f8a5c;color:#fff}.savebtn:disabled{opacity:.55;cursor:not-allowed}
+.copybtn{background:#18BFFF;color:#fff}
+.calbtn{background:#11362b;color:#fff}
+.resetbtn{background:#fff;border:1px solid #d7e5dd!important;color:#33453d}
+/* bloc identification */
+.who{background:#fff;border:1px solid #e3ece7;border-left:4px solid #18BFFF;border-radius:16px;padding:16px 20px;margin:0 0 14px}
+.who .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.who label{display:block;font-size:.76rem;font-weight:700;color:#5f6b62;margin-bottom:3px}
+.who input,.who select{width:100%;padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem}
+.sugg{position:relative}
+.sugglist{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fff;border:1px solid #d7e5dd;border-radius:11px;box-shadow:0 18px 40px -22px rgba(17,54,43,.6);max-height:210px;overflow:auto;display:none}
+.sugglist.on{display:block}
+.sugglist div{padding:9px 12px;font-size:.86rem;cursor:pointer;border-bottom:1px solid #f0f4f2}
+.sugglist div:hover{background:#f2faf5}
+.sugglist .meta{color:#7b8a82;font-size:.76rem}
+.linked{font-size:.8rem;font-weight:700;color:#1f8a5c;margin-top:8px}
+.linked.none{color:#9a7212}
 @media(max-width:640px){.scorewrap{top:8px}}
 </style>
 </head><body data-page="audit">
@@ -35,33 +53,113 @@
       <h1>Audit IA — questionnaire</h1><span class="tag">À remplir avec le dirigeant</span>
     </div>
     <div class="content">
-      <div class="callout c-info" style="margin-top:0">🎧 <b>À utiliser pendant l'appel / l'audit.</b> Cliquez les réponses du dirigeant — le score et la reco se calculent tout seuls. En bas : <b>« Copier le résumé »</b> pour le coller dans la note du prospect (Airtable).</div>
+      <div class="callout c-info" style="margin-top:0">🎧 <b>À utiliser pendant l'appel.</b> Cliquez les réponses du dirigeant — le score et la reco se calculent tout seuls. À la fin, <b>enregistrez directement dans le CRM</b> : plus besoin de recopier quoi que ce soit.</div>
+
+      <!-- ===== Qui auditez-vous ? ===== -->
+      <div class="who">
+        <div class="qt" style="font-weight:700;color:#11362b;margin-bottom:8px">👤 Qui auditez-vous ?</div>
+        <div class="row">
+          <div class="sugg">
+            <label>Entreprise</label>
+            <input id="wEnt" type="text" placeholder="Tapez 3 lettres…" autocomplete="off">
+            <div class="sugglist" id="wSugg"></div>
+          </div>
+          <div><label>Dirigeant / contact</label><input id="wDir" type="text" placeholder="Nom du dirigeant"></div>
+          <div><label>Téléphone</label><input id="wTel" type="text" placeholder="06…"></div>
+          <div><label>Agent</label><select id="wAgent"></select></div>
+        </div>
+        <div class="linked none" id="wLinked">Aucune fiche liée — l'audit créera une nouvelle fiche prospect.</div>
+      </div>
 
       <div class="scorewrap">
         <div class="lbl">Score de maturité IA du dirigeant</div>
         <div class="big"><span id="score">0</span>/100 · <span id="verdict">à évaluer</span></div>
         <div class="bar"><i id="barfill"></i></div>
         <div class="lbl" id="opp" style="margin-top:8px"></div>
+        <div class="prog" id="prog"></div>
       </div>
 
       <div id="quiz"></div>
+
+      <!-- ===== Issue de l'appel ===== -->
+      <div class="qz" id="issueBox">
+        <div class="qt">📞 Issue de l'appel</div>
+        <div class="qs">Obligatoire pour enregistrer — c'est ce qui met à jour le statut du prospect</div>
+        <div class="chips" id="issueChips"></div>
+      </div>
 
       <div class="reco" id="reco" style="display:none">
         <h3>🎯 Recommandation à formuler au dirigeant</h3>
         <div id="recotext"></div>
         <div class="act">
-          <button class="copybtn" id="copy">📋 Copier le résumé pour Airtable</button>
+          <button class="savebtn" id="save">💾 Enregistrer dans le CRM</button>
+          <button class="copybtn" id="copy">📋 Copier le résumé</button>
+          <a class="calbtn" href="https://calendly.com/paris-sud/com" target="_blank" rel="noopener">📅 Bloquer l'audit avec Abdel</a>
           <button class="resetbtn" id="reset">Nouveau questionnaire</button>
         </div>
-        <div class="hint" id="copied" style="color:#1f8a5c;font-weight:700"></div>
+        <div class="hint" id="copied" style="color:#1f8a5c;font-weight:700;margin-top:8px"></div>
       </div>
 
-      <div class="callout c-warn"><b>Rappel :</b> l'audit sert à faire parler le dirigeant et à décrocher le RDV avec Abdel. Financement = OPCO Mobilités. Ne promettez jamais un montant chiffré (« on calcule ça ensemble à l'audit »).</div>
+      <div class="callout c-warn"><b>Les 3 règles.</b> ① L'audit sert à faire parler le dirigeant et à décrocher le RDV avec Abdel — pas à vendre au téléphone. ② Financement = <b>OPCO Mobilités uniquement</b> : on dit « 100 % financé par votre OPCO Mobilités, 0 € pour vous », jamais « CPF » ni « AGEFICE ». ③ <b>Ne jamais annoncer de montant</b> : « le montant exact, on le calcule ensemble pendant l'audit ».</div>
     </div>
   </div>
 </div>
-<script src="nav.js?v=202607301709"></script>
+<script src="nav.js?v=202609281059"></script>
 <script>
+/* ============ connexion CRM (même clé que le reste de l'espace) ============ */
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var ME=(window.PSF_AUTH&&window.PSF_AUTH.current()&&window.PSF_AUTH.current().id)||'';
+function apic(method,payload,q){var o={method:method,headers:{'x-crm-key':CFG.key}};
+  if(payload){o.headers['Content-Type']='application/json';o.body=JSON.stringify(payload);}
+  return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+
+/* ============ identification du prospect ============ */
+var AGENTS=['Agente 1','Agente 2','Abdel'];
+var sel=document.getElementById('wAgent');
+sel.innerHTML='<option value="">—</option>'+AGENTS.map(function(a){return '<option'+(a===ME?' selected':'')+'>'+a+'</option>';}).join('');
+
+var CACHE=null, LINKED=null;
+function loadProspects(){
+  if(CACHE)return Promise.resolve(CACHE);
+  if(!LIVE)return Promise.resolve([]);
+  return apic('GET',null,'?table=Prospects&max=900').then(function(j){
+    CACHE=(j.records||[]).map(function(r){var f=r.fields;
+      return {id:r.id,nom:f['nom']||'',tel:f['telephone']||'',ville:f['ville']||'',dir:f['dirigeants']||''};});
+    return CACHE;
+  }).catch(function(){return [];});
+}
+var wEnt=document.getElementById('wEnt'), wSugg=document.getElementById('wSugg');
+wEnt.addEventListener('input',function(){
+  var q=this.value.trim().toLowerCase();
+  LINKED=null; paintLinked();
+  if(q.length<3){wSugg.classList.remove('on');return;}
+  loadProspects().then(function(rows){
+    var hit=rows.filter(function(r){return r.nom.toLowerCase().indexOf(q)>-1;}).slice(0,8);
+    if(!hit.length){wSugg.classList.remove('on');return;}
+    wSugg.innerHTML=hit.map(function(r,i){
+      return '<div data-i="'+i+'"><b>'+esc(r.nom)+'</b><div class="meta">'+esc(r.ville||'')+(r.tel?' · '+esc(r.tel):'')+'</div></div>';}).join('');
+    wSugg.classList.add('on');
+    wSugg.querySelectorAll('div[data-i]').forEach(function(el){
+      el.addEventListener('click',function(){
+        var r=hit[+el.getAttribute('data-i')];
+        LINKED=r; wEnt.value=r.nom;
+        if(r.tel&&!document.getElementById('wTel').value)document.getElementById('wTel').value=r.tel;
+        if(r.dir&&!document.getElementById('wDir').value)document.getElementById('wDir').value=r.dir;
+        wSugg.classList.remove('on'); paintLinked();
+      });
+    });
+  });
+});
+document.addEventListener('click',function(e){if(!e.target.closest('.sugg'))wSugg.classList.remove('on');});
+function paintLinked(){
+  var el=document.getElementById('wLinked');
+  if(LINKED){el.className='linked';el.textContent='✓ Fiche liée : '+LINKED.nom+' — l\'audit sera ajouté à cette fiche.';}
+  else{el.className='linked none';el.textContent=LIVE?'Aucune fiche liée — l\'audit créera une nouvelle fiche prospect.':'⚠️ CRM non connecté sur cet appareil : l\'enregistrement sera indisponible (le résumé restera copiable).';}
+}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ============ questionnaire ============ */
 var Q=[
  {id:'taille',t:'Taille de l\'entreprise',s:'Combien de salariés ?',type:'one',o:[['Dirigeant seul',8],['1 à 5',10],['6 à 20',9],['20 à 50',7],['50+',5]]},
  {id:'type',t:'Type de transport',s:'Activité principale',type:'one',o:[['Marchandises léger',6],['Marchandises lourd',6],['Messagerie / dernier km',7],['Commission / affrètement',7],['Autre',5]]},
@@ -73,10 +171,10 @@ var Q=[
  {id:'opco',t:'Éligibilité financement',s:'Le nerf de la guerre',type:'one',o:[['Affilié OPCO Mobilités, budget dispo',10],['Affilié, ne sait pas pour le budget',7],['Ne sait pas',5],['Pas transport / non éligible',0,'red']]}
 ];
 var maxScore=0;Q.forEach(function(q){var vals=q.o.map(function(o){return o[1]});maxScore+=q.type==='multi'?vals.filter(function(v){return v>0}).sort(function(a,b){return b-a}).slice(0,3).reduce(function(a,b){return a+b},0):Math.max.apply(null,vals);});
-var state={};
+var state={}, ISSUE='';
 var quiz=document.getElementById('quiz');
 Q.forEach(function(q){
-  var box=document.createElement('div');box.className='qz';
+  var box=document.createElement('div');box.className='qz';box.id='qz-'+q.id;
   box.innerHTML='<div class="qt">'+q.t+'</div><div class="qs">'+q.s+'</div>';
   var chips=document.createElement('div');chips.className='chips';
   q.o.forEach(function(o){
@@ -84,21 +182,38 @@ Q.forEach(function(q){
     c.addEventListener('click',function(){
       if(q.type==='one'){chips.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');state[q.id]=[o];}
       else{c.classList.toggle('on');state[q.id]=q.o.filter(function(oo,k){return chips.querySelectorAll('.chip')[k].classList.contains('on')});}
+      box.classList.toggle('done',(state[q.id]||[]).length>0);
       compute();
     });
     chips.appendChild(c);
   });
   box.appendChild(chips);quiz.appendChild(box);
 });
+
+/* issue de l'appel */
+var ISSUES=[['RDV pris','🔥 Intéressé'],['À rappeler','🟡 À relancer'],['Pas intéressé','❄️ Pas intéressé'],['Injoignable','📵 Injoignable']];
+var ic=document.getElementById('issueChips');
+ISSUES.forEach(function(p){
+  var b=document.createElement('button');b.className='chip';b.textContent=p[0];
+  b.addEventListener('click',function(){
+    ic.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');ISSUE=p[0];
+    document.getElementById('issueBox').classList.add('done');
+    compute();
+  });
+  ic.appendChild(b);
+});
+
 function compute(){
   var sc=0,answered=0;
-  Q.forEach(function(q){var sel=state[q.id]||[];if(sel.length)answered++;
-    if(q.type==='one'&&sel[0])sc+=sel[0][1];
-    if(q.type==='multi')sc+=sel.map(function(o){return o[1]}).sort(function(a,b){return b-a}).slice(0,3).reduce(function(a,b){return a+b},0);
+  Q.forEach(function(q){var s=state[q.id]||[];if(s.length)answered++;
+    if(q.type==='one'&&s[0])sc+=s[0][1];
+    if(q.type==='multi')sc+=s.map(function(o){return o[1]}).sort(function(a,b){return b-a}).slice(0,3).reduce(function(a,b){return a+b},0);
   });
   var pct=Math.min(100,Math.round(sc/maxScore*100));
   document.getElementById('score').textContent=pct;
   document.getElementById('barfill').style.width=pct+'%';
+  document.getElementById('prog').textContent=answered+'/'+Q.length+' questions renseignées'+(ISSUE?' · issue : '+ISSUE:' · issue de l\'appel à choisir');
   var v,opp;
   if(answered<3){v='à évaluer';opp='Continuez à cliquer les réponses du dirigeant…';}
   else if(pct>=70){v='🔥 Très fort potentiel';opp='Retard IA + douleurs marquées = énorme marge de progrès. Foncez sur le RDV.';}
@@ -107,32 +222,95 @@ function compute(){
   document.getElementById('verdict').textContent=v;
   document.getElementById('opp').textContent=opp;
   if(answered>=4){document.getElementById('reco').style.display='block';buildReco(pct);}
+  var sv=document.getElementById('save');
+  sv.disabled=!(LIVE&&ISSUE&&document.getElementById('wEnt').value.trim());
+  sv.title=sv.disabled?'Renseignez l\'entreprise et l\'issue de l\'appel (et connectez le CRM)':'';
 }
 function buildReco(pct){
   var d=state.douleurs||[],it=state.interet||[];
   var levers=[];
   var map={'Manque de clients':'prospection clients pilotée par IA + nouvelles lignes régulières','Trajets à vide':'optimisation des tournées + lignes de retour','Charges trop lourdes':'audit des charges + apprentissage (moins de charges sociales)','Noyé sous l\'administratif':'automatisation des devis, mails et relances','Marges serrées':'cockpit de pilotage de la marge par ligne','Recruter des chauffeurs':'aide au recrutement + POEI','Pilotage à vue':'CRM & tableau de bord temps réel','Dépendance à 1 client':'diversification via prospection + donneurs d\'ordre'};
   d.forEach(function(o){if(map[o[0]])levers.push(map[o[0]]);});
-  it.forEach(function(o){var m={'Automatiser les devis':'automatisation des devis','Piloter sa marge':'pilotage de la marge','Former ses salariés':'formation des salariés (jusqu\'à ~10 000 € pris en charge)','Flotte électrique':'accompagnement transition flotte électrique','Communauté / entraide':'communauté Transporteurs 2.0'};if(m[o[0]]&&levers.indexOf(m[o[0]])<0)levers.push(m[o[0]]);});
+  it.forEach(function(o){var m={'Automatiser les devis':'automatisation des devis','Piloter sa marge':'pilotage de la marge','Former ses salariés':'formation des salariés prise en charge par l\'OPCO','Flotte électrique':'accompagnement transition flotte électrique','Communauté / entraide':'communauté Transporteurs 2.0'};if(m[o[0]]&&levers.indexOf(m[o[0]])<0)levers.push(m[o[0]]);});
   if(!levers.length)levers.push('pilotage IA de l\'activité + formation dirigeant');
-  var offre=pct>=45?'Formation IA Dirigeant (enveloppe ~1 500 €, débloquée en ~2 semaines) — porte d\'entrée de l\'accompagnement 360°':'Formation IA Dirigeant + valoriser l\'avance concurrentielle';
-  var txt='<b>Offre à proposer :</b> '+offre+'.<br><b>Leviers à mettre en avant :</b> '+levers.slice(0,4).join(' · ')+'.<br><b>Prochaine étape :</b> bloquer l\'audit gratuit de 30 min avec Abdel.';
+  var offre=pct>=45
+    ? 'Formation IA Dirigeant — <b>100 % financée par son OPCO Mobilités, 0 € pour lui</b> — porte d\'entrée de l\'accompagnement 360°'
+    : 'Formation IA Dirigeant (0 € via l\'OPCO Mobilités) en valorisant son avance sur ses confrères';
+  var txt='<b>Offre à proposer :</b> '+offre+'.<br>'
+    +'<b>Leviers à mettre en avant :</b> '+levers.slice(0,4).join(' · ')+'.<br>'
+    +'<b>Prochaine étape :</b> bloquer l\'audit gratuit de 30 min avec Abdel.<br>'
+    +'<span style="color:#9a7212;font-weight:700">⚠️ Aucun montant ne doit être annoncé : « le montant exact, on le calcule ensemble pendant l\'audit ».</span>';
   document.getElementById('recotext').innerHTML=txt;
 }
+
+/* ============ résumé texte ============ */
+function resume(){
+  var L=[];
+  L.push('— AUDIT IA du '+new Date().toLocaleDateString('fr-FR')+(ME?' (par '+ME+')':'')+' —');
+  var ent=document.getElementById('wEnt').value.trim(), dir=document.getElementById('wDir').value.trim();
+  if(ent)L.push('Entreprise : '+ent); if(dir)L.push('Dirigeant : '+dir);
+  Q.forEach(function(q){var s=state[q.id]||[];if(s.length)L.push(q.t+' : '+s.map(function(o){return o[0]}).join(', '));});
+  L.push('Score maturité IA : '+document.getElementById('score').textContent+'/100 ('+document.getElementById('verdict').textContent+')');
+  if(ISSUE)L.push('Issue de l\'appel : '+ISSUE);
+  L.push('Reco : '+(document.getElementById('recotext').innerText||'').replace(/\s*\n\s*/g,' ').replace(/⚠️.*$/,'').trim());
+  return L.join('\n');
+}
+
+/* ============ enregistrement CRM ============ */
+document.getElementById('save').addEventListener('click',function(){
+  var btn=this, hint=document.getElementById('copied');
+  if(!LIVE){hint.style.color='#c0432a';hint.textContent='CRM non connecté — utilisez « Copier le résumé ».';return;}
+  var ent=document.getElementById('wEnt').value.trim();
+  var interet=(ISSUES.filter(function(p){return p[0]===ISSUE})[0]||[])[1]||'';
+  var agent=document.getElementById('wAgent').value||ME;
+  btn.disabled=true;btn.textContent='Enregistrement…';hint.style.color='#1f8a5c';hint.textContent='';
+
+  var fields={'Statut prospection':ISSUE,'Intérêt':interet,'Appelé':true,'Notes prospect':resume()};
+  if(agent){fields['Agent']=agent;fields['Appelé par']=agent;}
+
+  var p;
+  if(LINKED){
+    // on ajoute l'audit sous les notes existantes plutôt que de les écraser
+    p=apic('GET',null,'?table=Prospects&max=900').then(function(j){
+      var rec=(j.records||[]).filter(function(r){return r.id===LINKED.id;})[0];
+      var old=(rec&&rec.fields&&rec.fields['Notes prospect'])||'';
+      fields['Notes prospect']=old?(old+'\n\n'+resume()):resume();
+      return apic('PATCH',{table:'Prospects',id:LINKED.id,fields:fields});
+    });
+  }else{
+    fields['nom']=ent;
+    var tel=document.getElementById('wTel').value.trim(), dir=document.getElementById('wDir').value.trim();
+    if(tel)fields['telephone']=tel; if(dir)fields['dirigeants']=dir;
+    p=apic('POST',{table:'Prospects',fields:fields});
+  }
+  p.then(function(){
+    CACHE=null;
+    hint.textContent=LINKED?('✓ Audit ajouté à la fiche « '+LINKED.nom+' » — statut mis à jour : '+ISSUE)
+                            :('✓ Nouvelle fiche prospect créée : « '+ent+' » — statut : '+ISSUE);
+    btn.textContent='✓ Enregistré';
+  }).catch(function(e){
+    hint.style.color='#c0432a';hint.textContent='❌ Échec : '+e.message+' — le résumé reste copiable.';
+    btn.disabled=false;btn.textContent='💾 Enregistrer dans le CRM';
+  });
+});
+
 document.getElementById('copy').addEventListener('click',function(){
-  var lines=['— AUDIT IA (rempli en appel) —'];
-  Q.forEach(function(q){var sel=state[q.id]||[];if(sel.length)lines.push(q.t+' : '+sel.map(function(o){return o[0]}).join(', '));});
-  lines.push('Score maturité IA : '+document.getElementById('score').textContent+'/100 ('+document.getElementById('verdict').textContent+')');
-  lines.push('Reco : '+document.getElementById('recotext').innerText.replace(/\n/g,' '));
-  navigator.clipboard.writeText(lines.join('\n')).then(function(){
-    document.getElementById('copied').textContent='✓ Résumé copié — collez-le dans « Notes prospect » sur Airtable.';
-    setTimeout(function(){document.getElementById('copied').textContent='';},4000);
+  navigator.clipboard.writeText(resume()).then(function(){
+    var h=document.getElementById('copied');h.style.color='#1f8a5c';
+    h.textContent='✓ Résumé copié.';setTimeout(function(){h.textContent='';},4000);
   });
 });
 document.getElementById('reset').addEventListener('click',function(){
-  state={};document.querySelectorAll('.chip.on').forEach(function(c){c.classList.remove('on')});
-  document.getElementById('reco').style.display='none';compute();
+  state={};ISSUE='';LINKED=null;
+  document.querySelectorAll('.chip.on').forEach(function(c){c.classList.remove('on')});
+  document.querySelectorAll('.qz.done').forEach(function(c){c.classList.remove('done')});
+  ['wEnt','wDir','wTel'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('reco').style.display='none';
+  document.getElementById('copied').textContent='';
+  var s=document.getElementById('save');s.textContent='💾 Enregistrer dans le CRM';
+  paintLinked();compute();window.scrollTo({top:0,behavior:'smooth'});
 });
-compute();
+['wEnt','wDir','wTel'].forEach(function(id){document.getElementById(id).addEventListener('input',compute);});
+paintLinked();compute();
 </script>
 </body></html>
