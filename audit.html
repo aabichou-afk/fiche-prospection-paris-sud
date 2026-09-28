@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Audit IA · Espace Agents — Paris Sud Formation</title>
-<link rel="stylesheet" href="style.css?v=202609281059">
-<script src="gate.js?v=202609281059"></script>
+<link rel="stylesheet" href="style.css?v=202609281121">
+<script src="gate.js?v=202609281121"></script>
 <style>
 .qz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
 .qz .qt{font-weight:700;color:#11362b;font-size:1.02rem;margin-bottom:4px}
@@ -86,6 +86,11 @@
         <div class="qt">📞 Issue de l'appel</div>
         <div class="qs">Obligatoire pour enregistrer — c'est ce qui met à jour le statut du prospect</div>
         <div class="chips" id="issueChips"></div>
+        <div id="rappelWrap" style="display:none;margin-top:12px">
+          <label style="display:block;font-size:.76rem;font-weight:700;color:#5f6b62;margin-bottom:3px">📅 À rappeler le</label>
+          <input id="wRappel" type="date" style="padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem">
+          <span style="font-size:.78rem;color:#7b8a82;margin-left:8px">Sans date, la relance se perd.</span>
+        </div>
       </div>
 
       <div class="reco" id="reco" style="display:none">
@@ -104,7 +109,7 @@
     </div>
   </div>
 </div>
-<script src="nav.js?v=202609281059"></script>
+<script src="nav.js?v=202609281121"></script>
 <script>
 /* ============ connexion CRM (même clé que le reste de l'espace) ============ */
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
@@ -125,7 +130,9 @@ function loadProspects(){
   if(!LIVE)return Promise.resolve([]);
   return apic('GET',null,'?table=Prospects&max=900').then(function(j){
     CACHE=(j.records||[]).map(function(r){var f=r.fields;
-      return {id:r.id,nom:f['nom']||'',tel:f['telephone']||'',ville:f['ville']||'',dir:f['dirigeants']||''};});
+      // on garde notes + nb relances pour ne PAS refaire un second chargement complet au moment d'enregistrer
+      return {id:r.id,nom:f['nom']||'',tel:f['telephone']||'',ville:f['ville']||'',dir:f['dirigeants']||'',
+              notes:f['Notes prospect']||'',relances:Number(f['Nb relances']||0)};});
     return CACHE;
   }).catch(function(){return [];});
 }
@@ -183,7 +190,7 @@ Q.forEach(function(q){
       if(q.type==='one'){chips.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');state[q.id]=[o];}
       else{c.classList.toggle('on');state[q.id]=q.o.filter(function(oo,k){return chips.querySelectorAll('.chip')[k].classList.contains('on')});}
       box.classList.toggle('done',(state[q.id]||[]).length>0);
-      compute();
+      compute();saveDraft();
     });
     chips.appendChild(c);
   });
@@ -199,10 +206,17 @@ ISSUES.forEach(function(p){
     ic.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});
     b.classList.add('on');ISSUE=p[0];
     document.getElementById('issueBox').classList.add('done');
-    compute();
+    // « À rappeler » sans date = relance qui se perd : on demande la date tout de suite
+    document.getElementById('rappelWrap').style.display=(ISSUE==='À rappeler')?'block':'none';
+    if(ISSUE==='À rappeler'&&!document.getElementById('wRappel').value){
+      var d=new Date();d.setDate(d.getDate()+3);
+      document.getElementById('wRappel').value=d.toISOString().slice(0,10);
+    }
+    compute();saveDraft();
   });
   ic.appendChild(b);
 });
+document.getElementById('wRappel').addEventListener('change',saveDraft);
 
 function compute(){
   var sc=0,answered=0;
@@ -243,6 +257,58 @@ function buildReco(pct){
   document.getElementById('recotext').innerHTML=txt;
 }
 
+/* ============ brouillon auto (ne jamais perdre un audit en cours d'appel) ============ */
+var DKEY='psf_audit_draft';
+function saveDraft(){
+  try{
+    var d={ent:document.getElementById('wEnt').value,dir:document.getElementById('wDir').value,
+      tel:document.getElementById('wTel').value,agent:document.getElementById('wAgent').value,
+      rappel:document.getElementById('wRappel').value,issue:ISSUE,linked:LINKED,
+      answers:{},ts:Date.now()};
+    Object.keys(state).forEach(function(k){d.answers[k]=(state[k]||[]).map(function(o){return o[0];});});
+    localStorage.setItem(DKEY,JSON.stringify(d));
+  }catch(e){}
+}
+function clearDraft(){try{localStorage.removeItem(DKEY);}catch(e){}}
+function restoreDraft(){
+  var raw;try{raw=localStorage.getItem(DKEY);}catch(e){return;}
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(e){return;}
+  if(!d||!d.ts)return;
+  // un brouillon de plus de 12 h n'a plus de sens
+  if(Date.now()-d.ts>12*3600*1000){clearDraft();return;}
+  var quand=new Date(d.ts).toLocaleString('fr-FR',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+  var bar=document.createElement('div');
+  bar.className='callout c-warn';
+  bar.style.cssText='display:flex;gap:12px;align-items:center;flex-wrap:wrap';
+  bar.innerHTML='<span>💾 Un audit non enregistré a été retrouvé ('+(d.ent||'sans entreprise')+' · '+quand+').</span>'
+    +'<button id="drRestore" class="chip" style="background:#1f8a5c;color:#fff;border-color:#1f8a5c">Reprendre</button>'
+    +'<button id="drDrop" class="chip">Ignorer</button>';
+  var c=document.querySelector('.content');c.insertBefore(bar,c.children[1]);
+  document.getElementById('drDrop').addEventListener('click',function(){clearDraft();bar.remove();});
+  document.getElementById('drRestore').addEventListener('click',function(){
+    document.getElementById('wEnt').value=d.ent||'';document.getElementById('wDir').value=d.dir||'';
+    document.getElementById('wTel').value=d.tel||'';
+    if(d.agent)document.getElementById('wAgent').value=d.agent;
+    LINKED=d.linked||null;
+    Q.forEach(function(q){
+      var picked=(d.answers&&d.answers[q.id])||[];if(!picked.length)return;
+      var box=document.getElementById('qz-'+q.id),chips=box.querySelectorAll('.chip');
+      q.o.forEach(function(o,k){if(picked.indexOf(o[0])>-1)chips[k].classList.add('on');});
+      state[q.id]=q.o.filter(function(o){return picked.indexOf(o[0])>-1;});
+      box.classList.add('done');
+    });
+    if(d.issue){
+      ISSUE=d.issue;
+      ic.querySelectorAll('.chip').forEach(function(b){if(b.textContent===d.issue)b.classList.add('on');});
+      document.getElementById('issueBox').classList.add('done');
+      if(ISSUE==='À rappeler'){document.getElementById('rappelWrap').style.display='block';
+        document.getElementById('wRappel').value=d.rappel||'';}
+    }
+    bar.remove();paintLinked();compute();
+  });
+}
+
 /* ============ résumé texte ============ */
 function resume(){
   var L=[];
@@ -252,6 +318,8 @@ function resume(){
   Q.forEach(function(q){var s=state[q.id]||[];if(s.length)L.push(q.t+' : '+s.map(function(o){return o[0]}).join(', '));});
   L.push('Score maturité IA : '+document.getElementById('score').textContent+'/100 ('+document.getElementById('verdict').textContent+')');
   if(ISSUE)L.push('Issue de l\'appel : '+ISSUE);
+  var rp=document.getElementById('wRappel').value;
+  if(ISSUE==='À rappeler'&&rp)L.push('>>> À RAPPELER LE '+rp.split('-').reverse().join('/'));
   L.push('Reco : '+(document.getElementById('recotext').innerText||'').replace(/\s*\n\s*/g,' ').replace(/⚠️.*$/,'').trim());
   return L.join('\n');
 }
@@ -267,24 +335,24 @@ document.getElementById('save').addEventListener('click',function(){
 
   var fields={'Statut prospection':ISSUE,'Intérêt':interet,'Appelé':true,'Notes prospect':resume()};
   if(agent){fields['Agent']=agent;fields['Appelé par']=agent;}
+  // ces 2 champs sont lus par la relance automatique : sans eux, le prospect passe pour « jamais contacté »
+  fields['Date dernier contact']=new Date().toISOString().slice(0,10);
 
   var p;
   if(LINKED){
-    // on ajoute l'audit sous les notes existantes plutôt que de les écraser
-    p=apic('GET',null,'?table=Prospects&max=900').then(function(j){
-      var rec=(j.records||[]).filter(function(r){return r.id===LINKED.id;})[0];
-      var old=(rec&&rec.fields&&rec.fields['Notes prospect'])||'';
-      fields['Notes prospect']=old?(old+'\n\n'+resume()):resume();
-      return apic('PATCH',{table:'Prospects',id:LINKED.id,fields:fields});
-    });
+    // les notes et le compteur viennent du cache : pas de second chargement des 583 fiches
+    fields['Notes prospect']=LINKED.notes?(LINKED.notes+'\n\n'+resume()):resume();
+    fields['Nb relances']=(LINKED.relances||0)+1;
+    p=apic('PATCH',{table:'Prospects',id:LINKED.id,fields:fields});
   }else{
+    fields['Nb relances']=1;
     fields['nom']=ent;
     var tel=document.getElementById('wTel').value.trim(), dir=document.getElementById('wDir').value.trim();
     if(tel)fields['telephone']=tel; if(dir)fields['dirigeants']=dir;
     p=apic('POST',{table:'Prospects',fields:fields});
   }
   p.then(function(){
-    CACHE=null;
+    CACHE=null;clearDraft();
     hint.textContent=LINKED?('✓ Audit ajouté à la fiche « '+LINKED.nom+' » — statut mis à jour : '+ISSUE)
                             :('✓ Nouvelle fiche prospect créée : « '+ent+' » — statut : '+ISSUE);
     btn.textContent='✓ Enregistré';
@@ -301,7 +369,8 @@ document.getElementById('copy').addEventListener('click',function(){
   });
 });
 document.getElementById('reset').addEventListener('click',function(){
-  state={};ISSUE='';LINKED=null;
+  state={};ISSUE='';LINKED=null;clearDraft();
+  document.getElementById('rappelWrap').style.display='none';document.getElementById('wRappel').value='';
   document.querySelectorAll('.chip.on').forEach(function(c){c.classList.remove('on')});
   document.querySelectorAll('.qz.done').forEach(function(c){c.classList.remove('done')});
   ['wEnt','wDir','wTel'].forEach(function(id){document.getElementById(id).value='';});
@@ -310,7 +379,8 @@ document.getElementById('reset').addEventListener('click',function(){
   var s=document.getElementById('save');s.textContent='💾 Enregistrer dans le CRM';
   paintLinked();compute();window.scrollTo({top:0,behavior:'smooth'});
 });
-['wEnt','wDir','wTel'].forEach(function(id){document.getElementById(id).addEventListener('input',compute);});
-paintLinked();compute();
+['wEnt','wDir','wTel'].forEach(function(id){document.getElementById(id).addEventListener('input',function(){compute();saveDraft();});});
+document.getElementById('wAgent').addEventListener('change',saveDraft);
+paintLinked();compute();restoreDraft();
 </script>
 </body></html>
