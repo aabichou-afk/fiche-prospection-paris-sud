@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test de positionnement · Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css?v=202609281329">
+<script src="gate.js?v=202609281329"></script>
+<style>
+.pz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
+.pz.done{border-color:#bfe3cd;background:#fcfffd}
+.pz h3{margin:0 0 3px;color:#11362b;font-size:1.04rem}
+.pz .sub{font-size:.82rem;color:#5f6b62;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label.f{display:block;font-size:.76rem;font-weight:700;color:#5f6b62;margin-bottom:3px}
+input.f,select.f,textarea.f{width:100%;padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem;background:#fff}
+textarea.f{min-height:66px;resize:vertical}
+.req{color:#c0432a}
+/* échelle de niveau */
+.comp{border-bottom:1px solid #f0f4f2;padding:11px 0}
+.comp:last-child{border-bottom:none}
+.comp .lb{font-size:.9rem;color:#33453d;margin-bottom:7px;font-weight:600}
+.lv{display:flex;gap:6px;flex-wrap:wrap}
+.lv button{border:1px solid #d7e5dd;background:#fff;color:#54615a;border-radius:999px;padding:6px 13px;font-size:.81rem;font-weight:600;cursor:pointer;font-family:inherit;transition:.12s}
+.lv button:hover{border-color:#1f8a5c}
+.lv button.on[data-v="0"]{background:#d1543a;border-color:#d1543a;color:#fff}
+.lv button.on[data-v="1"]{background:#d68b1f;border-color:#d68b1f;color:#fff}
+.lv button.on[data-v="2"]{background:#1f8a5c;border-color:#1f8a5c;color:#fff}
+.lv button.on[data-v="3"]{background:#11362b;border-color:#11362b;color:#fff}
+/* bandeau résultat */
+.res{position:sticky;top:118px;z-index:10;background:linear-gradient(135deg,#11362b,#1f6f5c);color:#fff;border-radius:16px;padding:16px 20px;margin-bottom:8px;box-shadow:0 14px 34px -20px rgba(17,54,43,.7)}
+.res .big{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:700;line-height:1.05}
+.res .lbl{font-size:.85rem;opacity:.92}
+.bar{height:12px;background:rgba(255,255,255,.22);border-radius:999px;overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8cc63f,#f4ce1e);transition:.35s}
+.concl{background:#eef7f2;border:1px solid #bfe3cd;border-radius:14px;padding:16px 18px;margin:12px 0}
+.concl h3{margin:0 0 8px;color:#11362b}
+.act{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.act button{border:none;border-radius:999px;padding:12px 20px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
+.savebtn{background:#1f8a5c;color:#fff}.savebtn:disabled{opacity:.55;cursor:not-allowed}
+.printbtn{background:#11362b;color:#fff}.copybtn{background:#18BFFF;color:#fff}
+.resetbtn{background:#fff;border:1px solid #d7e5dd!important;color:#33453d}
+.sig{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px}
+.sigbox{border:1px dashed #c7d6ce;border-radius:11px;padding:12px 14px;min-height:88px}
+.sigbox .t{font-size:.75rem;font-weight:700;color:#5f6b62;margin-bottom:4px}
+.legal{font-size:.76rem;color:#7b8a82;margin-top:10px;line-height:1.5}
+@media(max-width:640px){.res{top:8px}.sig{grid-template-columns:1fr}}
+
+/* ===== impression : le document devient la preuve Qualiopi ===== */
+@media print{
+  @page{size:A4;margin:14mm}
+  .side,.scrim,.topbar,.fabwa,.crmban,.crmov,.act,.no-print{display:none!important}
+  body{background:#fff}
+  .app,.main,.content{display:block!important;margin:0!important;padding:0!important;max-width:none!important}
+  .pz,.concl{box-shadow:none;break-inside:avoid;page-break-inside:avoid;border:1px solid #cfdad4}
+  .res{position:static;background:#11362b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .lv button{display:none}.lv button.on{display:inline-block;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  input.f,select.f,textarea.f{border:none;border-bottom:1px solid #cfdad4;border-radius:0;padding-left:0}
+  .printhead{display:block!important}
+}
+.printhead{display:none;border-bottom:2px solid #11362b;padding-bottom:9px;margin-bottom:14px}
+.printhead .org{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:700;color:#11362b}
+.printhead .meta{font-size:.76rem;color:#5f6b62;margin-top:2px}
+</style>
+</head><body data-page="positionnement">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Test de positionnement</h1><span class="tag">Entrée en formation</span>
+    </div>
+    <div class="content">
+
+      <!-- en-tête visible seulement à l'impression -->
+      <div class="printhead">
+        <div class="org">PARIS SUD FORMATION — Test de positionnement à l'entrée en formation</div>
+        <div class="meta">N° de déclaration d'activité 11911094991 · UAI 0912524Z · SIRET 93347916400032 · 12 rue Jean Pacilly, 91120 Palaiseau · Certifié Qualiopi</div>
+      </div>
+
+      <div class="callout c-info no-print" style="margin-top:0">
+        🎓 <b>À réaliser avec le candidat avant l'entrée en formation.</b> Ce test évalue les acquis de départ et sert à <b>adapter le parcours</b> (allègements, renforcements, aménagements).
+        Une fois rempli : <b>Imprimer / PDF</b> pour le dossier de l'apprenant, et <b>Enregistrer</b> pour la traçabilité.
+      </div>
+
+      <!-- ===== 1. Identification ===== -->
+      <div class="pz" id="s1">
+        <h3>1 · Identification</h3>
+        <div class="sub">Qui est positionné, sur quelle formation, et par qui</div>
+        <div class="grid2">
+          <div><label class="f">Nom et prénom du candidat <span class="req">*</span></label><input class="f" id="pNom" placeholder="NOM Prénom"></div>
+          <div><label class="f">Date de naissance</label><input class="f" id="pNaiss" type="date"></div>
+          <div><label class="f">Téléphone</label><input class="f" id="pTel" placeholder="06…"></div>
+          <div><label class="f">Email</label><input class="f" id="pMail" type="email" placeholder="nom@exemple.fr"></div>
+          <div><label class="f">Entreprise d'accueil</label><input class="f" id="pEnt" placeholder="Raison sociale"></div>
+          <div><label class="f">Formation visée <span class="req">*</span></label><select class="f" id="pForm"><option value="">— choisir —</option></select></div>
+          <div><label class="f">Date du positionnement <span class="req">*</span></label><input class="f" id="pDate" type="date"></div>
+          <div><label class="f">Réalisé par</label><select class="f" id="pBy"></select></div>
+          <div><label class="f">Modalité</label><select class="f" id="pMod"><option>Entretien téléphonique</option><option>Entretien visio</option><option>Entretien sur site</option><option>Questionnaire à distance</option></select></div>
+        </div>
+        <div class="callout c-info no-print" id="formInfo" style="margin-top:12px;display:none"></div>
+      </div>
+
+      <!-- ===== 2. Prérequis ===== -->
+      <div class="pz" id="s2">
+        <h3>2 · Vérification des prérequis</h3>
+        <div class="sub">Conditions d'accès à la formation — à cocher avec le candidat</div>
+        <div id="prereq"></div>
+      </div>
+
+      <!-- ===== 3. Parcours & expérience ===== -->
+      <div class="pz" id="s3">
+        <h3>3 · Parcours et expérience</h3>
+        <div class="sub">Ce sur quoi on va pouvoir s'appuyer</div>
+        <div class="grid2">
+          <div><label class="f">Dernier diplôme / titre obtenu</label><input class="f" id="pDip" placeholder="Ex. BEP, Bac, BTS…"></div>
+          <div><label class="f">Année d'obtention</label><input class="f" id="pDipAn" placeholder="Ex. 2015"></div>
+          <div><label class="f">Situation actuelle</label><select class="f" id="pSit"><option>Salarié·e</option><option>Demandeur d'emploi</option><option>Scolaire / étudiant·e</option><option>Inactif·ve</option><option>Travailleur indépendant</option></select></div>
+          <div><label class="f">Expérience dans le domaine visé</label><select class="f" id="pExp"><option>Aucune</option><option>Moins d'1 an</option><option>1 à 3 ans</option><option>Plus de 3 ans</option></select></div>
+        </div>
+        <div style="margin-top:12px"><label class="f">Expériences marquantes / missions déjà exercées</label><textarea class="f" id="pMiss" placeholder="Ce que le candidat a déjà fait concrètement"></textarea></div>
+      </div>
+
+      <!-- ===== 4. Auto-évaluation des compétences ===== -->
+      <div class="pz" id="s4">
+        <h3>4 · Auto-évaluation des compétences visées</h3>
+        <div class="sub">Pour chaque compétence : où en est le candidat aujourd'hui ? (avant la formation)</div>
+        <div id="comps"><div style="color:#7b8a82;font-size:.88rem">Choisissez d'abord une formation en section 1.</div></div>
+      </div>
+
+      <!-- ===== 5. Compétences transverses ===== -->
+      <div class="pz" id="s5">
+        <h3>5 · Compétences transverses</h3>
+        <div class="sub">Socle nécessaire pour suivre la formation, notamment à distance</div>
+        <div id="transverses"></div>
+      </div>
+
+      <!-- ===== 6. Besoins & aménagements ===== -->
+      <div class="pz" id="s6">
+        <h3>6 · Besoins particuliers et aménagements</h3>
+        <div class="sub">Accessibilité, rythme, contraintes — c'est ici qu'on adapte le parcours</div>
+        <div class="grid2">
+          <div><label class="f">Situation de handicap déclarée</label><select class="f" id="pHand"><option>Non</option><option>Oui</option><option>Ne souhaite pas répondre</option></select></div>
+          <div><label class="f">Aménagement souhaité</label><input class="f" id="pAmenag" placeholder="Ex. supports adaptés, temps majoré…"></div>
+          <div><label class="f">Équipement informatique</label><select class="f" id="pEquip"><option>Ordinateur + connexion OK</option><option>Smartphone uniquement</option><option>Pas d'équipement</option></select></div>
+          <div><label class="f">Disponibilité / rythme</label><input class="f" id="pRythme" placeholder="Ex. 1 jour / semaine"></div>
+        </div>
+        <div style="margin-top:12px"><label class="f">Objectif professionnel du candidat</label><textarea class="f" id="pObj" placeholder="Pourquoi cette formation, quel projet derrière"></textarea></div>
+        <div class="callout c-warn no-print" id="handNote" style="margin-top:12px;display:none">
+          ♿ <b>Référent handicap à mobiliser.</b> Formaliser l'aménagement par écrit dans le dossier de l'apprenant et le tracer dans le suivi — c'est l'indicateur 26.
+        </div>
+      </div>
+
+      <!-- ===== Résultat ===== -->
+      <div class="res">
+        <div class="lbl">Niveau de maîtrise à l'entrée</div>
+        <div class="big"><span id="score">0</span>% · <span id="verdict">à évaluer</span></div>
+        <div class="bar"><i id="barfill"></i></div>
+        <div class="lbl" id="detail" style="margin-top:8px"></div>
+      </div>
+
+      <!-- ===== 7. Conclusion ===== -->
+      <div class="pz" id="s7">
+        <h3>7 · Conclusion du positionnement</h3>
+        <div class="sub">Décision et parcours retenu — généré automatiquement, modifiable</div>
+        <div class="concl" id="conclBox"><div id="conclAuto" style="font-size:.92rem">Renseignez les sections ci-dessus.</div></div>
+        <div class="grid2" style="margin-top:12px">
+          <div><label class="f">Décision <span class="req">*</span></label><select class="f" id="pDec"><option value="">— choisir —</option><option>Entrée en formation validée</option><option>Entrée validée avec aménagements</option><option>Entrée validée avec parcours renforcé</option><option>Orientation vers une autre formation</option><option>Entrée non validée</option></select></div>
+          <div><label class="f">Durée de parcours retenue</label><input class="f" id="pDuree" placeholder="Ex. 441 h"></div>
+        </div>
+        <div style="margin-top:12px"><label class="f">Adaptations retenues (allègements, renforcements, aménagements)</label><textarea class="f" id="pAdapt" placeholder="Ce qu'on change concrètement pour ce candidat"></textarea></div>
+
+        <div class="sig">
+          <div class="sigbox"><div class="t">Signature du candidat — date</div></div>
+          <div class="sigbox"><div class="t">Signature du représentant de l'organisme — date</div></div>
+        </div>
+        <div class="legal">
+          Document établi par PARIS SUD FORMATION dans le cadre de la procédure de positionnement à l'entrée en formation.
+          Les informations recueillies sont utilisées pour adapter le parcours et sont conservées dans le dossier de l'apprenant.
+          Conformément au RGPD, le candidat dispose d'un droit d'accès, de rectification et d'effacement en écrivant à formation@paris-sud.com.
+        </div>
+      </div>
+
+      <div class="act no-print">
+        <button class="printbtn" id="print">🖨️ Imprimer / PDF pour le dossier</button>
+        <button class="savebtn" id="save">💾 Enregistrer dans le CRM</button>
+        <button class="copybtn" id="copy">📋 Copier le résumé</button>
+        <button class="resetbtn" id="reset">Nouveau test</button>
+      </div>
+      <div class="hint no-print" id="msg" style="font-weight:700;margin-top:8px"></div>
+
+      <div class="callout c-warn no-print" style="margin-top:14px">
+        <b>Pourquoi ce document compte.</b> Le positionnement à l'entrée est un attendu de la certification Qualiopi (analyse du besoin et adaptation du parcours).
+        L'auditeur demande la <b>procédure</b> et des <b>traces réelles par apprenant</b> : un test rempli, daté et signé par dossier.
+        ⛔ Ne jamais remplir un test après coup en antidatant — un document fabriqué est un écart bien plus grave qu'un document manquant.
+      </div>
+    </div>
+  </div>
+</div>
+<script src="nav.js?v=202609281329"></script>
+<script>
+/* ============ connexion CRM (même clé que le reste de l'espace) ============ */
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var ME=(window.PSF_AUTH&&window.PSF_AUTH.current()&&window.PSF_AUTH.current().id)||'';
+function apic(method,payload,q){var o={method:method,headers:{'x-crm-key':CFG.key}};
+  if(payload){o.headers['Content-Type']='application/json';o.body=JSON.stringify(payload);}
+  return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+function $(id){return document.getElementById(id);}
+
+/* ============ formations réelles du CFA (données YPAREO) ============ */
+var FORMATIONS={
+ 'RPMS':{lib:'TP Responsable de petite et moyenne structure',rncp:'RNCP38575',code:'36T31001',heures:460,dist:356,niveau:'Niveau 5 (bac+2)',
+   prereq:['Projet professionnel en lien avec l\'encadrement d\'une structure','Niveau baccalauréat ou expérience professionnelle équivalente','Maîtrise du français écrit et oral','Accès à un ordinateur et à une connexion internet (formation majoritairement à distance)','Entreprise d\'accueil identifiée (si parcours en alternance)'],
+   comps:['Piloter l\'activité quotidienne de la structure','Gérer le budget, la trésorerie et la rentabilité','Suivre et analyser les indicateurs de performance','Encadrer et animer une équipe','Recruter et intégrer un collaborateur','Développer l\'activité commerciale et la relation client','Négocier avec les fournisseurs et les partenaires','Appliquer la réglementation sociale et sécurité au quotidien']},
+ 'CC':{lib:'TP Conseiller commercial',rncp:'RNCP37717',code:'46T31202',heures:441,dist:329,niveau:'Niveau 4 (bac)',
+   prereq:['Projet professionnel orienté vers la relation client et la vente','Maîtrise du français écrit et oral','Aisance relationnelle et goût du contact','Accès à un ordinateur et à une connexion internet (formation majoritairement à distance)','Entreprise d\'accueil identifiée (si parcours en alternance)'],
+   comps:['Assurer une veille commerciale sur son secteur','Prospecter de nouveaux clients (téléphone, terrain, digital)','Préparer et mener un entretien de vente','Découvrir le besoin du client et le reformuler','Argumenter et traiter les objections','Élaborer et présenter une proposition commerciale','Conclure la vente et assurer le suivi','Rendre compte de son activité et suivre ses indicateurs']},
+ 'APH':{lib:'TP Agent de propreté et d\'hygiène',rncp:'RNCP37872',code:'56T34301',heures:441,dist:329,niveau:'Niveau 3 (CAP/BEP)',
+   prereq:['Projet professionnel dans les métiers de la propreté','Compréhension du français oral et écrit (consignes de sécurité)','Aptitude physique compatible avec le métier','Accès à un ordinateur ou smartphone et à une connexion internet','Entreprise d\'accueil identifiée (si parcours en alternance)'],
+   comps:['Réaliser le nettoyage manuel des locaux','Utiliser les machines de nettoyage en sécurité','Appliquer les protocoles d\'hygiène et de désinfection','Lire et respecter une fiche de poste et un planning','Identifier et utiliser les produits adaptés','Respecter les règles de sécurité et le port des EPI','Rendre compte de son intervention','Adopter une posture professionnelle face au client']}
+};
+var TRANSV=['Lire et comprendre un document professionnel','Rédiger un écrit professionnel simple (mail, compte rendu)','Réaliser les calculs courants du métier','Utiliser un ordinateur et une messagerie','Suivre une formation à distance en autonomie','Organiser son temps et respecter les échéances'];
+var NIV=[['Non acquis',0],['En cours d\'acquisition',1],['Acquis',2],['Maîtrisé',3]];
+
+/* remplissage des listes */
+var fs=$('pForm');
+Object.keys(FORMATIONS).forEach(function(k){var f=FORMATIONS[k];
+  fs.innerHTML+='<option value="'+k+'">'+f.lib+' ('+f.rncp+')</option>';});
+$('pBy').innerHTML=['','Abdel','Agente 1','Agente 2'].map(function(a){return '<option'+(a===ME?' selected':'')+'>'+a+'</option>';}).join('');
+$('pDate').value=new Date().toISOString().slice(0,10);
+
+var state={prereq:{},comps:{},transv:{}};
+
+function buildFormation(){
+  var k=fs.value, box=$('comps'), pr=$('prereq');
+  state.comps={};state.prereq={};
+  if(!k){box.innerHTML='<div style="color:#7b8a82;font-size:.88rem">Choisissez d\'abord une formation en section 1.</div>';pr.innerHTML='';$('formInfo').style.display='none';compute();return;}
+  var f=FORMATIONS[k];
+  $('formInfo').style.display='block';
+  $('formInfo').innerHTML='<b>'+f.lib+'</b> — '+f.rncp+' · code '+f.code+' · '+f.niveau+' · <b>'+f.heures+' h</b> dont '+f.dist+' h à distance.';
+  if(!$('pDuree').value)$('pDuree').value=f.heures+' h';
+  // prérequis
+  pr.innerHTML='';
+  f.prereq.forEach(function(p,i){
+    var d=document.createElement('div');d.className='comp';
+    d.innerHTML='<div class="lb">'+p+'</div><div class="lv">'
+      +'<button data-v="2">Oui</button><button data-v="1">Partiellement</button><button data-v="0">Non</button></div>';
+    pr.appendChild(d);
+    d.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click',function(){
+        d.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+        b.classList.add('on');state.prereq[i]=+b.getAttribute('data-v');compute();});
+    });
+  });
+  // compétences métier
+  box.innerHTML='';
+  f.comps.forEach(function(c,i){box.appendChild(compRow(c,'comps',i));});
+  compute();
+}
+function compRow(label,bucket,i){
+  var d=document.createElement('div');d.className='comp';
+  d.innerHTML='<div class="lb">'+label+'</div><div class="lv">'
+    +NIV.map(function(n){return '<button data-v="'+n[1]+'">'+n[0]+'</button>';}).join('')+'</div>';
+  d.querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click',function(){
+      d.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');state[bucket][i]=+b.getAttribute('data-v');compute();});
+  });
+  return d;
+}
+var tv=$('transverses');
+TRANSV.forEach(function(t,i){tv.appendChild(compRow(t,'transv',i));});
+
+function compute(){
+  var k=fs.value;
+  var cKeys=Object.keys(state.comps), tKeys=Object.keys(state.transv);
+  var nComp=k?FORMATIONS[k].comps.length:0, nTr=TRANSV.length;
+  var sum=0,tot=0;
+  cKeys.forEach(function(i){sum+=state.comps[i];});tot+=nComp*3;
+  tKeys.forEach(function(i){sum+=state.transv[i];});tot+=nTr*3;
+  var pct=tot?Math.round(sum/tot*100):0;
+  $('score').textContent=pct;$('barfill').style.width=pct+'%';
+  var v;
+  if(cKeys.length+tKeys.length<4)v='à évaluer';
+  else if(pct>=70)v='profil déjà avancé';
+  else if(pct>=40)v='profil intermédiaire';
+  else v='profil débutant';
+  $('verdict').textContent=v;
+  $('detail').textContent=(cKeys.length+tKeys.length)+'/'+(nComp+nTr)+' compétences évaluées'
+    +(k?' · '+FORMATIONS[k].rncp:'');
+  // prérequis non satisfaits ?
+  var ko=Object.keys(state.prereq).filter(function(i){return state.prereq[i]===0;}).length;
+  var part=Object.keys(state.prereq).filter(function(i){return state.prereq[i]===1;}).length;
+  $('handNote').style.display=($('pHand').value==='Oui')?'block':'none';
+  buildConcl(pct,v,ko,part,nComp,nTr,cKeys.length+tKeys.length);
+  [['s1',!!(nom()&&k&&$('pDate').value)],['s2',Object.keys(state.prereq).length===(k?FORMATIONS[k].prereq.length:0)&&k],
+   ['s4',cKeys.length===nComp&&nComp>0],['s5',tKeys.length===nTr]].forEach(function(p){
+    var el=$(p[0]);if(el)el.classList.toggle('done',!!p[1]);});
+  $('save').disabled=!(LIVE&&nom()&&k&&$('pDec').value);
+  $('save').title=$('save').disabled?'Renseignez le nom, la formation et la décision (et connectez le CRM)':'';
+}
+function nom(){return $('pNom').value.trim();}
+
+function buildConcl(pct,v,ko,part,nComp,nTr,answered){
+  var k=fs.value;
+  if(!k||answered<4){$('conclAuto').textContent='Renseignez les sections ci-dessus.';return;}
+  var f=FORMATIONS[k];
+  var faibles=[],forts=[];
+  Object.keys(state.comps).forEach(function(i){
+    if(state.comps[i]<=1)faibles.push(f.comps[i]);
+    if(state.comps[i]===3)forts.push(f.comps[i]);});
+  var trFaibles=[];
+  Object.keys(state.transv).forEach(function(i){if(state.transv[i]<=1)trFaibles.push(TRANSV[i]);});
+
+  var h='<b>Formation visée :</b> '+f.lib+' ('+f.rncp+') — '+f.heures+' h dont '+f.dist+' h à distance.<br>';
+  h+='<b>Niveau à l\'entrée :</b> '+pct+' % — '+v+'.<br>';
+  if(ko)h+='<span style="color:#c0432a;font-weight:700">⚠️ '+ko+' prérequis non satisfait'+(ko>1?'s':'')+' — à lever avant l\'entrée en formation.</span><br>';
+  else if(part)h+='<span style="color:#9a7212;font-weight:700">'+part+' prérequis partiellement satisfait'+(part>1?'s':'')+' — à sécuriser en début de parcours.</span><br>';
+  else if(Object.keys(state.prereq).length)h+='<span style="color:#1a6b45;font-weight:700">✓ Tous les prérequis sont satisfaits.</span><br>';
+  if(faibles.length)h+='<b>Renforcement prioritaire :</b> '+faibles.slice(0,4).join(' · ')+'.<br>';
+  if(forts.length)h+='<b>Acquis déjà maîtrisés</b> (allègement envisageable) : '+forts.slice(0,3).join(' · ')+'.<br>';
+  if(trFaibles.length)h+='<b>Accompagnement transverse :</b> '+trFaibles.slice(0,3).join(' · ')+'.<br>';
+  if($('pEquip').value==='Pas d\'équipement'||$('pEquip').value==='Smartphone uniquement')
+    h+='<span style="color:#9a7212;font-weight:700">⚠️ Équipement insuffisant pour '+f.dist+' h à distance — prévoir une solution avant le démarrage.</span><br>';
+  if($('pHand').value==='Oui')h+='<span style="color:#9a7212;font-weight:700">♿ Aménagement à formaliser avec le référent handicap.</span><br>';
+  $('conclAuto').innerHTML=h;
+}
+
+/* ============ résumé ============ */
+function resume(){
+  var k=fs.value,f=k?FORMATIONS[k]:null,L=[];
+  L.push('=== TEST DE POSITIONNEMENT — PARIS SUD FORMATION ===');
+  L.push('Candidat : '+(nom()||'—')+(($('pNaiss').value)?' (né·e le '+fr($('pNaiss').value)+')':''));
+  if($('pEnt').value)L.push('Entreprise : '+$('pEnt').value);
+  if(f)L.push('Formation visée : '+f.lib+' ('+f.rncp+') — '+f.heures+' h dont '+f.dist+' h à distance');
+  L.push('Date du positionnement : '+fr($('pDate').value)+' · Modalité : '+$('pMod').value+' · Réalisé par : '+($('pBy').value||'—'));
+  L.push('');
+  if(f&&Object.keys(state.prereq).length){
+    L.push('— Prérequis —');
+    f.prereq.forEach(function(p,i){var val=state.prereq[i];
+      if(val!==undefined)L.push('  '+(val===2?'Oui':val===1?'Partiellement':'NON')+' : '+p);});
+    L.push('');
+  }
+  L.push('— Parcours —');
+  L.push('  Diplôme : '+($('pDip').value||'—')+' '+($('pDipAn').value||''));
+  L.push('  Situation : '+$('pSit').value+' · Expérience : '+$('pExp').value);
+  if($('pMiss').value)L.push('  Missions : '+$('pMiss').value);
+  L.push('');
+  if(f&&Object.keys(state.comps).length){
+    L.push('— Compétences métier (niveau à l\'entrée) —');
+    f.comps.forEach(function(c,i){if(state.comps[i]!==undefined)L.push('  ['+NIV[state.comps[i]][0]+'] '+c);});
+    L.push('');
+  }
+  if(Object.keys(state.transv).length){
+    L.push('— Compétences transverses —');
+    TRANSV.forEach(function(t,i){if(state.transv[i]!==undefined)L.push('  ['+NIV[state.transv[i]][0]+'] '+t);});
+    L.push('');
+  }
+  L.push('— Besoins —');
+  L.push('  Handicap déclaré : '+$('pHand').value+($('pAmenag').value?' · Aménagement : '+$('pAmenag').value:''));
+  L.push('  Équipement : '+$('pEquip').value+($('pRythme').value?' · Rythme : '+$('pRythme').value:''));
+  if($('pObj').value)L.push('  Objectif : '+$('pObj').value);
+  L.push('');
+  L.push('— Conclusion —');
+  L.push('  Niveau à l\'entrée : '+$('score').textContent+'% ('+$('verdict').textContent+')');
+  L.push('  Décision : '+($('pDec').value||'—')+' · Durée retenue : '+($('pDuree').value||'—'));
+  if($('pAdapt').value)L.push('  Adaptations : '+$('pAdapt').value);
+  return L.join('\n');
+}
+function fr(d){return d?d.split('-').reverse().join('/'):'—';}
+
+/* ============ actions ============ */
+$('print').addEventListener('click',function(){
+  if(!nom()||!fs.value){msg('⚠️ Renseignez au moins le nom du candidat et la formation avant d\'imprimer.','#c0432a');return;}
+  window.print();
+});
+$('copy').addEventListener('click',function(){
+  navigator.clipboard.writeText(resume()).then(function(){msg('✓ Résumé copié.','#1f8a5c');});
+});
+$('save').addEventListener('click',function(){
+  var b=this;
+  if(!LIVE){msg('CRM non connecté — utilisez « Copier » ou « Imprimer ».','#c0432a');return;}
+  b.disabled=true;b.textContent='Enregistrement…';
+  var f=FORMATIONS[fs.value];
+  var fields={
+    'Apprenant':nom(),
+    'Entreprise':$('pEnt').value||'',
+    'Statut':'📝 À saisir',
+    'Blocage / note':'POSITIONNEMENT du '+fr($('pDate').value)+' — '+$('pDec').value
+      +' · niveau à l\'entrée '+$('score').textContent+'% ('+$('verdict').textContent+')'
+      +($('pAdapt').value?' · adaptations : '+$('pAdapt').value:'')
+      +' · '+(f?f.rncp:'')
+  };
+  apic('POST',{table:'Contrats',fields:fields}).then(function(){
+    msg('✓ Positionnement enregistré dans le CRM (onglet Contrats) — pensez à imprimer le document pour le dossier papier.','#1f8a5c');
+    b.textContent='✓ Enregistré';
+  }).catch(function(e){
+    msg('❌ Échec : '+e.message+' — le document reste imprimable.','#c0432a');
+    b.disabled=false;b.textContent='💾 Enregistrer dans le CRM';
+  });
+});
+$('reset').addEventListener('click',function(){
+  if(!confirm('Effacer ce test de positionnement ?'))return;
+  document.querySelectorAll('input.f,textarea.f').forEach(function(i){if(i.type!=='date')i.value='';});
+  $('pDate').value=new Date().toISOString().slice(0,10);$('pNaiss').value='';
+  fs.value='';$('pDec').value='';
+  state={prereq:{},comps:{},transv:{}};
+  document.querySelectorAll('.lv button.on').forEach(function(b){b.classList.remove('on')});
+  document.querySelectorAll('.pz.done').forEach(function(p){p.classList.remove('done')});
+  buildFormation();msg('','#1f8a5c');window.scrollTo({top:0,behavior:'smooth'});
+});
+function msg(t,c){var m=$('msg');m.style.color=c||'#1f8a5c';m.textContent=t;}
+
+fs.addEventListener('change',buildFormation);
+['pNom','pDate','pDec','pHand','pEquip','pEnt'].forEach(function(id){
+  $(id).addEventListener('change',compute);$(id).addEventListener('input',compute);});
+buildFormation();
+</script>
+</body></html>
