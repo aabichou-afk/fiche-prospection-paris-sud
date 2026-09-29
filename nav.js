@@ -32,6 +32,8 @@
     journee:['Ma journée','journee.html',I.day],
     qualif:['Qualification','qualification.html',I.phone], audit:['Audit IA','audit.html',I.audit],
     positionnement:['Test de positionnement','positionnement.html',I.grad],
+    satisfaction:['Satisfaction','satisfaction.html',I.audit],
+    reclamations:['Réclamations','reclamations.html',I.doc],
     scripts:['Scripts & Pitch','scripts.html',I.script], playbook:['Objections','playbook.html',I.book],
     formation:['Formation','formation.html',I.grad], offres:['Offres','offres.html',I.tag],
     process:['Process','process.html',I.flow], opco:['Compte OPCO','opco.html',I.opco],
@@ -40,7 +42,8 @@
   var GROUPS=[
     ['Pilotage',['accueil','pilotage','crm','fiche360','contrats','financement','facturation','agenda','journee']],
     ['Vente',['qualif','audit','scripts','playbook']],
-    ['Formation & offre',['formation','positionnement','offres','process','opco']],
+    ['Formation & offre',['formation','offres','process','opco']],
+    ['Qualité',['positionnement','satisfaction','reclamations']],
     ['Contenu',['contenu','sop','documents']]
   ];
   // Tous les outils externes — liste défilante dans la sidebar (recherche incluse)

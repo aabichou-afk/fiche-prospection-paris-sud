@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enquêtes de satisfaction · Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css?v=202609291144">
+<script src="gate.js?v=202609291144"></script>
+<style>
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.tb{padding:9px 17px;border-radius:999px;border:1px solid #d7e5dd;background:#fff;font-weight:700;font-size:.9rem;color:#54615a;cursor:pointer;font-family:inherit}
+.tb.on{background:#11362b;color:#fff;border-color:#11362b}
+.pz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
+.pz h3{margin:0 0 3px;color:#11362b;font-size:1.04rem}
+.pz .sub{font-size:.82rem;color:#5f6b62;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label.f{display:block;font-size:.76rem;font-weight:700;color:#5f6b62;margin-bottom:3px}
+input.f,select.f,textarea.f{width:100%;padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem;background:#fff}
+textarea.f{min-height:64px;resize:vertical}
+.q{border-bottom:1px solid #f0f4f2;padding:12px 0}.q:last-child{border-bottom:none}
+.q .lb{font-size:.92rem;color:#33453d;margin-bottom:8px;font-weight:600}
+.stars{display:flex;gap:6px;flex-wrap:wrap}
+.stars button{border:1px solid #d7e5dd;background:#fff;color:#54615a;border-radius:10px;width:44px;height:40px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit}
+.stars button.on{background:#1f8a5c;border-color:#1f8a5c;color:#fff}
+.stars button.on.low{background:#d1543a;border-color:#d1543a}
+.stars button.on.mid{background:#d68b1f;border-color:#d68b1f}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid #e3ece7;border-radius:14px;padding:14px 16px;text-align:center}
+.kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.9rem;font-weight:700;color:#1f8a5c;line-height:1}
+.kpi .l{font-size:.78rem;color:#6b7a72;margin-top:3px}
+.crit{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:.88rem}
+.crit .nm{flex:1;color:#33453d}
+.crit .bar{flex:2;height:9px;background:#eef1ef;border-radius:99px;overflow:hidden}
+.crit .bar>i{display:block;height:100%;background:linear-gradient(90deg,#8cc63f,#1f8a5c)}
+.crit .vv{font-weight:700;color:#11362b;min-width:46px;text-align:right}
+.act{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.act button{border:none;border-radius:999px;padding:12px 20px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
+.savebtn{background:#1f8a5c;color:#fff}.savebtn:disabled{opacity:.55;cursor:not-allowed}
+.printbtn{background:#11362b;color:#fff}.resetbtn{background:#fff;border:1px solid #d7e5dd!important;color:#33453d}
+.rowr{border-bottom:1px solid #f0f4f2;padding:10px 0;font-size:.87rem}
+.rowr b{color:#11362b}
+.rowr .m{color:#7b8a82;font-size:.79rem}
+@media print{
+  @page{size:A4;margin:14mm}
+  .side,.scrim,.topbar,.fabwa,.crmban,.crmov,.act,.tabs,.no-print{display:none!important}
+  .app,.main,.content{display:block!important;margin:0!important;padding:0!important;max-width:none!important}
+  .pz{box-shadow:none;break-inside:avoid;border:1px solid #cfdad4}
+  .stars button{display:none}.stars button.on{display:inline-block;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  input.f,select.f,textarea.f{border:none;border-bottom:1px solid #cfdad4;border-radius:0;padding-left:0}
+  .printhead{display:block!important}
+  .kpi,.crit .bar>i{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+.printhead{display:none;border-bottom:2px solid #11362b;padding-bottom:9px;margin-bottom:14px}
+.printhead .org{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.45rem;font-weight:700;color:#11362b}
+.printhead .meta{font-size:.76rem;color:#5f6b62;margin-top:2px}
+</style>
+</head><body data-page="satisfaction">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Enquêtes de satisfaction</h1><span class="conn" id="conn">…</span>
+    </div>
+    <div class="content">
+
+      <div class="printhead">
+        <div class="org" id="phTitle">PARIS SUD FORMATION — Enquête de satisfaction</div>
+        <div class="meta">N° de déclaration d'activité 11911094991 · UAI 0912524Z · SIRET 93347916400032 · 12 rue Jean Pacilly, 91120 Palaiseau · Certifié Qualiopi</div>
+      </div>
+
+      <div class="tabs no-print">
+        <button class="tb on" data-t="saisie">📝 Nouvelle enquête</button>
+        <button class="tb" data-t="resultats">📊 Résultats &amp; exploitation</button>
+      </div>
+
+      <!-- ================= SAISIE ================= -->
+      <div id="vSaisie">
+        <div class="callout c-info no-print" style="margin-top:0">
+          ⭐ <b>Recueil de l'appréciation des bénéficiaires.</b> À remplir avec l'apprenant ou l'entreprise — en fin de parcours, ou en cours.
+          Chaque réponse alimente les indicateurs de satisfaction publiés et sert de preuve au recueil des appréciations.
+        </div>
+
+        <div class="pz">
+          <h3>1 · Qui répond</h3>
+          <div class="sub">Identification du répondant et du parcours concerné</div>
+          <div class="grid2">
+            <div><label class="f">Nom du répondant *</label><input class="f" id="sNom" placeholder="NOM Prénom"></div>
+            <div><label class="f">Profil *</label><select class="f" id="sProfil"><option>Apprenant</option><option>Entreprise / Maître d'apprentissage</option><option>Formateur</option></select></div>
+            <div><label class="f">Formation</label><select class="f" id="sForm"><option value="">— choisir —</option><option>TP Responsable de petite et moyenne structure</option><option>TP Conseiller commercial</option><option>TP Agent de propreté et d'hygiène</option></select></div>
+            <div><label class="f">Entreprise</label><input class="f" id="sEnt" placeholder="Raison sociale"></div>
+            <div><label class="f">Date *</label><input class="f" id="sDate" type="date"></div>
+            <div><label class="f">Moment de l'enquête</label><select class="f" id="sMoment"><option>À chaud (fin de formation)</option><option>En cours de parcours</option><option>À froid (6 mois après)</option></select></div>
+            <div><label class="f">Recueilli par</label><select class="f" id="sBy"></select></div>
+          </div>
+        </div>
+
+        <div class="pz">
+          <h3>2 · Évaluation</h3>
+          <div class="sub">De 1 (pas du tout satisfait) à 5 (très satisfait)</div>
+          <div id="qs"></div>
+        </div>
+
+        <div class="pz">
+          <h3>3 · Appréciation libre</h3>
+          <div class="sub">C'est ce qui alimente réellement l'amélioration continue</div>
+          <div><label class="f">Recommanderait la formation</label>
+            <select class="f" id="sReco" style="max-width:220px"><option>Oui</option><option>Peut-être</option><option>Non</option></select></div>
+          <div style="margin-top:12px"><label class="f">Points forts</label><textarea class="f" id="sForts" placeholder="Ce qui a bien fonctionné"></textarea></div>
+          <div style="margin-top:12px"><label class="f">Axes d'amélioration</label><textarea class="f" id="sAxes" placeholder="Ce qui doit être amélioré"></textarea></div>
+          <div style="margin-top:12px"><label class="f">Suite donnée par l'organisme</label><textarea class="f" id="sSuite" placeholder="Action décidée suite à cette réponse — à compléter par l'organisme"></textarea></div>
+        </div>
+
+        <div class="act no-print">
+          <button class="savebtn" id="save">💾 Enregistrer l'enquête</button>
+          <button class="printbtn" id="print">🖨️ Imprimer / PDF</button>
+          <button class="resetbtn" id="reset">Nouvelle enquête</button>
+        </div>
+        <div id="msg" class="no-print" style="font-weight:700;margin-top:8px"></div>
+      </div>
+
+      <!-- ================= RESULTATS ================= -->
+      <div id="vRes" style="display:none">
+        <div class="callout c-info no-print" style="margin-top:0">
+          📊 <b>Exploitation des résultats.</b> Recueillir ne suffit pas : il faut montrer qu'on exploite. Cette synthèse est imprimable telle quelle comme preuve.
+        </div>
+        <div class="kpis" id="kpis"></div>
+        <div class="pz">
+          <h3>Satisfaction par critère</h3>
+          <div class="sub" id="resSub">Chargement…</div>
+          <div id="crits"></div>
+        </div>
+        <div class="pz">
+          <h3>Axes d'amélioration remontés</h3>
+          <div class="sub">Verbatims à traiter — chacun doit trouver une suite</div>
+          <div id="axes"></div>
+        </div>
+        <div class="act no-print"><button class="printbtn" id="print2">🖨️ Imprimer la synthèse</button></div>
+      </div>
+
+      <div class="callout c-warn no-print" style="margin-top:16px">
+        <b>Ce que l'auditeur vérifie.</b> Non pas « avez-vous des enquêtes ? » mais <b>« que faites-vous des réponses ? »</b>.
+        Renseignez systématiquement la <b>suite donnée</b> : c'est la preuve de la boucle d'amélioration continue.
+        ⛔ Ne jamais créer de réponses fictives — un échantillon réel, même réduit, vaut mieux qu'un jeu de données inventé.
+      </div>
+    </div>
+  </div>
+</div>
+<script src="nav.js?v=202609291144"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var ME=(window.PSF_AUTH&&window.PSF_AUTH.current()&&window.PSF_AUTH.current().id)||'';
+function $(i){return document.getElementById(i);}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function apic(m,p,q){var o={method:m,headers:{'x-crm-key':CFG.key}};
+  if(p){o.headers['Content-Type']='application/json';o.body=JSON.stringify(p);}
+  return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+(function(){var c=$('conn');if(LIVE){c.className='conn live';c.textContent='● Live';}else{c.className='conn demo';c.textContent='Aperçu';}})();
+
+var CRIT=[['Accueil et information','Accueil et information','L\'information reçue avant l\'entrée en formation était claire et complète'],
+ ['Contenu et supports','Contenu et supports','Le contenu et les supports sont adaptés et utiles'],
+ ['Qualité pédagogique','Qualité pédagogique','Les formateurs sont compétents et disponibles'],
+ ['Organisation et rythme','Organisation et rythme','L\'organisation, le rythme et les horaires conviennent'],
+ ['Atteinte des objectifs','Atteinte des objectifs','La formation répond aux objectifs annoncés']];
+var notes={};
+$('sDate').value=new Date().toISOString().slice(0,10);
+$('sBy').innerHTML=['','Abdel','Selma','Agente 1','Agente 2'].map(function(a){return '<option'+(a===ME?' selected':'')+'>'+a+'</option>';}).join('');
+
+var qs=$('qs');
+CRIT.forEach(function(c,i){
+  var d=document.createElement('div');d.className='q';
+  d.innerHTML='<div class="lb">'+c[0]+' — <span style="font-weight:400;color:#6b7a72">'+c[2]+'</span></div><div class="stars"></div>';
+  var st=d.querySelector('.stars');
+  [1,2,3,4,5].forEach(function(n){
+    var b=document.createElement('button');b.textContent=n;
+    b.addEventListener('click',function(){
+      st.querySelectorAll('button').forEach(function(x){x.classList.remove('on','low','mid')});
+      b.classList.add('on');if(n<=2)b.classList.add('low');else if(n===3)b.classList.add('mid');
+      notes[c[1]]=n;check();
+    });
+    st.appendChild(b);
+  });
+  qs.appendChild(d);
+});
+function moyenne(){var v=CRIT.map(function(c){return notes[c[1]]}).filter(function(x){return x;});
+  return v.length?Math.round(v.reduce(function(a,b){return a+b},0)/v.length*10)/10:0;}
+function check(){
+  $('save').disabled=!(LIVE&&$('sNom').value.trim()&&Object.keys(notes).length>=3);
+  $('save').title=$('save').disabled?'Renseignez le nom et au moins 3 critères (et connectez le CRM)':'';
+}
+['sNom','sForm','sEnt'].forEach(function(i){$(i).addEventListener('input',check);});
+
+$('save').addEventListener('click',function(){
+  var b=this;b.disabled=true;b.textContent='Enregistrement…';
+  var f={'Répondant':$('sNom').value.trim(),'Profil':$('sProfil').value,'Entreprise':$('sEnt').value,
+    'Date':$('sDate').value,'Moment':$('sMoment').value,'Note globale':moyenne(),
+    'Recommanderait':$('sReco').value,'Points forts':$('sForts').value,
+    "Axes d'amélioration":$('sAxes').value,'Suite donnée':$('sSuite').value,'Recueilli par':$('sBy').value||ME};
+  if($('sForm').value)f['Formation']=$('sForm').value;
+  CRIT.forEach(function(c){if(notes[c[1]])f[c[1]]=notes[c[1]];});
+  apic('POST',{table:'Satisfaction',fields:f}).then(function(){
+    msg('✓ Enquête enregistrée. Pensez à renseigner la « suite donnée » si elle appelle une action.','#1f8a5c');
+    b.textContent='✓ Enregistré';CACHE=null;
+  }).catch(function(e){msg('❌ '+e.message,'#c0432a');b.disabled=false;b.textContent='💾 Enregistrer l\'enquête';});
+});
+$('print').addEventListener('click',function(){
+  if(!$('sNom').value.trim()){msg('⚠️ Renseignez au moins le nom du répondant.','#c0432a');return;}
+  $('phTitle').textContent='PARIS SUD FORMATION — Enquête de satisfaction';window.print();});
+$('print2').addEventListener('click',function(){
+  $('phTitle').textContent='PARIS SUD FORMATION — Synthèse des enquêtes de satisfaction';window.print();});
+$('reset').addEventListener('click',function(){
+  ['sNom','sEnt','sForts','sAxes','sSuite'].forEach(function(i){$(i).value='';});
+  $('sForm').value='';notes={};
+  document.querySelectorAll('.stars button.on').forEach(function(b){b.classList.remove('on','low','mid')});
+  var s=$('save');s.textContent='💾 Enregistrer l\'enquête';msg('','#1f8a5c');check();
+  window.scrollTo({top:0,behavior:'smooth'});});
+function msg(t,c){$('msg').style.color=c;$('msg').textContent=t;}
+
+/* ===== onglets + résultats ===== */
+var CACHE=null;
+document.querySelectorAll('.tb').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tb').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+    var r=b.getAttribute('data-t')==='resultats';
+    $('vRes').style.display=r?'block':'none';$('vSaisie').style.display=r?'none':'block';
+    if(r)loadRes();
+  });
+});
+function loadRes(){
+  if(!LIVE){$('resSub').textContent='CRM non connecté — impossible d\'afficher les résultats.';return;}
+  if(CACHE){paint(CACHE);return;}
+  $('resSub').textContent='Chargement…';
+  apic('GET',null,'?table=Satisfaction&max=900').then(function(j){
+    CACHE=(j.records||[]).map(function(r){return r.fields;});paint(CACHE);
+  }).catch(function(e){$('resSub').textContent='Erreur : '+e.message;});
+}
+function paint(rows){
+  var n=rows.length;
+  if(!n){$('kpis').innerHTML='';$('resSub').textContent='Aucune réponse enregistrée pour l\'instant.';$('crits').innerHTML='';$('axes').innerHTML='';return;}
+  var glob=rows.map(function(r){return r['Note globale']}).filter(function(x){return x;});
+  var moy=glob.length?Math.round(glob.reduce(function(a,b){return a+b},0)/glob.length*10)/10:0;
+  var reco=rows.filter(function(r){return r['Recommanderait']==='Oui';}).length;
+  var pctReco=n?Math.round(reco/n*100):0;
+  var traites=rows.filter(function(r){return (r['Suite donnée']||'').trim();}).length;
+  $('kpis').innerHTML=
+     k(n,'réponses')+k(moy+'/5','note globale')+k(pctReco+'%','recommandent')
+    +k(traites+'/'+n,'avec suite donnée');
+  $('resSub').textContent=n+' réponse'+(n>1?'s':'')+' · moyenne par critère sur 5';
+  $('crits').innerHTML=CRIT.map(function(c){
+    var v=rows.map(function(r){return r[c[1]]}).filter(function(x){return x;});
+    var m=v.length?Math.round(v.reduce(function(a,b){return a+b},0)/v.length*10)/10:0;
+    return '<div class="crit"><span class="nm">'+c[0]+'</span><span class="bar"><i style="width:'+(m/5*100)+'%"></i></span><span class="vv">'+(m||'—')+'/5</span></div>';
+  }).join('');
+  var ax=rows.filter(function(r){return (r["Axes d'amélioration"]||'').trim();});
+  $('axes').innerHTML=ax.length?ax.map(function(r){
+    return '<div class="rowr"><b>'+esc(r['Répondant']||'—')+'</b> <span class="m">'+esc(r['Profil']||'')+' · '+esc(r['Date']||'')+'</span><br>'
+      +esc(r["Axes d'amélioration"])
+      +(String(r['Suite donnée']||'').trim()?'<br><span style="color:#1a6b45;font-weight:700">→ Suite : '+esc(r['Suite donnée'])+'</span>'
+        :'<br><span style="color:#c0432a;font-weight:700">→ Aucune suite renseignée</span>')+'</div>';
+  }).join(''):'<div style="color:#7b8a82;font-size:.88rem">Aucun axe d\'amélioration remonté.</div>';
+}
+function k(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
+check();
+</script>
+</body></html>
