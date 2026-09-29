@@ -32,6 +32,7 @@
     journee:['Ma journée','journee.html',I.day],
     qualif:['Qualification','qualification.html',I.phone], audit:['Audit IA','audit.html',I.audit],
     positionnement:['Test de positionnement','positionnement.html',I.grad],
+    conventions:['Conventions & CERFA','conventions.html',I.script],
     satisfaction:['Satisfaction','satisfaction.html',I.audit],
     reclamations:['Réclamations','reclamations.html',I.doc],
     scripts:['Scripts & Pitch','scripts.html',I.script], playbook:['Objections','playbook.html',I.book],
@@ -42,7 +43,7 @@
   var GROUPS=[
     ['Pilotage',['accueil','pilotage','crm','fiche360','contrats','financement','facturation','agenda','journee']],
     ['Vente',['qualif','audit','scripts','playbook']],
-    ['Formation & offre',['formation','offres','process','opco']],
+    ['Formation & offre',['formation','conventions','offres','process','opco']],
     ['Qualité',['positionnement','satisfaction','reclamations']],
     ['Contenu',['contenu','sop','documents']]
   ];
