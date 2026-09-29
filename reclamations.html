@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Réclamations &amp; amélioration continue · Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css?v=202609291144">
+<script src="gate.js?v=202609291144"></script>
+<style>
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.tb{padding:9px 17px;border-radius:999px;border:1px solid #d7e5dd;background:#fff;font-weight:700;font-size:.9rem;color:#54615a;cursor:pointer;font-family:inherit}
+.tb.on{background:#11362b;color:#fff;border-color:#11362b}
+.pz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
+.pz h3{margin:0 0 3px;color:#11362b;font-size:1.04rem}
+.pz .sub{font-size:.82rem;color:#5f6b62;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label.f{display:block;font-size:.76rem;font-weight:700;color:#5f6b62;margin-bottom:3px}
+input.f,select.f,textarea.f{width:100%;padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem;background:#fff}
+textarea.f{min-height:66px;resize:vertical}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid #e3ece7;border-radius:14px;padding:14px 16px;text-align:center}
+.kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.9rem;font-weight:700;color:#1f8a5c;line-height:1}
+.kpi .l{font-size:.78rem;color:#6b7a72;margin-top:3px}
+.etape{display:flex;gap:13px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #f0f4f2}
+.etape:last-child{border-bottom:none}
+.etape .n{width:27px;height:27px;flex:none;border-radius:50%;background:#1f8a5c;color:#fff;font-weight:700;display:grid;place-items:center;font-size:.82rem}
+.etape .tt{font-weight:700;color:#11362b;font-size:.93rem}
+.etape .dd{font-size:.85rem;color:#5f6b62;margin-top:2px}
+table.reg{width:100%;border-collapse:collapse;font-size:.83rem}
+table.reg th{background:#11362b;color:#fff;text-align:left;padding:8px 9px;font-size:.78rem;font-weight:600}
+table.reg td{padding:8px 9px;border-bottom:1px solid #eef1ef;vertical-align:top}
+.st{display:inline-block;padding:2px 8px;border-radius:99px;font-size:.72rem;font-weight:700;white-space:nowrap}
+.s-recue{background:#fdf3df;color:#8a6410}.s-cours{background:#e7f1fd;color:#1c5ca8}
+.s-traitee{background:#e3f5ea;color:#1a6b45}.s-clot{background:#eef1ef;color:#54615a}
+.act{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.act button{border:none;border-radius:999px;padding:12px 20px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
+.savebtn{background:#1f8a5c;color:#fff}.savebtn:disabled{opacity:.55;cursor:not-allowed}
+.printbtn{background:#11362b;color:#fff}.resetbtn{background:#fff;border:1px solid #d7e5dd!important;color:#33453d}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  .side,.scrim,.topbar,.fabwa,.crmban,.crmov,.act,.tabs,.no-print{display:none!important}
+  .app,.main,.content{display:block!important;margin:0!important;padding:0!important;max-width:none!important}
+  .pz{box-shadow:none;break-inside:avoid;border:1px solid #cfdad4}
+  input.f,select.f,textarea.f{border:none;border-bottom:1px solid #cfdad4;border-radius:0;padding-left:0}
+  .printhead{display:block!important}
+  .kpi,.st,table.reg th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+.printhead{display:none;border-bottom:2px solid #11362b;padding-bottom:9px;margin-bottom:14px}
+.printhead .org{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.45rem;font-weight:700;color:#11362b}
+.printhead .meta{font-size:.76rem;color:#5f6b62;margin-top:2px}
+</style>
+</head><body data-page="reclamations">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Réclamations &amp; amélioration continue</h1><span class="conn" id="conn">…</span>
+    </div>
+    <div class="content">
+
+      <div class="printhead">
+        <div class="org" id="phTitle">PARIS SUD FORMATION — Procédure et registre des réclamations</div>
+        <div class="meta">N° de déclaration d'activité 11911094991 · UAI 0912524Z · SIRET 93347916400032 · 12 rue Jean Pacilly, 91120 Palaiseau · Certifié Qualiopi</div>
+      </div>
+
+      <div class="tabs no-print">
+        <button class="tb on" data-t="proc">📋 Procédure</button>
+        <button class="tb" data-t="reg">📒 Registre</button>
+        <button class="tb" data-t="new">➕ Enregistrer une réclamation</button>
+      </div>
+
+      <!-- ============ PROCEDURE ============ -->
+      <div id="vProc">
+        <div class="callout c-info no-print" style="margin-top:0">
+          📋 <b>La procédure écrite est la preuve principale.</b> L'auditeur demande d'abord comment vous traitez une réclamation, ensuite les traces. Cette page est imprimable telle quelle.
+        </div>
+        <div class="pz">
+          <h3>Objet et champ d'application</h3>
+          <div class="sub">Qui est concerné et par quoi</div>
+          <p style="font-size:.92rem;color:#33453d;line-height:1.6;margin:0">
+            La présente procédure décrit la façon dont PARIS SUD FORMATION recueille et traite les <b>réclamations</b>, les <b>aléas</b> et les <b>suggestions</b>
+            émanant des apprenants, des entreprises d'accueil, des financeurs et des formateurs, pour toutes ses actions de formation et d'apprentissage.
+            Elle vise à apporter une réponse à chaque demande et à en tirer des actions d'amélioration.
+          </p>
+        </div>
+
+        <div class="pz">
+          <h3>Comment adresser une réclamation</h3>
+          <div class="sub">Voies ouvertes à tout bénéficiaire</div>
+          <div class="grid2">
+            <div><b>Par email</b><br><span style="color:#5f6b62;font-size:.88rem">formation@paris-sud.com</span></div>
+            <div><b>Par téléphone</b><br><span style="color:#5f6b62;font-size:.88rem">07 67 66 54 15</span></div>
+            <div><b>Par courrier</b><br><span style="color:#5f6b62;font-size:.88rem">12 rue Jean Pacilly, 91120 Palaiseau</span></div>
+            <div><b>Oralement</b><br><span style="color:#5f6b62;font-size:.88rem">Auprès du formateur ou du référent, qui la formalise</span></div>
+          </div>
+        </div>
+
+        <div class="pz">
+          <h3>Étapes de traitement</h3>
+          <div class="sub">Engagement de délais</div>
+          <div class="etape"><div class="n">1</div><div><div class="tt">Réception et enregistrement — sous 48 h ouvrées</div><div class="dd">Toute réclamation, quel que soit son canal, est inscrite au registre avec une référence unique, sa date de réception et son émetteur.</div></div></div>
+          <div class="etape"><div class="n">2</div><div><div class="tt">Accusé de réception — sous 5 jours ouvrés</div><div class="dd">L'émetteur reçoit confirmation de la prise en compte et le nom de l'interlocuteur en charge du dossier.</div></div></div>
+          <div class="etape"><div class="n">3</div><div><div class="tt">Analyse et qualification</div><div class="dd">Le responsable qualifie le type (réclamation, aléa, suggestion) et la gravité, recherche la cause et recueille si besoin le point de vue des parties.</div></div></div>
+          <div class="etape"><div class="n">4</div><div><div class="tt">Réponse formelle — sous 15 jours ouvrés</div><div class="dd">Une réponse écrite et motivée est adressée à l'émetteur. Si l'analyse demande plus de temps, un point d'étape est transmis dans ce délai.</div></div></div>
+          <div class="etape"><div class="n">5</div><div><div class="tt">Action corrective</div><div class="dd">Lorsque la réclamation révèle un dysfonctionnement, une action corrective est définie, mise en œuvre et tracée au registre.</div></div></div>
+          <div class="etape"><div class="n">6</div><div><div class="tt">Clôture et revue</div><div class="dd">Le dossier est clôturé après vérification de l'efficacité. L'ensemble des réclamations est revu au moins une fois par an dans le cadre de la revue qualité.</div></div></div>
+        </div>
+
+        <div class="pz">
+          <h3>Responsabilités</h3>
+          <div class="sub">Qui fait quoi</div>
+          <p style="font-size:.92rem;color:#33453d;line-height:1.6;margin:0">
+            Le <b>responsable de l'organisme</b> est garant du traitement des réclamations et de la tenue du registre.
+            Le <b>secrétariat</b> assure l'enregistrement et l'accusé de réception. Les <b>formateurs</b> remontent sans délai toute réclamation reçue oralement.
+            En l'absence de solution acceptée par l'émetteur, celui-ci peut saisir le financeur concerné ou l'organisme certificateur.
+          </p>
+        </div>
+        <div class="act no-print"><button class="printbtn" id="printProc">🖨️ Imprimer la procédure</button></div>
+      </div>
+
+      <!-- ============ REGISTRE ============ -->
+      <div id="vReg" style="display:none">
+        <div class="kpis" id="kpis"></div>
+        <div class="pz">
+          <h3>Registre des réclamations</h3>
+          <div class="sub" id="regSub">Chargement…</div>
+          <div style="overflow-x:auto"><table class="reg" id="tbl"></table></div>
+        </div>
+        <div class="callout c-warn no-print" id="vide" style="display:none">
+          <b>Registre vide ?</b> Ce n'est pas un problème en soi — un registre vide mais <b>formalisé et daté</b> est recevable.
+          Ce qui ne l'est pas, c'est l'absence de procédure, ou un registre rempli après coup. ⛔ Ne jamais inventer de réclamations.
+        </div>
+        <div class="act no-print"><button class="printbtn" id="printReg">🖨️ Imprimer le registre</button></div>
+      </div>
+
+      <!-- ============ NOUVELLE ============ -->
+      <div id="vNew" style="display:none">
+        <div class="pz">
+          <h3>Enregistrer une réclamation</h3>
+          <div class="sub">À faire dès réception — la référence est générée automatiquement</div>
+          <div class="grid2">
+            <div><label class="f">Référence</label><input class="f" id="rRef" readonly></div>
+            <div><label class="f">Date de réception *</label><input class="f" id="rDate" type="date"></div>
+            <div><label class="f">Émetteur *</label><input class="f" id="rEmet" placeholder="Nom de la personne"></div>
+            <div><label class="f">Qualité</label><select class="f" id="rQual"><option>Apprenant</option><option>Entreprise</option><option>Financeur / OPCO</option><option>Formateur</option><option>Autre</option></select></div>
+            <div><label class="f">Canal</label><select class="f" id="rCanal"><option>Email</option><option>Téléphone</option><option>Courrier</option><option>Oral / en séance</option><option>Formulaire du site</option></select></div>
+            <div><label class="f">Type</label><select class="f" id="rType"><option>Réclamation</option><option>Aléa / dysfonctionnement</option><option>Suggestion</option></select></div>
+            <div><label class="f">Gravité</label><select class="f" id="rGrav"><option>Faible</option><option>Moyenne</option><option>Élevée</option></select></div>
+            <div><label class="f">Statut</label><select class="f" id="rStat"><option>Reçue</option><option>En cours de traitement</option><option>Traitée</option><option>Clôturée</option></select></div>
+            <div><label class="f">Traitée par</label><select class="f" id="rBy"></select></div>
+          </div>
+          <div style="margin-top:12px"><label class="f">Objet *</label><input class="f" id="rObjet" placeholder="En une ligne"></div>
+          <div style="margin-top:12px"><label class="f">Description</label><textarea class="f" id="rDesc" placeholder="Ce qui est reproché, dans les mots de l'émetteur"></textarea></div>
+          <div style="margin-top:12px"><label class="f">Réponse apportée</label><textarea class="f" id="rRep" placeholder="À compléter lors de la réponse"></textarea></div>
+          <div style="margin-top:12px"><label class="f">Action corrective</label><textarea class="f" id="rAct" placeholder="Ce qu'on change pour que ça ne se reproduise pas"></textarea></div>
+          <div class="act no-print">
+            <button class="savebtn" id="save">💾 Enregistrer au registre</button>
+            <button class="resetbtn" id="reset">Vider le formulaire</button>
+          </div>
+          <div id="msg" style="font-weight:700;margin-top:8px"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="nav.js?v=202609291144"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+var ME=(window.PSF_AUTH&&window.PSF_AUTH.current()&&window.PSF_AUTH.current().id)||'';
+function $(i){return document.getElementById(i);}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function apic(m,p,q){var o={method:m,headers:{'x-crm-key':CFG.key}};
+  if(p){o.headers['Content-Type']='application/json';o.body=JSON.stringify(p);}
+  return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+(function(){var c=$('conn');if(LIVE){c.className='conn live';c.textContent='● Live';}else{c.className='conn demo';c.textContent='Aperçu';}})();
+
+$('rDate').value=new Date().toISOString().slice(0,10);
+$('rBy').innerHTML=['','Abdel','Selma'].map(function(a){return '<option'+(a===ME?' selected':'')+'>'+a+'</option>';}).join('');
+
+var CACHE=null;
+function load(){
+  if(!LIVE)return Promise.resolve([]);
+  if(CACHE)return Promise.resolve(CACHE);
+  return apic('GET',null,'?table=Reclamations&max=900').then(function(j){
+    CACHE=(j.records||[]).map(function(r){return r.fields;});return CACHE;
+  }).catch(function(){return [];});
+}
+function nextRef(rows){
+  var an=new Date().getFullYear();
+  var n=rows.filter(function(r){return String(r['Référence']||'').indexOf('REC-'+an)===0;}).length+1;
+  return 'REC-'+an+'-'+String(n).padStart(3,'0');
+}
+load().then(function(rows){$('rRef').value=nextRef(rows);});
+
+document.querySelectorAll('.tb').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tb').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+    var t=b.getAttribute('data-t');
+    $('vProc').style.display=t==='proc'?'block':'none';
+    $('vReg').style.display=t==='reg'?'block':'none';
+    $('vNew').style.display=t==='new'?'block':'none';
+    if(t==='reg')paintReg();
+  });
+});
+
+function paintReg(){
+  if(!LIVE){$('regSub').textContent='CRM non connecté — registre indisponible.';return;}
+  load().then(function(rows){
+    var n=rows.length;
+    var traitees=rows.filter(function(r){return r['Statut']==='Traitée'||r['Statut']==='Clôturée';}).length;
+    var dels=rows.map(function(r){return r['Délai de traitement (jours)']}).filter(function(x){return typeof x==='number';});
+    var moy=dels.length?Math.round(dels.reduce(function(a,b){return a+b},0)/dels.length):'—';
+    var corr=rows.filter(function(r){return (r['Action corrective']||'').trim();}).length;
+    $('kpis').innerHTML=k(n,'enregistrées')+k(traitees+'/'+(n||0),'traitées')+k(moy,'jours en moyenne')+k(corr,'actions correctives');
+    $('vide').style.display=n?'none':'block';
+    $('regSub').textContent=n?(n+' entrée'+(n>1?'s':'')+' au registre'):'Registre ouvert — aucune réclamation enregistrée à ce jour.';
+    if(!n){$('tbl').innerHTML='';return;}
+    var cls={'Reçue':'s-recue','En cours de traitement':'s-cours','Traitée':'s-traitee','Clôturée':'s-clot'};
+    $('tbl').innerHTML='<tr><th>Réf.</th><th>Reçue le</th><th>Émetteur</th><th>Type</th><th>Objet</th><th>Gravité</th><th>Statut</th><th>Réponse</th><th>Action corrective</th></tr>'
+      +rows.map(function(r){
+        return '<tr><td><b>'+esc(r['Référence']||'—')+'</b></td><td>'+esc(r['Date de réception']||'')+'</td>'
+        +'<td>'+esc(r['Émetteur']||'')+'<br><span style="color:#7b8a82;font-size:.76rem">'+esc(r["Qualité de l'émetteur"]||'')+'</span></td>'
+        +'<td>'+esc(r['Type']||'')+'</td><td>'+esc(r['Objet']||'')+'</td><td>'+esc(r['Gravité']||'')+'</td>'
+        +'<td><span class="st '+(cls[r['Statut']]||'s-clot')+'">'+esc(r['Statut']||'')+'</span></td>'
+        +'<td>'+esc(r['Réponse apportée']||'—')+'</td><td>'+esc(r['Action corrective']||'—')+'</td></tr>';
+      }).join('');
+  });
+}
+function k(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
+
+function check(){
+  $('save').disabled=!(LIVE&&$('rEmet').value.trim()&&$('rObjet').value.trim());
+  $('save').title=$('save').disabled?'Renseignez l\'émetteur et l\'objet (et connectez le CRM)':'';
+}
+['rEmet','rObjet'].forEach(function(i){$(i).addEventListener('input',check);});
+
+$('save').addEventListener('click',function(){
+  var b=this;b.disabled=true;b.textContent='Enregistrement…';
+  var f={'Référence':$('rRef').value,'Date de réception':$('rDate').value,'Émetteur':$('rEmet').value.trim(),
+   "Qualité de l'émetteur":$('rQual').value,'Canal':$('rCanal').value,'Type':$('rType').value,
+   'Objet':$('rObjet').value.trim(),'Description':$('rDesc').value,'Gravité':$('rGrav').value,
+   'Statut':$('rStat').value,'Traitée par':$('rBy').value||ME,
+   'Réponse apportée':$('rRep').value,'Action corrective':$('rAct').value};
+  if($('rRep').value.trim()){
+    f['Date de réponse']=new Date().toISOString().slice(0,10);
+    var d1=new Date($('rDate').value),d2=new Date();
+    if(!isNaN(d1))f['Délai de traitement (jours)']=Math.max(0,Math.round((d2-d1)/86400000));
+  }
+  apic('POST',{table:'Reclamations',fields:f}).then(function(){
+    $('msg').style.color='#1f8a5c';
+    $('msg').textContent='✓ Enregistrée au registre sous la référence '+f['Référence']+'.';
+    b.textContent='✓ Enregistrée';CACHE=null;
+  }).catch(function(e){$('msg').style.color='#c0432a';$('msg').textContent='❌ '+e.message;
+    b.disabled=false;b.textContent='💾 Enregistrer au registre';});
+});
+$('reset').addEventListener('click',function(){
+  ['rEmet','rObjet','rDesc','rRep','rAct'].forEach(function(i){$(i).value='';});
+  $('rDate').value=new Date().toISOString().slice(0,10);
+  CACHE=null;load().then(function(rows){$('rRef').value=nextRef(rows);});
+  $('msg').textContent='';var s=$('save');s.textContent='💾 Enregistrer au registre';check();
+});
+$('printProc').addEventListener('click',function(){
+  $('phTitle').textContent='PARIS SUD FORMATION — Procédure de traitement des réclamations';window.print();});
+$('printReg').addEventListener('click',function(){
+  $('phTitle').textContent='PARIS SUD FORMATION — Registre des réclamations';window.print();});
+check();
+</script>
+</body></html>
