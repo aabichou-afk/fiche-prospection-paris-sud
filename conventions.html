@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Conventions &amp; CERFA · Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css?v=202609291547">
+<script src="gate.js?v=202609291547"></script>
+<style>
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.tb{padding:9px 17px;border-radius:999px;border:1px solid #d7e5dd;background:#fff;font-weight:700;font-size:.9rem;color:#54615a;cursor:pointer;font-family:inherit}
+.tb.on{background:#11362b;color:#fff;border-color:#11362b}
+.pz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
+.pz h3{margin:0 0 3px;color:#11362b;font-size:1.04rem}
+.pz .sub{font-size:.82rem;color:#5f6b62;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}
+label.f{display:block;font-size:.75rem;font-weight:700;color:#5f6b62;margin-bottom:3px}
+input.f,select.f,textarea.f{width:100%;padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem;background:#fff}
+textarea.f{min-height:60px;resize:vertical}
+.req{color:#c0432a}
+.sens{background:#FFFBF2;border-left:3px solid #d68b1f}
+.act{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.act button{border:none;border-radius:999px;padding:12px 20px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
+.printbtn{background:#11362b;color:#fff}.loadbtn{background:#18BFFF;color:#fff}
+.resetbtn{background:#fff;border:1px solid #d7e5dd!important;color:#33453d}
+.pick{border:1px solid #d7e5dd;border-radius:11px;max-height:190px;overflow:auto;margin-top:8px}
+.pick div{padding:9px 12px;font-size:.87rem;cursor:pointer;border-bottom:1px solid #f0f4f2}
+.pick div:hover{background:#f2faf5}
+.pick .m{color:#7b8a82;font-size:.77rem}
+.miss{color:#c0432a;font-weight:700;font-size:.84rem;margin-top:8px}
+
+/* ====== documents générés ====== */
+.doc{display:none;background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:26px 30px;margin:12px 0;line-height:1.62;font-size:.93rem;color:#22302b}
+.doc.on{display:block}
+.doc h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;color:#11362b;margin:0 0 4px;text-align:center}
+.doc .ref{text-align:center;color:#6b7a72;font-size:.8rem;margin-bottom:18px}
+.doc h4{color:#11362b;font-size:.95rem;margin:16px 0 5px;border-bottom:1px solid #e3ece7;padding-bottom:3px}
+.doc p{margin:6px 0}
+.doc .v{font-weight:700;color:#11362b}
+.doc .todo{background:#FFF3CD;color:#8a6410;font-weight:700;padding:0 4px;border-radius:3px}
+.doc table{width:100%;border-collapse:collapse;font-size:.86rem;margin:7px 0}
+.doc table td{padding:5px 7px;border-bottom:1px solid #eef1ef;vertical-align:top}
+.doc table td:first-child{color:#5f6b62;width:42%}
+.sig{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}
+.sigbox{border:1px dashed #c7d6ce;border-radius:11px;padding:12px 14px;min-height:92px;font-size:.82rem;color:#5f6b62}
+.cerfa-bloc{border:1px solid #d7e5dd;border-radius:10px;padding:11px 14px;margin:9px 0}
+.cerfa-bloc .bt{font-weight:700;color:#11362b;font-size:.87rem;margin-bottom:5px}
+
+@media print{
+  @page{size:A4;margin:15mm}
+  .side,.scrim,.topbar,.fabwa,.crmban,.crmov,.act,.tabs,.no-print,.pz{display:none!important}
+  .app,.main,.content{display:block!important;margin:0!important;padding:0!important;max-width:none!important}
+  .doc{display:none!important;border:none;box-shadow:none;padding:0;margin:0}
+  .doc.on.printing{display:block!important}
+  .doc .todo{background:none;color:#000;text-decoration:underline}
+  .printhead{display:block!important}
+  .cerfa-bloc{break-inside:avoid}
+}
+.printhead{display:none;border-bottom:2px solid #11362b;padding-bottom:8px;margin-bottom:14px}
+.printhead .org{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;font-weight:700;color:#11362b}
+.printhead .meta{font-size:.74rem;color:#5f6b62;margin-top:2px}
+</style>
+</head><body data-page="conventions">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Conventions &amp; CERFA</h1><span class="conn" id="conn">…</span>
+    </div>
+    <div class="content">
+
+      <div class="printhead">
+        <div class="org">PARIS SUD FORMATION</div>
+        <div class="meta">N° de déclaration d'activité 11911094991 · UAI 0912524Z · SIRET 93347916400032 · 12 rue Jean Pacilly, 91120 Palaiseau · Certifié Qualiopi</div>
+      </div>
+
+      <div class="callout c-info no-print" style="margin-top:0">
+        📄 <b>Remplissez une fois, imprimez les deux documents.</b> Les données communes sont pré-remplies depuis le CRM ;
+        complétez les champs propres au contrat, puis imprimez la <b>convention</b> et la <b>fiche CERFA</b>.
+        🔒 Les données sensibles (NIR, adresse, date de naissance) <b>ne sont jamais enregistrées</b> — elles restent dans votre navigateur le temps de l'impression.
+      </div>
+
+      <!-- ===== pré-remplissage ===== -->
+      <div class="pz no-print">
+        <h3>① Partir d'un dossier existant</h3>
+        <div class="sub">Charge l'apprenant, l'entreprise et la formation depuis le CRM — ou passez directement à l'étape ②</div>
+        <button class="loadbtn" id="load">📥 Charger mes dossiers</button>
+        <div class="pick" id="pick" style="display:none"></div>
+      </div>
+
+      <!-- ===== saisie ===== -->
+      <div class="pz no-print">
+        <h3>② L'apprenti</h3>
+        <div class="sub">Les champs surlignés ne quittent jamais votre navigateur</div>
+        <div class="grid2">
+          <div><label class="f">Nom <span class="req">*</span></label><input class="f" id="aNom"></div>
+          <div><label class="f">Prénom <span class="req">*</span></label><input class="f" id="aPre"></div>
+          <div class="sens"><label class="f">Date de naissance</label><input class="f" id="aNaiss" type="date"></div>
+          <div class="sens"><label class="f">Lieu de naissance</label><input class="f" id="aLieu"></div>
+          <div class="sens"><label class="f">N° de sécurité sociale</label><input class="f" id="aNir" placeholder="13 chiffres + clé"></div>
+          <div class="sens"><label class="f">Adresse complète</label><input class="f" id="aAdr"></div>
+          <div><label class="f">Téléphone</label><input class="f" id="aTel"></div>
+          <div><label class="f">Email</label><input class="f" id="aMail" type="email"></div>
+          <div><label class="f">Dernier diplôme préparé</label><input class="f" id="aDip"></div>
+          <div><label class="f">Situation avant contrat</label><select class="f" id="aSit"><option>Scolaire</option><option>Salarié</option><option>Personne à la recherche d'un emploi</option><option>Inactif</option></select></div>
+          <div><label class="f">Travailleur handicapé</label><select class="f" id="aRqth"><option>Non</option><option>Oui</option></select></div>
+        </div>
+      </div>
+
+      <div class="pz no-print">
+        <h3>③ L'employeur</h3>
+        <div class="grid2">
+          <div><label class="f">Raison sociale <span class="req">*</span></label><input class="f" id="eNom"></div>
+          <div><label class="f">SIRET</label><input class="f" id="eSiret"></div>
+          <div><label class="f">Adresse</label><input class="f" id="eAdr"></div>
+          <div><label class="f">Code APE/NAF</label><input class="f" id="eApe"></div>
+          <div><label class="f">Convention collective (IDCC)</label><input class="f" id="eIdcc"></div>
+          <div><label class="f">Effectif</label><input class="f" id="eEff"></div>
+          <div><label class="f">Représentant légal</label><input class="f" id="eRep"></div>
+          <div><label class="f">Email</label><input class="f" id="eMail" type="email"></div>
+          <div><label class="f">Téléphone</label><input class="f" id="eTel"></div>
+          <div><label class="f">OPCO</label><select class="f" id="eOpco"><option>OPCO Mobilités</option><option>AKTO</option><option>L'Opcommerce</option><option>OPCO EP</option><option>ATLAS</option><option>Autre</option></select></div>
+          <div><label class="f">Maître d'apprentissage — nom</label><input class="f" id="mNom"></div>
+          <div><label class="f">Maître d'apprentissage — emploi</label><input class="f" id="mEmploi"></div>
+        </div>
+      </div>
+
+      <div class="pz no-print">
+        <h3>④ Le contrat et la formation</h3>
+        <div class="grid2">
+          <div><label class="f">Formation <span class="req">*</span></label><select class="f" id="cForm"><option value="">— choisir —</option></select></div>
+          <div><label class="f">Date de conclusion</label><input class="f" id="cConcl" type="date"></div>
+          <div><label class="f">Début du contrat <span class="req">*</span></label><input class="f" id="cDeb" type="date"></div>
+          <div><label class="f">Fin du contrat <span class="req">*</span></label><input class="f" id="cFin" type="date"></div>
+          <div><label class="f">Durée hebdomadaire</label><input class="f" id="cHeb" value="35 h"></div>
+          <div><label class="f">Salaire brut à l'embauche</label><input class="f" id="cSal" placeholder="Ex. 1 823,04 €"></div>
+          <div><label class="f">Montant de la prise en charge</label><input class="f" id="cMt" placeholder="Ex. 8 333 €"></div>
+          <div><label class="f">N° de dépôt (DECA)</label><input class="f" id="cDeca"></div>
+          <div><label class="f">N° de dossier OPCO</label><input class="f" id="cDoss"></div>
+          <div><label class="f">Lieu de signature</label><input class="f" id="cLieu" value="Palaiseau"></div>
+        </div>
+        <div class="miss" id="miss"></div>
+        <div class="act">
+          <button class="printbtn" id="pConv">🖨️ Imprimer la convention</button>
+          <button class="printbtn" id="pCerfa">🖨️ Imprimer la fiche CERFA</button>
+          <button class="resetbtn" id="reset">Vider</button>
+        </div>
+      </div>
+
+      <div class="tabs no-print">
+        <button class="tb on" data-d="conv">📄 Aperçu convention</button>
+        <button class="tb" data-d="cerfa">📋 Aperçu fiche CERFA</button>
+      </div>
+
+      <!-- ===== CONVENTION ===== -->
+      <div class="doc on" id="dConv"></div>
+      <!-- ===== CERFA ===== -->
+      <div class="doc" id="dCerfa"></div>
+
+      <div class="callout c-warn no-print" style="margin-top:14px">
+        <b>Ce que fait et ne fait pas cet outil.</b> Il produit la <b>convention de formation</b> (document contractuel CFA ↔ employeur)
+        et une <b>fiche CERFA complète</b> reprenant, bloc par bloc, tous les champs du formulaire officiel <b>10103*14</b> — à recopier ou joindre lors du dépôt.
+        Il ne remplace pas le dépôt officiel : le contrat doit toujours être <b>télétransmis à l'OPCO</b>.
+        ⚠️ Vérifiez systématiquement les montants et le NPEC auprès de l'OPCO avant signature.
+      </div>
+    </div>
+  </div>
+</div>
+<script src="nav.js?v=202609291547"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var LIVE=!!(CFG.api&&CFG.key);
+function $(i){return document.getElementById(i);}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function apic(m,p,q){var o={method:m,headers:{'x-crm-key':CFG.key}};
+  if(p){o.headers['Content-Type']='application/json';o.body=JSON.stringify(p);}
+  return fetch(CFG.api+(q||''),o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+(function(){var c=$('conn');if(LIVE){c.className='conn live';c.textContent='● Live';}else{c.className='conn demo';c.textContent='Aperçu';}})();
+
+var FORMATIONS={
+ 'TP Responsable de petite et moyenne structure':{rncp:'RNCP38575',code:'36T31001',h:460,dist:356,niv:'Niveau 5 (bac+2)'},
+ 'TP Conseiller commercial':{rncp:'RNCP37717',code:'46T31202',h:441,dist:329,niv:'Niveau 4 (bac)'},
+ "TP Agent de propreté et d'hygiène":{rncp:'RNCP37872',code:'56T34301',h:441,dist:329,niv:'Niveau 3 (CAP/BEP)'}
+};
+$('cForm').innerHTML='<option value="">— choisir —</option>'+Object.keys(FORMATIONS).map(function(k){
+  return '<option>'+k+'</option>';}).join('');
+
+/* ---------- pré-remplissage depuis le CRM ---------- */
+$('load').addEventListener('click',function(){
+  var p=$('pick');p.style.display='block';p.innerHTML='<div>Chargement…</div>';
+  if(!LIVE){p.innerHTML='<div>CRM non connecté — saisissez les champs à la main.</div>';return;}
+  apic('GET',null,'?table=Contrats&max=300').then(function(j){
+    var rows=(j.records||[]).map(function(r){return r.fields;});
+    if(!rows.length){p.innerHTML='<div>Aucun dossier dans le CRM.</div>';return;}
+    p.innerHTML=rows.map(function(r,i){
+      return '<div data-i="'+i+'"><b>'+esc(r['Apprenant']||'—')+'</b> · '+esc(r['Entreprise']||'')
+        +'<div class="m">'+esc(r['Formation']||'')+(r['Financeur']?' · '+esc(r['Financeur']):'')
+        +(r['Montant convention']?' · '+Number(r['Montant convention']).toLocaleString('fr-FR')+' €':'')+'</div></div>';
+    }).join('');
+    p.querySelectorAll('div[data-i]').forEach(function(el){
+      el.addEventListener('click',function(){
+        var r=rows[+el.getAttribute('data-i')];
+        var nom=(r['Apprenant']||'').trim().split(' ');
+        $('aNom').value=nom[0]||'';$('aPre').value=nom.slice(1).join(' ');
+        $('eNom').value=r['Entreprise']||'';
+        if(r['Montant convention'])$('cMt').value=Number(r['Montant convention']).toLocaleString('fr-FR')+' €';
+        if(r['Date début'])$('cDeb').value=r['Date début'];
+        if(r['Date fin'])$('cFin').value=r['Date fin'];
+        var fmap={'RPMS':'TP Responsable de petite et moyenne structure','Conseiller commercial':'TP Conseiller commercial','Agent propreté':"TP Agent de propreté et d'hygiène"};
+        if(r['Formation']&&fmap[r['Formation']])$('cForm').value=fmap[r['Formation']];
+        var omap={'AKTO':'AKTO','ATLAS':'ATLAS',"Op'Commerce":"L'Opcommerce",'OPCO EP':'OPCO EP','OPCO Mobilités':'OPCO Mobilités'};
+        if(r['Financeur']&&omap[r['Financeur']])$('eOpco').value=omap[r['Financeur']];
+        if(r['N° contrat'])$('cDeca').value=r['N° contrat'];
+        p.style.display='none';render();
+      });
+    });
+  }).catch(function(e){p.innerHTML='<div>Erreur : '+esc(e.message)+'</div>';});
+});
+
+/* ---------- rendu des documents ---------- */
+function g(id){return ($(id).value||'').trim();}
+function fr(d){return d?d.split('-').reverse().join('/'):'';}
+function V(v,lbl){return v?'<span class="v">'+esc(v)+'</span>':'<span class="todo">'+(lbl||'à compléter')+'</span>';}
+function today(){return new Date().toLocaleDateString('fr-FR');}
+
+function render(){
+  var f=FORMATIONS[$('cForm').value]||null;
+  var app=(g('aNom')+' '+g('aPre')).trim();
+  var manque=[];
+  [['aNom','nom de l\'apprenti'],['eNom','raison sociale'],['cForm','formation'],['cDeb','date de début'],['cFin','date de fin']]
+    .forEach(function(p){if(!g(p[0]))manque.push(p[1]);});
+  $('miss').textContent=manque.length?('À renseigner avant impression : '+manque.join(', ')):'';
+
+  /* ---- CONVENTION ---- */
+  $('dConv').innerHTML=
+   '<h2>Convention de formation par apprentissage</h2>'
+  +'<div class="ref">Établie en application des articles L.6211-1 et suivants du Code du travail — '+today()+'</div>'
+  +'<h4>Entre les soussignés</h4>'
+  +'<p><b>L\'organisme de formation</b><br>PARIS SUD FORMATION — CFA, SIRET 93347916400032, déclaration d\'activité n° 11911094991 auprès du préfet de la région Île-de-France, UAI 0912524Z, dont le siège est 12 rue Jean Pacilly, 91120 Palaiseau, certifié Qualiopi au titre des actions de formation et des actions par apprentissage, représenté par M. Abderrahim ABICHOU.<br><i>Ci-après « le CFA »</i></p>'
+  +'<p><b>Et l\'employeur</b><br>'+V(g('eNom'),'raison sociale')+', SIRET '+V(g('eSiret'))+', code APE '+V(g('eApe'))
+    +', convention collective IDCC '+V(g('eIdcc'))+', dont le siège est '+V(g('eAdr'))
+    +', représenté par '+V(g('eRep'))+'.<br><i>Ci-après « l\'employeur »</i></p>'
+  +'<h4>Article 1 — Objet</h4>'
+  +'<p>La présente convention a pour objet de définir les conditions dans lesquelles le CFA assure la formation de l\'apprenti désigné ci-après, dans le cadre du contrat d\'apprentissage conclu avec l\'employeur.</p>'
+  +'<h4>Article 2 — L\'apprenti et la formation</h4>'
+  +'<table>'
+  +'<tr><td>Apprenti</td><td>'+V(app,'nom et prénom')+'</td></tr>'
+  +'<tr><td>Formation préparée</td><td>'+V($('cForm').value,'formation')+'</td></tr>'
+  +'<tr><td>Certification visée</td><td>'+(f?'<span class="v">'+f.rncp+' — '+f.niv+'</span>':'<span class="todo">à compléter</span>')+'</td></tr>'
+  +'<tr><td>Durée de formation</td><td>'+(f?'<span class="v">'+f.h+' heures, dont '+f.dist+' h à distance</span>':'<span class="todo">à compléter</span>')+'</td></tr>'
+  +'<tr><td>Période</td><td>'+(g('cDeb')?'<span class="v">du '+fr(g('cDeb'))+' au '+fr(g('cFin'))+'</span>':'<span class="todo">à compléter</span>')+'</td></tr>'
+  +'<tr><td>Maître d\'apprentissage</td><td>'+V(g('mNom'))+(g('mEmploi')?' — '+esc(g('mEmploi')):'')+'</td></tr>'
+  +'</table>'
+  +'<h4>Article 3 — Organisation pédagogique</h4>'
+  +'<p>La formation alterne des périodes en centre de formation et des périodes en entreprise. Elle est dispensée en présentiel et à distance selon le calendrier remis à l\'apprenti et à l\'employeur. Un test de positionnement est réalisé à l\'entrée afin d\'adapter le parcours. Le CFA assure le suivi de l\'assiduité et transmet à l\'employeur les relevés de présence ainsi que les bilans de progression.</p>'
+  +'<h4>Article 4 — Engagements du CFA</h4>'
+  +'<p>Le CFA s\'engage à dispenser la formation conformément au référentiel de la certification visée, à mettre à disposition les moyens pédagogiques et humains nécessaires, à désigner un référent pédagogique et un référent handicap, à informer l\'employeur de toute difficulté ou absence, et à délivrer les attestations et certificats de réalisation.</p>'
+  +'<h4>Article 5 — Engagements de l\'employeur</h4>'
+  +'<p>L\'employeur s\'engage à confier à l\'apprenti des activités en lien avec la certification préparée, à désigner un maître d\'apprentissage répondant aux conditions légales, à laisser l\'apprenti suivre l\'intégralité des enseignements, et à participer au suivi de sa progression.</p>'
+  +'<h4>Article 6 — Conditions financières</h4>'
+  +'<p>Le coût de la formation est pris en charge par l\'opérateur de compétences <b>'+esc($('eOpco').value)+'</b> selon le niveau de prise en charge en vigueur, pour un montant de '+V(g('cMt'),'montant à confirmer auprès de l\'OPCO')+'.'
+  +' Le CFA adresse ses factures à l\'OPCO selon l\'échéancier applicable. En cas de rupture, la facturation est ajustée au prorata des heures réalisées.</p>'
+  +'<h4>Article 7 — Protection des données</h4>'
+  +'<p>Les données personnelles recueillies sont traitées aux seules fins de gestion de la formation et de ses financements, et conservées pour la durée légale. Conformément au RGPD, les personnes concernées disposent d\'un droit d\'accès, de rectification, d\'effacement et d\'opposition en écrivant à formation@paris-sud.com.</p>'
+  +'<h4>Article 8 — Résiliation et litiges</h4>'
+  +'<p>La présente convention prend fin de plein droit en cas de rupture du contrat d\'apprentissage. En cas de différend, les parties s\'efforcent de trouver une solution amiable ; à défaut, le litige est porté devant les juridictions compétentes.</p>'
+  +'<p style="margin-top:16px">Fait à '+V(g('cLieu'))+', le '+today()+', en deux exemplaires originaux.</p>'
+  +'<div class="sig"><div class="sigbox">Pour le CFA — PARIS SUD FORMATION<br>Nom, qualité, signature et cachet</div>'
+  +'<div class="sigbox">Pour l\'employeur — '+esc(g('eNom'))+'<br>Nom, qualité, signature et cachet</div></div>';
+
+  /* ---- FICHE CERFA ---- */
+  function B(t,rows){return '<div class="cerfa-bloc"><div class="bt">'+t+'</div><table>'+rows+'</table></div>';}
+  function L(k,v,lbl){return '<tr><td>'+k+'</td><td>'+V(v,lbl)+'</td></tr>';}
+  $('dCerfa').innerHTML=
+   '<h2>Fiche de saisie — contrat d\'apprentissage</h2>'
+  +'<div class="ref">Reprend les champs du formulaire officiel CERFA 10103*14 — document de travail interne, à reporter lors du dépôt</div>'
+  +B('1 · L\'employeur',
+     L('Raison sociale',g('eNom'))+L('SIRET',g('eSiret'))+L('Adresse',g('eAdr'))
+    +L('Code APE/NAF',g('eApe'))+L('Convention collective (IDCC)',g('eIdcc'))
+    +L('Effectif',g('eEff'))+L('Représentant légal',g('eRep'))
+    +L('Téléphone',g('eTel'))+L('Email',g('eMail'))
+    +'<tr><td>OPCO</td><td><span class="v">'+esc($('eOpco').value)+'</span></td></tr>')
+  +B('2 · L\'apprenti',
+     L('Nom',g('aNom'))+L('Prénom',g('aPre'))
+    +L('Date de naissance',fr(g('aNaiss')))+L('Lieu de naissance',g('aLieu'))
+    +L('N° de sécurité sociale',g('aNir'))+L('Adresse',g('aAdr'))
+    +L('Téléphone',g('aTel'))+L('Email',g('aMail'))
+    +L('Dernier diplôme préparé',g('aDip'))
+    +'<tr><td>Situation avant contrat</td><td><span class="v">'+esc($('aSit').value)+'</span></td></tr>'
+    +'<tr><td>Travailleur handicapé</td><td><span class="v">'+esc($('aRqth').value)+'</span></td></tr>')
+  +B('3 · Le maître d\'apprentissage',
+     L('Nom et prénom',g('mNom'))+L('Emploi occupé',g('mEmploi'))
+    +'<tr><td>Éligibilité attestée par l\'employeur</td><td><span class="v">Oui</span></td></tr>')
+  +B('4 · Le contrat',
+     '<tr><td>Type de contrat</td><td><span class="v">Premier contrat d\'apprentissage</span></td></tr>'
+    +L('Date de conclusion',fr(g('cConcl')))+L('Date de début',fr(g('cDeb')))+L('Date de fin',fr(g('cFin')))
+    +L('Durée hebdomadaire',g('cHeb'))+L('Salaire brut à l\'embauche',g('cSal'))
+    +'<tr><td>Version CERFA</td><td><span class="v">10103*14</span></td></tr>')
+  +B('5 · La formation',
+     '<tr><td>CFA responsable</td><td><span class="v">PARIS SUD FORMATION — UAI 0912524Z</span></td></tr>'
+    +'<tr><td>SIRET du CFA</td><td><span class="v">93347916400032</span></td></tr>'
+    +L('Intitulé de la formation',$('cForm').value)
+    +'<tr><td>Code RNCP</td><td>'+(f?'<span class="v">'+f.rncp+'</span>':'<span class="todo">à compléter</span>')+'</td></tr>'
+    +'<tr><td>Code diplôme</td><td>'+(f?'<span class="v">'+f.code+'</span>':'<span class="todo">à compléter</span>')+'</td></tr>'
+    +'<tr><td>Durée</td><td>'+(f?'<span class="v">'+f.h+' h dont '+f.dist+' h à distance</span>':'<span class="todo">à compléter</span>')+'</td></tr>')
+  +B('6 · Dépôt et financement',
+     L('N° de dépôt (DECA)',g('cDeca'),'attribué après dépôt')
+    +L('N° de dossier OPCO',g('cDoss'),'attribué par l\'OPCO')
+    +L('Montant de la prise en charge',g('cMt'),'à confirmer auprès de l\'OPCO'))
+  +'<p style="margin-top:14px;font-size:.84rem;color:#6b7a72">Les mentions <span class="todo">surlignées</span> restent à compléter. '
+  +'Le contrat doit être transmis à l\'OPCO dans les 5 jours ouvrables suivant le début de son exécution.</p>';
+}
+['aNom','aPre','aNaiss','aLieu','aNir','aAdr','aTel','aMail','aDip','eNom','eSiret','eAdr','eApe','eIdcc','eEff','eRep','eMail','eTel','mNom','mEmploi','cConcl','cDeb','cFin','cHeb','cSal','cMt','cDeca','cDoss','cLieu']
+ .forEach(function(i){$(i).addEventListener('input',render);});
+['cForm','eOpco','aSit','aRqth'].forEach(function(i){$(i).addEventListener('change',render);});
+
+document.querySelectorAll('.tb').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tb').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+    var d=b.getAttribute('data-d');
+    $('dConv').classList.toggle('on',d==='conv');$('dCerfa').classList.toggle('on',d==='cerfa');
+  });
+});
+function printDoc(id){
+  if(!g('aNom')||!g('eNom')||!$('cForm').value){alert('Renseignez au moins le nom de l\'apprenti, l\'employeur et la formation.');return;}
+  render();
+  $('dConv').classList.remove('printing');$('dCerfa').classList.remove('printing');
+  var el=$(id);var was=el.classList.contains('on');
+  el.classList.add('on','printing');
+  window.print();
+  setTimeout(function(){el.classList.remove('printing');if(!was)el.classList.remove('on');},400);
+}
+$('pConv').addEventListener('click',function(){printDoc('dConv');});
+$('pCerfa').addEventListener('click',function(){printDoc('dCerfa');});
+$('reset').addEventListener('click',function(){
+  if(!confirm('Vider tous les champs ?'))return;
+  document.querySelectorAll('input.f').forEach(function(i){i.value='';});
+  $('cHeb').value='35 h';$('cLieu').value='Palaiseau';$('cForm').value='';
+  render();window.scrollTo({top:0,behavior:'smooth'});
+});
+render();
+</script>
+</body></html>
