@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>YPAREO · Paris Sud Formation</title>
-<link rel="stylesheet" href="style.css?v=202609301917">
-<script src="gate.js?v=202609301917"></script>
+<link rel="stylesheet" href="style.css?v=202609302135">
+<script src="gate.js?v=202609302135"></script>
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
 .kpi{background:#fff;border:1px solid #e3ece7;border-radius:14px;padding:15px;text-align:center}
@@ -20,6 +20,17 @@
 .tag2{display:inline-block;padding:2px 9px;border-radius:99px;font-size:.72rem;font-weight:700;margin-right:5px}
 .t-ok{background:#e3f5ea;color:#1a6b45}.t-w{background:#fdf3df;color:#8a6410}.t-n{background:#eef1ef;color:#54615a}
 .empty{color:#7b8a82;font-size:.9rem;padding:16px 0}
+.newbox{background:#fff;border:1px solid #e3ece7;border-left:4px solid #1f8a5c;border-radius:16px;padding:18px 20px;margin:0 0 16px;display:none}
+.newbox.on{display:block}
+.newbox h3{margin:0 0 3px;color:#11362b;font-size:1.04rem}
+.newbox .sub{font-size:.82rem;color:#5f6b62;margin-bottom:12px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}
+label.f{display:block;font-size:.75rem;font-weight:700;color:#5f6b62;margin-bottom:3px}
+input.f,select.f{width:100%;padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem}
+.addbtn{background:#1f8a5c;color:#fff;border:none;border-radius:999px;padding:11px 22px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
+.addbtn:disabled{opacity:.5;cursor:not-allowed}
+.ghost{background:#fff;border:1px solid #d7e5dd;color:#33453d;border-radius:999px;padding:11px 20px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit}
+#nmsg{font-weight:700;margin-top:10px;font-size:.9rem}
 </style>
 </head><body data-page="ypareo">
 <div class="app">
@@ -40,6 +51,30 @@
 
       <div class="kpis" id="kpis"></div>
 
+      <div style="margin-bottom:14px"><button class="addbtn" id="toggleNew">➕ Nouvel apprenant dans YPAREO</button></div>
+
+      <div class="newbox" id="newbox">
+        <h3>Créer un apprenant</h3>
+        <div class="sub">Écrit directement dans YPAREO. Un contrôle anti-doublon bloque la création si la fiche existe déjà.</div>
+        <div class="g2">
+          <div><label class="f">Nom *</label><input class="f" id="nNom"></div>
+          <div><label class="f">Prénom *</label><input class="f" id="nPre"></div>
+          <div><label class="f">Civilité</label><select class="f" id="nCiv"><option>M</option><option>Mme</option></select></div>
+          <div><label class="f">Date de naissance</label><input class="f" id="nNaiss" type="date"></div>
+          <div><label class="f">Email</label><input class="f" id="nMail" type="email"></div>
+          <div><label class="f">Téléphone</label><input class="f" id="nTel" placeholder="06…"></div>
+          <div><label class="f">Adresse</label><input class="f" id="nAdr"></div>
+          <div><label class="f">Code postal</label><input class="f" id="nCp"></div>
+          <div><label class="f">Ville</label><input class="f" id="nVille"></div>
+          <div><label class="f">Inscrire à une formation</label><select class="f" id="nForm"><option value="">— aucune —</option></select></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+          <button class="addbtn" id="nSave">✅ Créer dans YPAREO</button>
+          <button class="ghost" id="nCancel">Annuler</button>
+        </div>
+        <div id="nmsg"></div>
+      </div>
+
       <div class="tabs">
         <button class="tb on" data-t="contrats">📁 Contrats</button>
         <button class="tb" data-t="personnes">👥 Apprenants</button>
@@ -52,12 +87,12 @@
       <div class="callout c-info" style="margin-top:16px">
         🔒 <b>Comment ça marche.</b> Le jeton YPAREO reste sur le serveur, jamais dans votre navigateur.
         L'espace demande les données à la passerelle, qui interroge YPAREO et ne renvoie que ce qui est autorisé.
-        <b>Lecture seule pour l'instant</b> — la création d'apprenants et de contrats depuis l'espace arrive ensuite.
+        Vous pouvez désormais <b>créer un apprenant et l'inscrire à une formation</b> depuis ici. Un garde anti-doublon empêche de créer deux fois la même personne. La saisie du contrat d'apprentissage reste à faire dans YPAREO.
       </div>
     </div>
   </div>
 </div>
-<script src="nav.js?v=202609301917"></script>
+<script src="nav.js?v=202609302135"></script>
 <script>
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
 var YP=CFG.api.replace(/\/records$/,'/ypareo');
@@ -138,6 +173,56 @@ document.querySelectorAll('.tb').forEach(function(b){
   });
 });
 $('srch').addEventListener('input',function(){Q=this.value.toLowerCase().trim();paint();});
+
+/* ===== création d'un apprenant ===== */
+var FORMS=[['e5cd427e-4d3c-47cd-bc3b-158d4ef96c3f','TP Conseiller commercial'],
+           ['38bb9b3f-0c46-4897-b061-85a4e576dbb9','TP Responsable de petite et moyenne structure'],
+           ['f5f363b5-99fc-4909-91c9-fdd5319acd97',"TP Agent de propreté et d'hygiène"],
+           ['02fac9a2-f83e-41b0-af9e-cc520a115405','Formation IA dirigeants']];
+$('nForm').innerHTML='<option value="">— aucune —</option>'+FORMS.map(function(f){
+  return '<option value="'+f[0]+'">'+f[1]+'</option>';}).join('');
+function nmsg(t,c){var m=$('nmsg');m.style.color=c||'#1f8a5c';m.innerHTML=t;}
+function ncheck(){$('nSave').disabled=!(LIVE&&$('nNom').value.trim()&&$('nPre').value.trim());}
+['nNom','nPre'].forEach(function(i){$(i).addEventListener('input',ncheck);});
+$('toggleNew').addEventListener('click',function(){
+  $('newbox').classList.toggle('on');ncheck();
+  if($('newbox').classList.contains('on'))$('nNom').focus();
+});
+$('nCancel').addEventListener('click',function(){
+  $('newbox').classList.remove('on');nmsg('');
+});
+$('nSave').addEventListener('click',function(){
+  var b=this;b.disabled=true;b.textContent='Création…';nmsg('');
+  var sel=$('nForm');
+  var fields={nom:$('nNom').value.trim(),prenom:$('nPre').value.trim(),civilite:$('nCiv').value};
+  ['nNaiss:dateNaissance','nMail:email','nTel:telephone','nAdr:adresse','nCp:codePostal','nVille:ville']
+    .forEach(function(p){var a=p.split(':');if($(a[0]).value.trim())fields[a[1]]=$(a[0]).value.trim();});
+  if(sel.value){fields.idFormation=sel.value;fields.libelleCursus=sel.options[sel.selectedIndex].text;}
+  fetch(YP,{method:'POST',headers:{'x-crm-key':CFG.key,'Content-Type':'application/json'},
+    body:JSON.stringify({action:'creer_apprenant',fields:fields})})
+  .then(function(r){return r.json().then(function(j){return {s:r.status,j:j};});})
+  .then(function(o){
+    if(o.s===409){
+      var d=o.j.doublon||{};
+      nmsg('⚠️ '+esc(o.j.error)+' — fiche existante : <b>'+esc(d.nom||'')+' '+esc(d.prenom||'')+'</b>. Rien n\'a été créé.','#9a7212');
+      b.disabled=false;b.textContent='✅ Créer dans YPAREO';return;
+    }
+    if(!o.j.ok){
+      nmsg('❌ '+esc(o.j.error||'échec'),'#c0432a');
+      b.disabled=false;b.textContent='✅ Créer dans YPAREO';return;
+    }
+    var t='✅ Apprenant créé dans YPAREO.';
+    if(o.j.cursus)t+=' Inscrit à la formation.';
+    if(o.j.cursusErreur)t+=' ⚠️ Inscription formation échouée : '+esc(o.j.cursusErreur);
+    nmsg(t,'#1f8a5c');
+    b.textContent='✅ Créé';
+    CACHE={};boot();
+    ['nNom','nPre','nNaiss','nMail','nTel','nAdr','nCp','nVille'].forEach(function(i){$(i).value='';});
+    setTimeout(function(){b.disabled=false;b.textContent='✅ Créer dans YPAREO';},1500);
+  })
+  .catch(function(e){nmsg('❌ '+esc(e.message),'#c0432a');b.disabled=false;b.textContent='✅ Créer dans YPAREO';});
+});
+ncheck();
 boot();
 </script>
 </body></html>
