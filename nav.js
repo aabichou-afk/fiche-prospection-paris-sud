@@ -1,5 +1,17 @@
 // Sidebar gauche + footer — Espace Paris Sud (CRM premium)
 (function(){
+  // ===== connexion en 1 clic : lien ...#k=LACLE — la clé est enregistrée puis retirée de l'URL =====
+  try{
+    var m=(location.hash||'').match(/[#&]k=([^&]+)/);
+    if(m&&m[1]){
+      localStorage.setItem('crm_key',decodeURIComponent(m[1]));
+      if(!localStorage.getItem('crm_api'))
+        localStorage.setItem('crm_api','https://psf-crm-proxy.vercel.app/api/records');
+      history.replaceState(null,'',location.pathname+location.search);
+      location.reload();
+      return;
+    }
+  }catch(e){}
   var I={
     home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
     folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 11h18"/>',
