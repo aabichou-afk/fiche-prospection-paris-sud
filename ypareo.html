@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YPAREO · Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css?v=202609301917">
+<script src="gate.js?v=202609301917"></script>
+<style>
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid #e3ece7;border-radius:14px;padding:15px;text-align:center}
+.kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:700;color:#1f8a5c;line-height:1}
+.kpi .l{font-size:.78rem;color:#6b7a72;margin-top:3px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.tb{padding:9px 17px;border-radius:999px;border:1px solid #d7e5dd;background:#fff;font-weight:700;font-size:.9rem;color:#54615a;cursor:pointer;font-family:inherit}
+.tb.on{background:#11362b;color:#fff;border-color:#11362b}
+.srch{width:100%;max-width:420px;padding:11px 14px;border:1px solid #d7e5dd;border-radius:11px;font-family:inherit;font-size:.93rem;margin-bottom:14px}
+.card2{background:#fff;border:1px solid #e3ece7;border-radius:14px;padding:14px 17px;margin-bottom:10px;box-shadow:0 6px 18px -16px rgba(17,54,43,.4)}
+.card2 .nm{font-weight:700;color:#11362b;font-size:1rem}
+.card2 .sub{font-size:.83rem;color:#5f6b62;margin-top:3px}
+.card2 .meta{font-size:.78rem;color:#8a978f;margin-top:6px}
+.tag2{display:inline-block;padding:2px 9px;border-radius:99px;font-size:.72rem;font-weight:700;margin-right:5px}
+.t-ok{background:#e3f5ea;color:#1a6b45}.t-w{background:#fdf3df;color:#8a6410}.t-n{background:#eef1ef;color:#54615a}
+.empty{color:#7b8a82;font-size:.9rem;padding:16px 0}
+</style>
+</head><body data-page="ypareo">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>YPAREO</h1><span class="conn" id="conn">…</span>
+    </div>
+    <div class="content">
+      <div class="hero-banner">
+        <span class="pill">Lecture directe</span>
+        <h1>Votre CFA, sans ouvrir YPAREO.</h1>
+        <p>Les données réelles de YPAREO Neo, lues en direct. Apprenants, contrats, entreprises, formations — tout est là.</p>
+      </div>
+
+      <div id="offline" class="callout c-warn" style="display:none">⚠️ CRM non connecté sur cet appareil — cliquez « 🔌 Reconnecter » en haut de page.</div>
+
+      <div class="kpis" id="kpis"></div>
+
+      <div class="tabs">
+        <button class="tb on" data-t="contrats">📁 Contrats</button>
+        <button class="tb" data-t="personnes">👥 Apprenants</button>
+        <button class="tb" data-t="entreprises">🏢 Entreprises</button>
+        <button class="tb" data-t="formations">🎓 Formations</button>
+      </div>
+      <input class="srch" id="srch" placeholder="Filtrer…">
+      <div id="list"><div class="empty">Chargement…</div></div>
+
+      <div class="callout c-info" style="margin-top:16px">
+        🔒 <b>Comment ça marche.</b> Le jeton YPAREO reste sur le serveur, jamais dans votre navigateur.
+        L'espace demande les données à la passerelle, qui interroge YPAREO et ne renvoie que ce qui est autorisé.
+        <b>Lecture seule pour l'instant</b> — la création d'apprenants et de contrats depuis l'espace arrive ensuite.
+      </div>
+    </div>
+  </div>
+</div>
+<script src="nav.js?v=202609301917"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var YP=CFG.api.replace(/\/records$/,'/ypareo');
+var LIVE=!!(CFG.api&&CFG.key);
+function $(i){return document.getElementById(i);}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fr(d){return d?String(d).split('-').reverse().join('/'):'—';}
+function yp(q){return fetch(YP+q,{headers:{'x-crm-key':CFG.key}})
+  .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||r.status);return j;});});}
+(function(){var c=$('conn');if(LIVE){c.className='conn live';c.textContent='● Live';}else{c.className='conn demo';c.textContent='Aperçu';$('offline').style.display='block';}})();
+
+var CACHE={},TAB='contrats',Q='';
+
+function k(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
+
+function boot(){
+  if(!LIVE){$('list').innerHTML='<div class="empty">Connectez le CRM pour voir vos données YPAREO.</div>';return;}
+  yp('?resource=stats').then(function(j){
+    var s=j.stats||{};
+    $('kpis').innerHTML=k(s.personnes||0,'personnes')+k(s.contrats||0,'contrats')
+      +k(s.entreprises||0,'entreprises')+k(s.formations||0,'formations')+k(s.cursus||0,'cursus');
+  }).catch(function(e){$('kpis').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>';});
+  load('contrats');
+}
+
+function load(t){
+  TAB=t;$('list').innerHTML='<div class="empty">Chargement…</div>';
+  if(CACHE[t]){paint();return;}
+  yp('?resource='+t+'&max=500').then(function(j){CACHE[t]=j.data||[];paint();})
+    .catch(function(e){$('list').innerHTML='<div class="empty">Erreur : '+esc(e.message)+'</div>';});
+}
+
+function txt(o){return JSON.stringify(o||{}).toLowerCase();}
+
+function paint(){
+  var rows=(CACHE[TAB]||[]).filter(function(r){return !Q||txt(r).indexOf(Q)>-1;});
+  if(!rows.length){$('list').innerHTML='<div class="empty">Aucun résultat.</div>';return;}
+  var h='';
+  if(TAB==='contrats'){
+    rows.forEach(function(c){
+      var a=c.apprenti||{},e=c.employeur||{},f=c.formation||{},ct=c.contrat||{},o=c.opco||{},et=(c.etat||{}).nom||'';
+      var cls=et==='Complet'?'t-ok':(et==='ASigne'?'t-w':'t-n');
+      h+='<div class="card2"><div class="nm">'+esc(a.nom||'—')+' '+esc(a.prenom||'')+'</div>'
+       +'<div class="sub">'+esc(e.raisonSociale||'—')+' · '+esc(f.intitulePrecisDiplome||'')+'</div>'
+       +'<div class="meta"><span class="tag2 '+cls+'">'+esc(et||'—')+'</span>'
+       +esc(f.codeRncp||'')+' · '+fr(ct.dateDebutContrat)+' → '+fr(ct.dateFinContrat)
+       +(o.noDepot?' · DECA '+esc(o.noDepot):'')+(o.noDossier?' · dossier '+esc(o.noDossier):'')+'</div></div>';
+    });
+  } else if(TAB==='personnes'){
+    rows.forEach(function(p){
+      h+='<div class="card2"><div class="nm">'+esc(p.nom||'—')+' '+esc(p.prenom||'')+'</div>'
+       +'<div class="sub">'+esc(p.courriel||'')+(p.telephone?' · '+esc(p.telephone):'')+'</div>'
+       +'<div class="meta">'+(p.dateNaissance?'né·e le '+fr(p.dateNaissance):'')
+       +((p.adresse&&p.adresse.commune)?' · '+esc(p.adresse.commune):'')+'</div></div>';
+    });
+  } else if(TAB==='entreprises'){
+    rows.forEach(function(e){
+      h+='<div class="card2"><div class="nm">'+esc(e.raisonSociale||e.nom||'—')+'</div>'
+       +'<div class="sub">'+esc(e.siret||'')+(e.courriel?' · '+esc(e.courriel):'')+'</div>'
+       +'<div class="meta">'+((e.adresse&&e.adresse.commune)?esc(e.adresse.commune):'')
+       +(e.telephone?' · '+esc(e.telephone):'')+'</div></div>';
+    });
+  } else {
+    rows.forEach(function(f){
+      h+='<div class="card2"><div class="nm">'+esc(f.intitulePrecisDiplome||f.libelle||f.nom||'—')+'</div>'
+       +'<div class="sub">'+esc(f.codeRncp||'')+(f.codeDiplome?' · '+esc(f.codeDiplome):'')+'</div>'
+       +'<div class="meta">'+(f.dureeFormation?esc(f.dureeFormation)+' h':'')
+       +(f.nbHeuresDistanciel?' dont '+esc(f.nbHeuresDistanciel)+' h à distance':'')+'</div></div>';
+    });
+  }
+  $('list').innerHTML=h;
+}
+
+document.querySelectorAll('.tb').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tb').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');load(b.getAttribute('data-t'));
+  });
+});
+$('srch').addEventListener('input',function(){Q=this.value.toLowerCase().trim();paint();});
+boot();
+</script>
+</body></html>
