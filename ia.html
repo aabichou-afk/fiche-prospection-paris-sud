@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Assistant · Paris Sud Formation</title>
-<link rel="stylesheet" href="style.css?v=202610011503">
-<script src="gate.js?v=202610011503"></script>
+<link rel="stylesheet" href="style.css?v=202610011522">
+<script src="gate.js?v=202610011522"></script>
 <style>
 .tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:6px 0 24px}
 .task{background:#fff;border:1.5px solid #e3ece7;border-radius:15px;padding:16px 15px;cursor:pointer;transition:.14s;text-align:left}
@@ -12,7 +12,7 @@
 .task .e{font-size:1.4rem;line-height:1}
 .task .n{font-family:var(--serif);font-weight:700;color:#11362b;margin:7px 0 3px;font-size:1rem}
 .task .d{font-size:.8rem;color:#67756c;line-height:1.4}
-textarea.ctx{width:100%;min-height:190px;padding:14px;border:1.5px solid #e3ece7;border-radius:13px;font:inherit;font-size:.92rem;line-height:1.55;resize:vertical}
+textarea.ctx{width:100%;max-width:100%;min-height:190px;padding:14px;border:1.5px solid #e3ece7;border-radius:13px;font:inherit;font-size:.92rem;line-height:1.55;resize:vertical}
 textarea.ctx:focus{outline:none;border-color:#1f8a5c}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
 .btn{background:#1f8a5c;color:#fff;border:0;border-radius:11px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer}
@@ -33,6 +33,9 @@ pre.out{white-space:pre-wrap;font:inherit;font-size:.95rem;line-height:1.6;backg
     </div>
     <div class="content">
 
+      <div id="off" style="display:none" class="callout c-warn">⏸️ <b>L'assistant n'est pas activé.</b> Il est installé et prêt, mais il lui manque sa clé d'accès — c'est une décision volontaire d'Abdel : tant qu'il est le seul à rédiger, il passe directement par Claude. <b>On l'allumera quand Selma et les agentes en auront besoin.</b><br><span style="font-size:.84rem;color:#8a7a6a">En attendant, les outils du menu de gauche fonctionnent normalement.</span></div>
+
+      <div id="live">
       <div class="callout c-ok" style="margin-top:0">✍️ <b>L'assistant rédige, vous validez.</b> Rien n'est envoyé d'ici : vous obtenez un texte à relire, corriger et copier. Les règles de la maison sont appliquées automatiquement — financement OPCO Mobilités uniquement, jamais de montant annoncé, et toute information manquante est écrite <span class="hl">[à compléter]</span> plutôt qu'inventée.</div>
 
       <h2 class="grp-title">1 · Qu'est-ce qu'on prépare&nbsp;?</h2>
@@ -60,11 +63,12 @@ pre.out{white-space:pre-wrap;font:inherit;font-size:.95rem;line-height:1.6;backg
           <span class="meta" id="meta"></span>
         </div>
       </div>
+      </div>
 
     </div>
   </div>
 </div>
-<script src="nav.js?v=202610011503"></script>
+<script src="nav.js?v=202610011522"></script>
 <script>
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
 var IA=CFG.api.replace(/\/records$/,'/ia');
@@ -77,6 +81,18 @@ var TASKS=[
  ['resume_dossier','🧭','Résumer un dossier','Où on en est, ce qui bloque, quoi faire.'],
  ['notes_vers_fiche','🗂️','Notes → fiche','Vos notes brutes deviennent une fiche propre.']
 ];
+// ── l'assistant est-il branché ? on le demande AVANT de laisser remplir le formulaire ──
+if(LIVE){
+  fetch(IA,{headers:{'x-crm-key':CFG.key}})
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(j){
+      if(j && j.actif===false){
+        document.getElementById('live').style.display='none';
+        document.getElementById('off').style.display='block';
+      }
+    }).catch(function(){});
+}
+
 var choisi=null;
 document.getElementById('tasks').innerHTML=TASKS.map(function(t){
   return '<button class="task" data-t="'+t[0]+'"><span class="e">'+t[1]+'</span>'+

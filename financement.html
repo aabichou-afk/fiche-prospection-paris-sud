@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Financement OPCO · Paris Sud — Pipeline</title>
-<link rel="stylesheet" href="style.css?v=202610011503">
-<script src="gate.js?v=202610011503"></script>
+<link rel="stylesheet" href="style.css?v=202610011522">
+<script src="gate.js?v=202610011522"></script>
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:2px 0 16px}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
@@ -64,7 +64,7 @@
     </div>
   </div>
 </div>
-<script src="nav.js?v=202610011503"></script>
+<script src="nav.js?v=202610011522"></script>
 <script>
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
 var LIVE=!!(CFG.api&&CFG.key);
@@ -97,7 +97,7 @@ function load(){
  if(LIVE)return apic('GET',null,'?table=Contrats&max=200').then(function(j){return (j.records||[]).map(function(r){var f=r.fields;return {id:r.id,apprenant:f['Apprenant'],entreprise:f['Entreprise'],statut:(f['Statut']&&f['Statut'].name)||f['Statut'],financeur:(f['Financeur']&&f['Financeur'].name)||f['Financeur'],montant:f['Montant convention'],note:f['Blocage / note']};});});
  return fetch('crm_snapshot.json?cb='+Date.now()).then(function(r){return r.json()}).then(function(j){return j.contrats||[];});
 }
-function save(id,st,pill){if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');return;}
+function save(id,st,pill){if(!LIVE){alert('Pour enregistrer, reconnectez le CRM : bouton « 🔌 Reconnecter » dans le bandeau orange, en haut de cette page.');return;}
  apic('PATCH',{table:'Contrats',id:id,fields:{'Statut':st}}).then(function(){if(pill){pill.classList.add('show');setTimeout(function(){pill.classList.remove('show')},1400);}render();});}
 var ROWS=[];
 function kpi(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}

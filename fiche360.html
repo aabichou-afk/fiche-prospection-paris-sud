@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fiche 360° · Paris Sud — Vue client complète</title>
-<link rel="stylesheet" href="style.css?v=202610011503">
-<script src="gate.js?v=202610011503"></script>
+<link rel="stylesheet" href="style.css?v=202610011522">
+<script src="gate.js?v=202610011522"></script>
 <style>
 .wrap{display:grid;grid-template-columns:290px 1fr;gap:16px}
 @media(max-width:860px){.wrap{grid-template-columns:1fr}}
@@ -54,7 +54,7 @@
     </div>
   </div>
 </div>
-<script src="nav.js?v=202610011503"></script>
+<script src="nav.js?v=202610011522"></script>
 <script>
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
 var LIVE=!!(CFG.api&&CFG.key);
@@ -151,7 +151,7 @@ function render360(){
  $('#view').innerHTML=h;
  $('#c360go').addEventListener('click',function(){
   var v=$('#c360').value.trim();if(!v)return;
-  if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');return;}
+  if(!LIVE){alert('Pour enregistrer, reconnectez le CRM : bouton « 🔌 Reconnecter » dans le bandeau orange, en haut de cette page.');return;}
   var target=en?{table:'Entreprises',id:en.id,field:'Notes agent',rec:en}:(pr?{table:'Prospects',id:pr.id,field:'Notes prospect',rec:pr}:null);
   if(!target){alert('Cette entreprise n\'a pas de fiche prospect/lead — ajoutez-la dans le CRM d\'abord.');return;}
   var nv='['+today()+'] '+v+(target.rec.notes?'\n'+target.rec.notes:'');

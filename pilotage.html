@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pilotage dirigeant · Paris Sud</title>
-<link rel="stylesheet" href="style.css?v=202610011503">
-<script src="gate.js?v=202610011503"></script>
+<link rel="stylesheet" href="style.css?v=202610011522">
+<script src="gate.js?v=202610011522"></script>
 <style>
 .conn{font-size:.78rem;font-weight:700;padding:4px 11px;border-radius:999px}
 .conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fde8e3;color:#c0432a}
@@ -115,7 +115,7 @@
     </div>
   </div>
 </div>
-<script src="nav.js?v=202610011503"></script>
+<script src="nav.js?v=202610011522"></script>
 <script>
 var $=function(s){return document.querySelector(s)};
 var d=new Date();$('#today').textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
@@ -203,7 +203,7 @@ Promise.all([fetchTab('prospects'),fetchTab('contrats'),fetchTab('taches'),fetch
     return '<label class="dt"><input type="checkbox" data-id="'+t.id+'"><span><b>'+esc(t.tache)+'</b><br><small>'+esc(t.assigne||'')+(t.priorite?' · '+esc(t.priorite):'')+'</small></span></label>';
   }).join('')||'<div style="color:#8a978f;font-size:.85rem">Rien à traiter 🎉</div>';
   document.querySelectorAll('.dt input').forEach(function(cb){cb.addEventListener('change',function(){
-    if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');cb.checked=false;return;}
+    if(!LIVE){alert('Pour enregistrer, reconnectez le CRM : bouton « 🔌 Reconnecter » dans le bandeau orange, en haut de cette page.');cb.checked=false;return;}
     cb.closest('.dt').classList.add('done');
     apic('PATCH',{table:'Taches',id:cb.getAttribute('data-id'),fields:{'Statut':'✅ Fait'}})
       .catch(function(e){alert('Erreur : '+e.message);cb.checked=false;cb.closest('.dt').classList.remove('done');});
