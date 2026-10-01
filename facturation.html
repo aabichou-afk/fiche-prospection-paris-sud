@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Facturation · Paris Sud — Suivi OPCO</title>
-<link rel="stylesheet" href="style.css?v=202610011503">
-<script src="gate.js?v=202610011503"></script>
+<link rel="stylesheet" href="style.css?v=202610011522">
+<script src="gate.js?v=202610011522"></script>
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:2px 0 16px}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
@@ -59,7 +59,7 @@
   </div>
 </div>
 <div class="overlay" id="ov"><div class="modal" id="modal"></div></div>
-<script src="nav.js?v=202610011503"></script>
+<script src="nav.js?v=202610011522"></script>
 <script>
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
 var LIVE=!!(CFG.api&&CFG.key);
@@ -95,7 +95,7 @@ function render(){
    +(r.notes?'<div class="note">'+esc(String(r.notes).split('\n')[0])+'</div>':'')+'</div>';
  }).join('')||'<div style="text-align:center;color:#8a978f;padding:30px">Aucune facture. Clique ➕.</div>';
  document.querySelectorAll('.fx select').forEach(function(s){s.addEventListener('change',function(){
-  if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');return;}
+  if(!LIVE){alert('Pour enregistrer, reconnectez le CRM : bouton « 🔌 Reconnecter » dans le bandeau orange, en haut de cette page.');return;}
   var id=s.getAttribute('data-id');var rec=ROWS.filter(function(x){return x.id===id})[0];if(rec)rec.statut=s.value;
   var fields={'Statut':s.value};
   if(s.value==='📤 Émise'&&rec&&!rec.emission){var d=new Date();fields['Date émission']=d.toISOString().slice(0,10);rec.emission=fields['Date émission'];}
@@ -107,7 +107,7 @@ $('#add').addEventListener('click',function(){
  $('#modal').innerHTML=h;$('#ov').classList.add('on');
  $('#no').addEventListener('click',function(){$('#ov').classList.remove('on');});
  $('#ok').addEventListener('click',function(){
-  if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour créer.');return;}
+  if(!LIVE){alert('Pour créer une facture, reconnectez le CRM : bouton « 🔌 Reconnecter » dans le bandeau orange, en haut de cette page.');return;}
   var payload={'Libellé':$('#f0').value.trim(),'Dossier lié':$('#f1').value.trim(),'Client / financeur':$('#f2').value,'Montant':Number($('#f3').value.replace(',','.').replace(/[^0-9.]/g,''))||0,'Statut':$('#f4').value};
   if($('#f5').value.trim())payload['Notes']=$('#f5').value.trim();
   $('#ok').textContent='…';

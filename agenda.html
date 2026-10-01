@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Agenda · Paris Sud — Échéancier</title>
-<link rel="stylesheet" href="style.css?v=202610011503">
-<script src="gate.js?v=202610011503"></script>
+<link rel="stylesheet" href="style.css?v=202610011522">
+<script src="gate.js?v=202610011522"></script>
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:2px 0 16px}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
@@ -40,7 +40,7 @@
     </div>
   </div>
 </div>
-<script src="nav.js?v=202610011503"></script>
+<script src="nav.js?v=202610011522"></script>
 <script>
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
 var LIVE=!!(CFG.api&&CFG.key);
@@ -110,7 +110,7 @@ function render(){
   }).join(''):'<div class="empty">Rien ici 🎉</div>')+'</div>';
  }).join('');
  document.querySelectorAll('[data-done]').forEach(function(b){b.addEventListener('click',function(){
-  if(!LIVE){alert('Connecte le CRM (page CRM → ⚙️) pour enregistrer.');return;}
+  if(!LIVE){alert('Pour enregistrer, reconnectez le CRM : bouton « 🔌 Reconnecter » dans le bandeau orange, en haut de cette page.');return;}
   b.textContent='…';
   apic('PATCH',{table:'Taches',id:b.getAttribute('data-done'),fields:{'Statut':'✅ Fait'}}).then(function(){
    var t=(DATA.taches||[]).filter(function(x){return x.id===b.getAttribute('data-done')})[0];if(t)t.statut='✅ Fait';render();
