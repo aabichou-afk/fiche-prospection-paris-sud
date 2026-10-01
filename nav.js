@@ -35,7 +35,8 @@
   function opco(txt){return '<span class="opco-badge" style="color:'+txt+'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#8cc63f"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/><path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#8cc63f"/><circle cx="12" cy="12" r="3.1" fill="#00a88e" stroke="none"/></svg>OPCO Mobilités</span>';}
 
   var META={
-    accueil:['Accueil','index.html',I.home], pilotage:['Pilotage','pilotage.html',I.rocket],
+    accueil:['Accueil','index.html',I.home], ia:['Assistant','ia.html',I.audit],
+    pilotage:['Pilotage','pilotage.html',I.rocket],
     crm:['CRM','crm.html',I.crm], fiche360:['Fiche 360°','fiche360.html',I.audit],
     contrats:['Contrats','contrats.html',I.folder],
     ypareo:['YPAREO','ypareo.html',I.grad],
@@ -54,7 +55,7 @@
     contenu:['Contenu','contenu.html',I.mega], sop:['SOP','sop.html',I.sop]
   };
   var GROUPS=[
-    ['Pilotage',['accueil','pilotage','crm','fiche360','contrats','ypareo','financement','facturation','agenda','journee']],
+    ['Pilotage',['accueil','ia','pilotage','crm','fiche360','contrats','ypareo','financement','facturation','agenda','journee']],
     ['Vente',['qualif','audit','scripts','playbook']],
     ['Formation & offre',['formation','conventions','offres','process','opco']],
     ['Qualité',['positionnement','satisfaction','reclamations']],

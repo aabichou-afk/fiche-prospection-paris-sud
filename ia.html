@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Assistant · Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css?v=202610011503">
+<script src="gate.js?v=202610011503"></script>
+<style>
+.tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:6px 0 24px}
+.task{background:#fff;border:1.5px solid #e3ece7;border-radius:15px;padding:16px 15px;cursor:pointer;transition:.14s;text-align:left}
+.task:hover{border-color:#1f8a5c;transform:translateY(-2px)}
+.task.on{border-color:#1f8a5c;background:#f4faf6;box-shadow:0 10px 26px -20px rgba(31,138,92,.8)}
+.task .e{font-size:1.4rem;line-height:1}
+.task .n{font-family:var(--serif);font-weight:700;color:#11362b;margin:7px 0 3px;font-size:1rem}
+.task .d{font-size:.8rem;color:#67756c;line-height:1.4}
+textarea.ctx{width:100%;min-height:190px;padding:14px;border:1.5px solid #e3ece7;border-radius:13px;font:inherit;font-size:.92rem;line-height:1.55;resize:vertical}
+textarea.ctx:focus{outline:none;border-color:#1f8a5c}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.btn{background:#1f8a5c;color:#fff;border:0;border-radius:11px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.sec{background:#fff;color:#1f8a5c;border:1.5px solid #cfe5d8}
+select.pick{padding:10px 12px;border:1.5px solid #e3ece7;border-radius:11px;font:inherit;background:#fff;max-width:100%}
+pre.out{white-space:pre-wrap;font:inherit;font-size:.95rem;line-height:1.6;background:#fff;border:1px solid #e3ece7;border-left:4px solid #1f8a5c;border-radius:13px;padding:20px;margin:0}
+.meta{font-size:.78rem;color:#8a968f;margin-top:9px}
+.hl{background:#fff6d8;border-bottom:1.5px solid #e8c84a;padding:0 2px}
+</style>
+</head><body data-page="ia">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Assistant</h1><span class="tag">Brouillons — jamais d'envoi</span>
+    </div>
+    <div class="content">
+
+      <div class="callout c-ok" style="margin-top:0">✍️ <b>L'assistant rédige, vous validez.</b> Rien n'est envoyé d'ici : vous obtenez un texte à relire, corriger et copier. Les règles de la maison sont appliquées automatiquement — financement OPCO Mobilités uniquement, jamais de montant annoncé, et toute information manquante est écrite <span class="hl">[à compléter]</span> plutôt qu'inventée.</div>
+
+      <h2 class="grp-title">1 · Qu'est-ce qu'on prépare&nbsp;?</h2>
+      <div class="tasks" id="tasks"></div>
+
+      <h2 class="grp-title">2 · Le contexte</h2>
+      <div class="grp-sub">Collez le mail reçu, vos notes d'appel, ou chargez un dossier du CRM. Plus c'est précis, moins il y aura de <span class="hl">[à compléter]</span>.</div>
+      <div class="row">
+        <select class="pick" id="src"><option value="">— charger un dossier du CRM —</option></select>
+        <button class="btn sec" id="load" disabled>Charger</button>
+      </div>
+      <textarea class="ctx" id="ctx" placeholder="Exemple : ROSCO Needy / Laya Consulting — financement ATLAS accordé le 01/07 mais dossier bloqué, pas de n° DECA, donc facture impossible. Dernier échange le 12/09, sans réponse depuis."></textarea>
+
+      <div class="row">
+        <button class="btn" id="go" disabled>✨ Rédiger</button>
+        <span id="state" style="font-size:.86rem;color:#67756c"></span>
+      </div>
+
+      <div id="result" style="display:none;margin-top:10px">
+        <h2 class="grp-title" style="margin-top:14px">3 · Le brouillon</h2>
+        <div class="grp-sub">Relisez-le avant de l'utiliser. Remplacez chaque <span class="hl">[à compléter]</span>.</div>
+        <pre class="out" id="out"></pre>
+        <div class="row">
+          <button class="btn sec" id="copy">📋 Copier</button>
+          <span class="meta" id="meta"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="nav.js?v=202610011503"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var IA=CFG.api.replace(/\/records$/,'/ia');
+var LIVE=!!(CFG.api&&CFG.key);
+
+var TASKS=[
+ ['mail_relance','📨','Relancer','Un dossier silencieux — obtenir une réponse.'],
+ ['mail_reponse','↩️','Répondre à un mail','Collez le mail reçu, récupérez la réponse.'],
+ ['brief_appel','📞','Préparer un appel','Accroche, 3 questions, objections, objectif.'],
+ ['resume_dossier','🧭','Résumer un dossier','Où on en est, ce qui bloque, quoi faire.'],
+ ['notes_vers_fiche','🗂️','Notes → fiche','Vos notes brutes deviennent une fiche propre.']
+];
+var choisi=null;
+document.getElementById('tasks').innerHTML=TASKS.map(function(t){
+  return '<button class="task" data-t="'+t[0]+'"><span class="e">'+t[1]+'</span>'+
+    '<div class="n">'+t[2]+'</div><div class="d">'+t[3]+'</div></button>';
+}).join('');
+document.getElementById('tasks').addEventListener('click',function(e){
+  var b=e.target.closest('.task'); if(!b)return;
+  [].forEach.call(document.querySelectorAll('.task'),function(x){x.classList.remove('on');});
+  b.classList.add('on'); choisi=b.getAttribute('data-t'); maj();
+});
+
+var ctx=document.getElementById('ctx'), go=document.getElementById('go'), state=document.getElementById('state');
+function maj(){ go.disabled=!(choisi && ctx.value.trim()); }
+ctx.addEventListener('input',maj);
+
+// ── charger un dossier depuis le CRM ────────────────────────────────
+var src=document.getElementById('src'), load=document.getElementById('load'), dossiers={};
+if(LIVE){
+  fetch(CFG.api+'?table=Contrats&max=300',{headers:{'x-crm-key':CFG.key}})
+    .then(function(r){return r.ok?r.json():Promise.reject(r.status);})
+    .then(function(d){
+      (d.records||[]).forEach(function(r){
+        var f=r.fields||{}, nom=(f['Apprenant']||'—')+(f['Entreprise']?' / '+f['Entreprise']:'');
+        dossiers[r.id]=['Dossier : '+nom,
+          f['Formation']?'Formation : '+(f['Formation'].name||f['Formation']):'',
+          f['Statut']?'Statut : '+(f['Statut'].name||f['Statut']):'',
+          f['Financeur']?'Financeur : '+(f['Financeur'].name||f['Financeur']):'',
+          f['Date début']?'Date de début : '+f['Date début']:'',
+          f['N° contrat']?'N° contrat : '+f['N° contrat']:'',
+          f['Blocage / note']?'Note : '+f['Blocage / note']:''
+        ].filter(Boolean).join('\n');
+        var o=document.createElement('option'); o.value=r.id; o.textContent=nom; src.appendChild(o);
+      });
+      if(src.options.length>1) load.disabled=false;
+    }).catch(function(){});
+}
+load.addEventListener('click',function(){
+  var d=dossiers[src.value]; if(!d)return;
+  ctx.value=d+(ctx.value.trim()?'\n\n'+ctx.value.trim():''); maj(); ctx.focus();
+});
+
+// ── rédaction ───────────────────────────────────────────────────────
+go.addEventListener('click',function(){
+  if(!LIVE){ state.textContent='Connectez le CRM d\'abord (bandeau en haut de page).'; return; }
+  go.disabled=true; state.textContent='Rédaction en cours…';
+  document.getElementById('result').style.display='none';
+  fetch(IA,{method:'POST',headers:{'content-type':'application/json','x-crm-key':CFG.key},
+            body:JSON.stringify({tache:choisi,contexte:ctx.value.trim()})})
+    .then(function(r){return r.json().then(function(j){ return {ok:r.ok,code:r.status,j:j}; });})
+    .then(function(x){
+      go.disabled=false;
+      if(!x.ok){
+        state.textContent='⚠️ '+(x.j.message||x.j.error||('Erreur '+x.code));
+        return;
+      }
+      state.textContent='';
+      document.getElementById('out').textContent=x.j.texte;
+      document.getElementById('meta').textContent=
+        (x.j.tronque?'⚠️ Texte coupé — relancez pour la suite. · ':'')+
+        'Brouillon — non envoyé.';
+      document.getElementById('result').style.display='block';
+      document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+    })
+    .catch(function(e){ go.disabled=false; state.textContent='⚠️ '+e.message; });
+});
+
+document.getElementById('copy').addEventListener('click',function(){
+  var t=document.getElementById('out').textContent, b=this;
+  navigator.clipboard.writeText(t).then(function(){ b.textContent='✅ Copié'; setTimeout(function(){b.textContent='📋 Copier';},1600); });
+});
+</script>
+</body></html>
