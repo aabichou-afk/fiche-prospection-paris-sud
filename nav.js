@@ -40,6 +40,7 @@
     crm:['CRM','crm.html',I.crm], fiche360:['Fiche 360°','fiche360.html',I.audit],
     contrats:['Contrats','contrats.html',I.folder],
     ypareo:['YPAREO','ypareo.html',I.grad],
+    inscriptions:['Inscriptions','inscriptions.html',I.grad],
     financement:['Financement','financement.html',I.euro], facturation:['Facturation','facturation.html',I.euro],
     documents:['Documents','documents.html',I.doc],
     agenda:['Agenda','agenda.html',I.day],
@@ -55,7 +56,7 @@
     contenu:['Contenu','contenu.html',I.mega], sop:['SOP','sop.html',I.sop]
   };
   var GROUPS=[
-    ['Pilotage',['accueil','ia','pilotage','crm','fiche360','contrats','ypareo','financement','facturation','agenda','journee']],
+    ['Pilotage',['accueil','ia','pilotage','crm','fiche360','contrats','inscriptions','ypareo','financement','facturation','agenda','journee']],
     ['Vente',['qualif','audit','scripts','playbook']],
     ['Formation & offre',['formation','conventions','offres','process','opco']],
     ['Qualité',['positionnement','satisfaction','reclamations']],

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inscriptions · Paris Sud Formation</title>
+<link rel="stylesheet" href="style.css?v=202610012100">
+<script src="gate.js?v=202610012100"></script>
+<style>
+.dossiers{display:grid;gap:11px;margin:6px 0 24px}
+.dos{background:#fff;border:1.5px solid #e3ece7;border-radius:15px;padding:15px 16px;cursor:pointer;transition:.14s;text-align:left;display:flex;gap:14px;align-items:center;width:100%;font:inherit}
+.dos:hover{border-color:#1f8a5c}
+.dos.on{border-color:#1f8a5c;background:#f4faf6}
+.dos .who{flex:1;min-width:0}
+.dos .n{font-family:var(--serif);font-weight:700;color:#11362b;font-size:1rem}
+.dos .s{font-size:.82rem;color:#67756c;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{font-size:.74rem;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.p-new{background:#f1f3f2;color:#67756c}.p-cours{background:#fdf6e0;color:#8a7a34}
+.p-tr{background:#e7f1fb;color:#2c5d87}.p-ok{background:#e8f6ed;color:#1f6b4a}
+.fiche{background:#fff;border:1.5px solid #e3ece7;border-radius:16px;padding:20px;margin-bottom:18px}
+table.rel{width:100%;border-collapse:collapse;font-size:.88rem}
+table.rel td{padding:7px 0;border-bottom:1px solid #f0f4f1;vertical-align:top}
+table.rel td:first-child{color:#67756c;width:46%;padding-right:12px}
+table.rel td:last-child{font-weight:600;color:#11362b}
+.vide{color:#b9544a;font-weight:600}
+.flds{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px;margin:4px 0 6px}
+.f label{display:block;font-size:.8rem;font-weight:700;color:#3d5a4d;margin-bottom:5px}
+.f input,.f select{width:100%;padding:10px 12px;border:1.5px solid #e3ece7;border-radius:11px;font:inherit;font-size:.92rem;background:#fff}
+.f input:focus,.f select:focus{outline:none;border-color:#1f8a5c}
+.f.manque input,.f.manque select{border-color:#e8b4ae;background:#fdf7f6}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 0}
+.btn{background:#1f8a5c;color:#fff;border:0;border-radius:11px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.sec{background:#fff;color:#1f8a5c;border:1.5px solid #cfe5d8}
+.hl{background:#fff6d8;border-bottom:1.5px solid #e8c84a;padding:0 2px}
+.full{grid-column:1/-1}
+</style>
+</head><body data-page="inscriptions">
+<div class="app">
+  <aside class="side" id="side"></aside><div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <h1>Inscriptions</h1><span class="tag">Vous relisez, vous créez</span>
+    </div>
+    <div class="content">
+
+      <div class="callout c-ok" style="margin-top:0">🪄 <b>Du dossier client à YPAREO, en un clic — après relecture.</b> Les dossiers remplis sur <b>paris-sud.com/espace</b> arrivent ici. Vous vérifiez ce que le client a écrit, vous corrigez si besoin, et vous créez l'apprenant dans YPAREO. <b>Rien ne part tout seul</b> : YPAREO est le registre que l'auditeur consulte, une faute de frappe n'y entre pas sans votre accord.</div>
+
+      <h2 class="grp-title">1 · Les dossiers reçus</h2>
+      <div class="grp-sub" id="compte">Chargement…</div>
+      <div class="dossiers" id="liste"></div>
+
+      <div id="detail" style="display:none">
+        <h2 class="grp-title">2 · Ce que le client a rempli</h2>
+        <div class="grp-sub">Relisez. Un champ <span class="vide">en rouge</span> est vide côté client — complétez-le ci-dessous ou laissez-le vide, mais ne l'inventez pas.</div>
+        <div class="fiche"><table class="rel" id="rel"></table></div>
+
+        <h2 class="grp-title">3 · L'apprenant à créer dans YPAREO</h2>
+        <div class="grp-sub">Pré-rempli avec le contact de l'entreprise. Si le participant est quelqu'un d'autre, corrigez les champs.</div>
+        <div class="fiche">
+          <div class="flds" id="form"></div>
+          <div class="row">
+            <button class="btn" id="go">🎓 Créer dans YPAREO</button>
+            <button class="btn sec" id="annuler">Fermer</button>
+            <span id="state" style="font-size:.86rem;color:#67756c"></span>
+          </div>
+          <div id="res" style="display:none;margin-top:14px"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="nav.js?v=202610012100"></script>
+<script>
+var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
+var YP=CFG.api.replace(/\/records$/,'/ypareo');
+var LIVE=!!(CFG.api&&CFG.key);
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function H(){return {'x-crm-key':CFG.key};}
+
+// ── les champs du dossier, dans l'ordre où on veut les relire ────────
+var RELECTURE=[
+  ['Offre pressentie','offre'],['🎓 Quelle formation souhaitez-vous ?','formation'],
+  ['Raison Sociale','raison'],['Siret','siret'],['Code APE/NAF','ape'],['Idcc','idcc'],
+  ['Effectif société','effectif'],['Opco','opco'],['Type de transport','transport'],
+  ['Adresse 1','adr'],['CP','cp'],['Ville','ville'],
+  ['Email entreprise','mailE'],['Portable entreprise','telE'],
+  ['Civilité Contact Entreprise','civ'],['Nom Contact Entreprise','nom'],
+  ['Prénom Contact Entreprise','prenom'],['Date de naissance Contact Entreprise','naiss'],
+  ['Fonction Contact Entreprise','fonction'],
+  ['Participants formation','participants'],['Difficulté / besoin principal','besoin'],
+  ['Nombre de poste','postes'],['Date début contrat souhaité','debut'],
+  ['Salaire apprenti mensuelle souhaité SMIC apprentissage net 1611€','salaire'],
+  ['✍️ Autorisez-vous Paris Sud Formation à déposer la demande de prise en charge auprès de votre OPCO (mandat CERFA)','mandat']
+];
+function val(f,champ){var v=f[champ];if(v==null||v==='')return null;if(v&&v.name)return v.name;if(Array.isArray(v))return v.map(function(x){return x&&x.name?x.name:x;}).join(', ');return v;}
+
+var comptes=[],entreprises={},formations=[],choisi=null;
+
+function badge(s){
+  var m={'🆕 Compte créé':'p-new','✏️ Dossier en cours':'p-cours','📩 Dossier transmis':'p-tr','✅ Dossier validé':'p-ok'};
+  return '<span class="pill '+(m[s]||'p-new')+'">'+esc(s)+'</span>';
+}
+
+function dessiner(){
+  var l=document.getElementById('liste');
+  if(!comptes.length){
+    document.getElementById('compte').textContent='Aucun compte client pour l\'instant. Dès qu\'un client s\'inscrit sur paris-sud.com/espace, il apparaît ici.';
+    l.innerHTML='';return;
+  }
+  var pretsN=comptes.filter(function(c){return c.statut==='📩 Dossier transmis'&&!c.idYpareo;}).length;
+  document.getElementById('compte').innerHTML=comptes.length+' compte'+(comptes.length>1?'s':'')+
+    ' · <b>'+pretsN+'</b> dossier'+(pretsN>1?'s':'')+' prêt'+(pretsN>1?'s':'')+' à inscrire';
+  l.innerHTML=comptes.map(function(c,i){
+    return '<button class="dos" data-i="'+i+'"><div class="who"><div class="n">'+
+      esc(c.entreprise||c.nom||c.email||'—')+(c.idYpareo?' · 🎓 déjà dans YPAREO':'')+'</div>'+
+      '<div class="s">'+esc([c.nom,c.email].filter(Boolean).join(' · '))+'</div></div>'+badge(c.statut)+'</button>';
+  }).join('');
+}
+
+function champ(cle,label,valeur,options,manque){
+  var h='<div class="f'+(manque?' manque':'')+(cle==='adresse'?' full':'')+'" data-c="'+cle+'"><label>'+esc(label)+'</label>';
+  if(options){
+    h+='<select id="c_'+cle+'">'+options.map(function(o){
+      return '<option value="'+esc(o[0])+'"'+(String(o[0])===String(valeur||'')?' selected':'')+'>'+esc(o[1])+'</option>';
+    }).join('')+'</select>';
+  } else {
+    h+='<input id="c_'+cle+'" value="'+esc(valeur||'')+'"'+(cle==='naissance'?' type="date"':'')+'>';
+  }
+  return h+'</div>';
+}
+
+function ouvrir(i){
+  choisi=comptes[i];
+  [].forEach.call(document.querySelectorAll('.dos'),function(x,j){x.classList.toggle('on',j===i);});
+  var f=choisi.dossier||{};
+
+  // 2 · relecture
+  document.getElementById('rel').innerHTML=RELECTURE.map(function(r){
+    var v=val(f,r[0]);
+    return '<tr><td>'+esc(r[0].replace(/^[^\wÀ-ſ]+/,''))+'</td><td'+(v?'':' class="vide"')+'>'+
+      (v?esc(v):'— vide —')+'</td></tr>';
+  }).join('');
+
+  // 3 · formulaire apprenant, pré-rempli
+  var naiss=val(f,'Date de naissance Contact Entreprise')||'';
+  if(naiss) naiss=String(naiss).slice(0,10);
+  var offre=val(f,'Offre pressentie')||'';
+  var pref='';
+  formations.forEach(function(fo){
+    if(!pref && /intelligence artificielle/i.test(fo.nom) && /IA|intelligence/i.test(offre)) pref=fo.id;
+    if(!pref && /petite ou moyenne/i.test(fo.nom) && /RPMS|alternance/i.test(offre)) pref=fo.id;
+  });
+  document.getElementById('form').innerHTML=
+    champ('civilite','Civilité',(val(f,'Civilité Contact Entreprise')||'M').indexOf('Mme')>=0?'Mme':'M',[['M','M.'],['Mme','Mme']])+
+    champ('nom','Nom *',val(f,'Nom Contact Entreprise'),null,!val(f,'Nom Contact Entreprise'))+
+    champ('prenom','Prénom *',val(f,'Prénom Contact Entreprise'),null,!val(f,'Prénom Contact Entreprise'))+
+    champ('naissance','Date de naissance',naiss,null,!naiss)+
+    champ('email','Email',choisi.email||val(f,'Email entreprise'))+
+    champ('telephone','Téléphone',val(f,'Portable entreprise'))+
+    champ('adresse','Adresse',val(f,'Adresse 1'))+
+    champ('codePostal','Code postal',val(f,'CP'))+
+    champ('ville','Ville',val(f,'Ville'))+
+    champ('formation','Formation (cursus)',pref,[['','— aucune, créer l\'apprenant seul —']].concat(formations.map(function(x){return [x.id,x.nom];})));
+
+  document.getElementById('res').style.display='none';
+  document.getElementById('state').textContent='';
+  var go=document.getElementById('go');
+  go.disabled=false;
+  go.textContent=choisi.idYpareo?'⚠️ Déjà inscrit — créer quand même':'🎓 Créer dans YPAREO';
+  document.getElementById('detail').style.display='block';
+  document.getElementById('detail').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.getElementById('liste').addEventListener('click',function(e){
+  var b=e.target.closest('.dos'); if(b) ouvrir(+b.getAttribute('data-i'));
+});
+document.getElementById('annuler').addEventListener('click',function(){
+  document.getElementById('detail').style.display='none';
+  [].forEach.call(document.querySelectorAll('.dos'),function(x){x.classList.remove('on');});
+});
+
+// ── création ────────────────────────────────────────────────────────
+function lire(c){var e=document.getElementById('c_'+c);return e?e.value.trim():'';}
+
+document.getElementById('go').addEventListener('click',function(){
+  if(!LIVE||!choisi)return;
+  var nom=lire('nom'),prenom=lire('prenom');
+  if(!nom||!prenom){document.getElementById('state').textContent='⚠️ Le nom et le prénom sont obligatoires.';return;}
+  var go=this;go.disabled=true;
+  document.getElementById('state').textContent='Création dans YPAREO…';
+  var fields={civilite:lire('civilite'),nom:nom,prenom:prenom,dateNaissance:lire('naissance'),
+    email:lire('email'),telephone:lire('telephone'),adresse:lire('adresse'),
+    codePostal:lire('codePostal'),ville:lire('ville')};
+  var idF=lire('formation');
+  if(idF){fields.idFormation=idF;
+    formations.forEach(function(x){if(x.id===idF)fields.libelleCursus=x.nom;});}
+
+  fetch(YP,{method:'POST',headers:{'content-type':'application/json','x-crm-key':CFG.key},
+            body:JSON.stringify({action:'creer_apprenant',fields:fields,forcer:!!choisi.forcer})})
+  .then(function(r){return r.json().then(function(j){return {ok:r.ok,code:r.status,j:j};});})
+  .then(function(x){
+    var res=document.getElementById('res');res.style.display='block';
+    if(x.code===409){
+      choisi.forcer=true;go.disabled=false;go.textContent='⚠️ Créer quand même (doublon)';
+      document.getElementById('state').textContent='';
+      var d=x.j.doublon||{};
+      res.innerHTML='<div class="callout c-warn">🛑 <b>Un apprenant porte déjà ce nom dans YPAREO</b> — '+
+        esc([d.nom,d.prenom].filter(Boolean).join(' '))+(d.dateNaissance?' (né le '+esc(String(d.dateNaissance).slice(0,10))+')':'')+
+        '.<br>Si c\'est bien la même personne, <b>ne créez pas de doublon</b> : inscrivez-la à la formation depuis YPAREO. Si c\'est un homonyme, recliquez sur le bouton.</div>';
+      return;
+    }
+    if(!x.ok){
+      go.disabled=false;document.getElementById('state').textContent='';
+      res.innerHTML='<div class="callout c-warn">⚠️ <b>YPAREO a refusé.</b> '+esc(x.j.error||('Erreur '+x.code))+'<br>Rien n\'a été créé. Corrigez et réessayez.</div>';
+      return;
+    }
+    document.getElementById('state').textContent='';
+    var cursus=idF?(x.j.cursusErreur?'<br>⚠️ <b>L\'apprenant est créé, mais pas inscrit à la formation</b> : '+esc(x.j.cursusErreur)+' — à faire dans YPAREO.':'<br>✅ Inscrit à la formation.'):'<br>Aucun cursus demandé.';
+    res.innerHTML='<div class="callout c-ok">🎓 <b>'+esc(prenom+' '+nom)+' est créé dans YPAREO.</b>'+cursus+
+      '<br><span style="font-size:.84rem;color:#5c6f63">Identifiant : '+esc(x.j.idPersonne||'—')+
+      '</span><br><br><b>Il reste à faire à la main :</b> la convention ou le CERFA, puis la signature (OoSign). YPAREO n\'expose aucune API pour ces deux étapes.</div>';
+    choisi.idYpareo=x.j.idPersonne||'créé';
+    // on marque le compte côté Airtable pour ne pas le refaire deux fois
+    fetch(CFG.api,{method:'PATCH',headers:{'content-type':'application/json','x-crm-key':CFG.key},
+      body:JSON.stringify({table:'Comptes',id:choisi.id,
+        fields:{'ID YPAREO':String(x.j.idPersonne||''),'Statut dossier':'✅ Dossier validé'}})})
+      .then(function(){choisi.statut='✅ Dossier validé';dessiner();})
+      .catch(function(){});
+  })
+  .catch(function(e){go.disabled=false;document.getElementById('state').textContent='⚠️ '+e.message;});
+});
+
+// ── chargement ──────────────────────────────────────────────────────
+if(!LIVE){
+  document.getElementById('compte').innerHTML='🔌 <b>Le CRM n\'est pas connecté.</b> Utilisez le bouton « 🔌 Reconnecter » dans le bandeau orange, en haut de cette page.';
+} else {
+  Promise.all([
+    fetch(CFG.api+'?table=Comptes&max=300',{headers:H()}).then(function(r){return r.ok?r.json():{records:[]};}),
+    fetch(CFG.api+'?table=Entreprises&max=600',{headers:H()}).then(function(r){return r.ok?r.json():{records:[]};}),
+    fetch(YP+'?resource=formations',{headers:H()}).then(function(r){return r.ok?r.json():{formations:[]};})
+  ]).then(function(a){
+    (a[1].records||[]).forEach(function(r){entreprises[r.id]=r.fields||{};});
+    formations=a[2].formations||[];
+    comptes=(a[0].records||[]).map(function(r){
+      var f=r.fields||{},lien=(f['Entreprise liée']||[])[0];
+      return {id:r.id,email:f['Email']||'',nom:f['Nom du contact']||'',entreprise:f['Entreprise']||'',
+        statut:(f['Statut dossier']||{}).name||f['Statut dossier']||'🆕 Compte créé',
+        idYpareo:f['ID YPAREO']||'',dossier:lien?entreprises[lien]||{}:{}};
+    }).sort(function(x,y){
+      var o={'📩 Dossier transmis':0,'✏️ Dossier en cours':1,'🆕 Compte créé':2,'✅ Dossier validé':3};
+      return (o[x.statut]==null?9:o[x.statut])-(o[y.statut]==null?9:o[y.statut]);
+    });
+    dessiner();
+  }).catch(function(e){
+    document.getElementById('compte').innerHTML='⚠️ Chargement impossible : '+esc(e.message);
+  });
+}
+</script>
+</body></html>
