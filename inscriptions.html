@@ -79,20 +79,30 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function H(){return {'x-crm-key':CFG.key};}
 
 // ── les champs du dossier, dans l'ordre où on veut les relire ────────
+// 3ᵉ colonne = à quel parcours le champ appartient. On n'affiche jamais un champ
+// que le client n'a pas eu à remplir : un vide en rouge doit vouloir dire
+// « il manque vraiment quelque chose », pas « cette question ne lui a pas été posée ».
 var RELECTURE=[
-  ['Offre pressentie','offre'],['🎓 Quelle formation souhaitez-vous ?','formation'],
-  ['Raison Sociale','raison'],['Siret','siret'],['Code APE/NAF','ape'],['Idcc','idcc'],
-  ['Effectif société','effectif'],['Opco','opco'],['Type de transport','transport'],
-  ['Adresse 1','adr'],['CP','cp'],['Ville','ville'],
-  ['Email entreprise','mailE'],['Portable entreprise','telE'],
-  ['Civilité Contact Entreprise','civ'],['Nom Contact Entreprise','nom'],
-  ['Prénom Contact Entreprise','prenom'],['Date de naissance Contact Entreprise','naiss'],
-  ['Fonction Contact Entreprise','fonction'],
-  ['Participants formation','participants'],['Difficulté / besoin principal','besoin'],
-  ['Nombre de poste','postes'],['Date début contrat souhaité','debut'],
-  ['Salaire apprenti mensuelle souhaité SMIC apprentissage net 1611€','salaire'],
-  ['✍️ Autorisez-vous Paris Sud Formation à déposer la demande de prise en charge auprès de votre OPCO (mandat CERFA)','mandat']
+  ['Offre pressentie','tous'],
+  ['Raison Sociale','tous'],['Siret','tous'],['Code APE/NAF','tous'],['Idcc','alt'],
+  ['Effectif société','tous'],['Opco','tous'],['Type de transport','tous'],
+  ['Adresse 1','tous'],['CP','tous'],['Ville','tous'],
+  ['Email entreprise','tous'],['Portable entreprise','tous'],
+  ['Civilité Contact Entreprise','tous'],['Nom Contact Entreprise','tous'],
+  ['Prénom Contact Entreprise','tous'],['Date de naissance Contact Entreprise','tous'],
+  ['Fonction Contact Entreprise','tous'],
+  ['Participants formation','ia'],['Difficulté / besoin principal','flou'],
+  ['🎓 Quelle formation souhaitez-vous ?','alt'],
+  ['Nombre de poste','alt'],['Date début contrat souhaité','alt'],
+  ['Salaire apprenti mensuelle souhaité SMIC apprentissage net 1611€','alt'],
+  ['✍️ Autorisez-vous Paris Sud Formation à déposer la demande de prise en charge auprès de votre OPCO (mandat CERFA)','alt']
 ];
+// quel parcours le client a-t-il choisi ?
+function parcours(offre){
+  if(/intelligence artificielle|IA Dirigeant/i.test(offre)) return 'ia';
+  if(/RPMS|alternance|apprenti/i.test(offre)) return 'alt';
+  return 'flou';
+}
 function val(f,champ){var v=f[champ];if(v==null||v==='')return null;if(v&&v.name)return v.name;if(Array.isArray(v))return v.map(function(x){return x&&x.name?x.name:x;}).join(', ');return v;}
 
 var comptes=[],entreprises={},formations=[],choisi=null;
@@ -134,9 +144,15 @@ function ouvrir(i){
   choisi=comptes[i];
   [].forEach.call(document.querySelectorAll('.dos'),function(x,j){x.classList.toggle('on',j===i);});
   var f=choisi.dossier||{};
+  var offre=val(f,'Offre pressentie')||'';
+  var p=parcours(offre);
 
-  // 2 · relecture
-  document.getElementById('rel').innerHTML=RELECTURE.map(function(r){
+  // 2 · relecture — seulement les champs que ce client a eu à remplir
+  document.getElementById('rel').innerHTML=RELECTURE.filter(function(r){
+    if(r[1]==='tous') return true;
+    if(r[1]===p) return true;
+    return val(f,r[0])!=null; // un champ hors parcours ne s'affiche que s'il est rempli
+  }).map(function(r){
     var v=val(f,r[0]);
     return '<tr><td>'+esc(r[0].replace(/^[^\wÀ-ſ]+/,''))+'</td><td'+(v?'':' class="vide"')+'>'+
       (v?esc(v):'— vide —')+'</td></tr>';
@@ -145,7 +161,6 @@ function ouvrir(i){
   // 3 · formulaire apprenant, pré-rempli
   var naiss=val(f,'Date de naissance Contact Entreprise')||'';
   if(naiss) naiss=String(naiss).slice(0,10);
-  var offre=val(f,'Offre pressentie')||'';
   var pref='';
   formations.forEach(function(fo){
     if(!pref && /intelligence artificielle/i.test(fo.nom) && /IA|intelligence/i.test(offre)) pref=fo.id;
