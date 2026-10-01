@@ -2,8 +2,8 @@
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Accueil · Espace Agents — Paris Sud Formation</title>
-<link rel="stylesheet" href="style.css?v=202609302135">
-<script src="gate.js?v=202609302135"></script>
+<link rel="stylesheet" href="style.css?v=202610011406">
+<script src="gate.js?v=202610011406"></script>
 <style>
 .hometiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:6px 0 40px}
 .hometile{display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid var(--border);border-radius:20px;padding:26px 24px;box-shadow:var(--shadow);transition:.16s;text-decoration:none}
@@ -42,6 +42,8 @@
         <span class="b">N° DA 11911094991</span>
       </div>
 
+      <div id="veilleBox" style="display:none;margin:0 0 34px"></div>
+
       <h2 class="grp-title">Votre journée, en un coup d'œil</h2>
       <div class="grp-sub">Cliquez sur une carte pour ouvrir l'outil — tout le reste est dans « 🧰 Tous les outils » à gauche.</div>
       <div class="hometiles" id="dailyTiles"></div>
@@ -72,7 +74,7 @@
     </div>
   </div>
 </div>
-<script src="nav.js?v=202609302135"></script>
+<script src="nav.js?v=202610011406"></script>
 <script>
 var me=(window.PSF_AUTH&&window.PSF_AUTH.current());
 document.getElementById('helloName').textContent='Bonjour'+(me?', '+me.id:'')+' 👋';
@@ -88,5 +90,36 @@ var DAILY=[
 document.getElementById('dailyTiles').innerHTML=DAILY.map(function(t){
   return '<a class="hometile" href="'+t[3]+'"'+(t[4]?' target="_blank" rel="noopener"':'')+'><span class="hi">'+t[0]+'</span><span class="ht">'+t[1]+'</span><span class="hd">'+t[2]+'</span><span class="ha">Ouvrir →</span></a>';
 }).join('');
+
+// ===== Veille du serveur : écrite chaque matin par Vercel, Mac éteint ou non =====
+(function(){
+  var api=localStorage.getItem('crm_api'), key=localStorage.getItem('crm_key');
+  if(!api||!key)return;                       // non connecté : la bannière de nav.js prend le relais
+  var box=document.getElementById('veilleBox');
+  fetch(api+'?table=Taches&max=300',{headers:{'x-crm-key':key}})
+    .then(function(r){return r.ok?r.json():Promise.reject(r.status);})
+    .then(function(d){
+      var v=(d.records||[]).filter(function(r){
+        return String((r.fields||{})['Tâche']||'').indexOf('🔎 Veille') === 0;
+      }).sort(function(a,b){
+        return String(b.fields['Échéance']||'').localeCompare(String(a.fields['Échéance']||''));
+      })[0];
+      if(!v)return;
+      var f=v.fields, ok=String(f['Statut']||'').indexOf('Fait')>-1;
+      var d8=String(f['Échéance']||''), jour=d8?d8.slice(8,10)+'/'+d8.slice(5,7):'';
+      var frais=d8===new Date().toISOString().slice(0,10);
+      box.style.display='block';
+      box.innerHTML='<div class="card" style="border-left:4px solid '+(ok?'#1f8a5c':'#c2410c')+
+        ';background:linear-gradient(180deg,#fff,'+(ok?'#f4faf6':'#fff8f4')+')">'+
+        '<h3 style="margin:0 0 .3rem;color:#11362b;font-size:1.18rem">🔎 Veille du '+jour+
+          (frais?'':' <span style="font-weight:400;color:#8a7a6a;font-size:.8rem">(dernière en date)</span>')+'</h3>'+
+        '<p style="margin:0 0 .9rem;color:#6b7c74;font-size:.84rem">Établie automatiquement par le serveur, sans que votre Mac soit allumé. Aucun email n\'a été envoyé.</p>'+
+        '<pre style="white-space:pre-wrap;font:inherit;font-size:.92rem;color:#2f3f38;margin:0">'+
+          String(f['Notes']||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').split('\n\n— Généré')[0]+'</pre>'+
+        '<div style="margin-top:14px"><a href="contrats.html" style="color:#1f8a5c;font-weight:700;font-size:.88rem">Ouvrir les dossiers concernés →</a></div>'+
+        '</div>';
+    })
+    .catch(function(){});
+})();
 </script>
 </body></html>
