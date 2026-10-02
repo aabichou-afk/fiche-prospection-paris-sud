@@ -6,28 +6,28 @@
 <script src="gate.js?v=202610011522"></script>
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:2px 0 16px}
-.kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(13,46,54,.5)}
 .kpi .v{font-family:var(--serif);font-size:1.55rem;font-weight:700;color:var(--primary);line-height:1}
 .kpi .l{font-size:.76rem;color:var(--muted);margin-top:3px}
-.fx{background:#fff;border:1px solid #e6ebe8;border-left:4px solid #dbe6e0;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 5px 15px -12px rgba(17,54,43,.45)}
-.fx.blocked{border-left-color:#d1543a}.fx.todo{border-left-color:#8a978f}.fx.sent{border-left-color:#c9a24a}.fx.paid{border-left-color:#1f8a5c}
+.fx{background:#fff;border:1px solid #e6ebe8;border-left:4px solid #dbe6e0;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 5px 15px -12px rgba(13,46,54,.45)}
+.fx.blocked{border-left-color:#d1543a}.fx.todo{border-left-color:#45595E}.fx.sent{border-left-color:#8a6d1f}.fx.paid{border-left-color:#07702A}
 .fx .hd{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
-.fx .t{font-weight:700;color:#11362b}
-.fx .d{font-size:.79rem;color:#8a978f}
-.fx .mt{margin-left:auto;font-family:var(--serif);font-weight:700;color:#1f8a5c;font-size:1.25rem;white-space:nowrap}
+.fx .t{font-weight:700;color:#0D2E36}
+.fx .d{font-size:.79rem;color:#45595E}
+.fx .mt{margin-left:auto;font-family:var(--serif);font-weight:700;color:#07702A;font-size:1.25rem;white-space:nowrap}
 .fx .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
 .fx select{padding:7px 10px;border:1px solid #dbe6e0;border-radius:9px;font-size:.84rem;font-family:inherit;background:#fff;min-height:0;width:auto}
 .fx .note{font-size:.8rem;color:#5f6b62;background:#f6f9f7;border-radius:9px;padding:7px 11px;margin-top:8px}
 .badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;background:#eef1ef;color:#4a5a52;white-space:nowrap}
-.savepill{font-size:.72rem;color:#1f8a5c;font-weight:700;opacity:0;transition:.2s}.savepill.show{opacity:1}
-.btnadd{background:#1f8a5c;color:#fff;border:none;border-radius:999px;padding:11px 18px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}
+.savepill{font-size:.72rem;color:#07702A;font-weight:700;opacity:0;transition:.2s}.savepill.show{opacity:1}
+.btnadd{background:#07702A;color:#fff;border:none;border-radius:999px;padding:11px 18px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}
 .conn{font-size:.78rem;padding:4px 11px;border-radius:999px;font-weight:700}.conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fdf3df;color:#9a7212}
-.overlay{position:fixed;inset:0;background:rgba(17,54,43,.5);display:none;place-items:center;z-index:220;padding:16px}.overlay.on{display:grid}
+.overlay{position:fixed;inset:0;background:rgba(13,46,54,.5);display:none;place-items:center;z-index:220;padding:16px}.overlay.on{display:grid}
 .modal{background:#fff;border-radius:18px;padding:22px;max-width:440px;width:100%;box-shadow:0 30px 70px -20px rgba(0,0,0,.5);max-height:88vh;overflow:auto}
-.modal h3{margin:0 0 12px;color:#11362b}.modal label{display:block;font-size:.78rem;color:#5f6b62;font-weight:600;margin:9px 0 3px}
+.modal h3{margin:0 0 12px;color:#0D2E36}.modal label{display:block;font-size:.78rem;color:#5f6b62;font-weight:600;margin:9px 0 3px}
 .modal input,.modal select,.modal textarea{width:100%;padding:10px 12px;border:1px solid #dbe6e0;border-radius:10px;font-family:inherit;font-size:.92rem}
 .modal .go{margin-top:14px;display:flex;gap:9px}.modal .go button{flex:1;border:none;border-radius:999px;padding:12px;font-weight:700;cursor:pointer;font-family:inherit}
-.modal .go .ok{background:#1f8a5c;color:#fff}.modal .go .no{background:#eee;color:#333}
+.modal .go .ok{background:#07702A;color:#fff}.modal .go .no{background:#eee;color:#333}
 </style>
 </head><body data-page="facturation">
 <div class="app">
@@ -40,7 +40,7 @@
     <div class="content">
       <div class="kpis" id="kpis"></div>
       <div style="display:flex;gap:8px;margin-bottom:12px"><button class="btnadd" id="add">➕ Nouvelle facture</button></div>
-      <div id="list"><div style="text-align:center;color:#8a978f;padding:30px">Chargement…</div></div>
+      <div id="list"><div style="text-align:center;color:#45595E;padding:30px">Chargement…</div></div>
 
       <div class="grid g2" style="margin-top:16px">
         <div class="card"><h3 style="color:var(--primary-3)">📤 Le circuit de facturation OPCO</h3><ul class="clean">
@@ -93,7 +93,7 @@ function render(){
   return '<div class="fx '+clsOf(r.statut)+'"><div class="hd"><div><div class="t">'+esc(r.lib||'—')+(r.num?' <span class="badge">'+esc(r.num)+'</span>':'')+'</div><div class="d">'+esc(r.dossier||'')+(r.fin?' · '+esc(r.fin):'')+(r.emission?' · émise le '+esc(r.emission):'')+'</div></div><div class="mt">'+eur(r.montant)+'</div></div>'
    +'<div class="row"><select data-id="'+r.id+'">'+STATUTS.map(function(s){return '<option'+(s===r.statut?' selected':'')+'>'+s+'</option>'}).join('')+'</select><span class="savepill">✓</span></div>'
    +(r.notes?'<div class="note">'+esc(String(r.notes).split('\n')[0])+'</div>':'')+'</div>';
- }).join('')||'<div style="text-align:center;color:#8a978f;padding:30px">Aucune facture. Clique ➕.</div>';
+ }).join('')||'<div style="text-align:center;color:#45595E;padding:30px">Aucune facture. Clique ➕.</div>';
  document.querySelectorAll('.fx select').forEach(function(s){s.addEventListener('change',function(){
   if(!LIVE){alert('Pour enregistrer, reconnectez le CRM : bouton « 🔌 Reconnecter » dans le bandeau orange, en haut de cette page.');return;}
   var id=s.getAttribute('data-id');var rec=ROWS.filter(function(x){return x.id===id})[0];if(rec)rec.statut=s.value;

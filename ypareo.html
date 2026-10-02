@@ -7,27 +7,27 @@
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
 .kpi{background:#fff;border:1px solid #e3ece7;border-radius:14px;padding:15px;text-align:center}
-.kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:700;color:#1f8a5c;line-height:1}
+.kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:700;color:#07702A;line-height:1}
 .kpi .l{font-size:.78rem;color:#6b7a72;margin-top:3px}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
 .tb{padding:9px 17px;border-radius:999px;border:1px solid #d7e5dd;background:#fff;font-weight:700;font-size:.9rem;color:#54615a;cursor:pointer;font-family:inherit}
-.tb.on{background:#11362b;color:#fff;border-color:#11362b}
+.tb.on{background:#0D2E36;color:#fff;border-color:#0D2E36}
 .srch{width:100%;max-width:420px;padding:11px 14px;border:1px solid #d7e5dd;border-radius:11px;font-family:inherit;font-size:.93rem;margin-bottom:14px}
-.card2{background:#fff;border:1px solid #e3ece7;border-radius:14px;padding:14px 17px;margin-bottom:10px;box-shadow:0 6px 18px -16px rgba(17,54,43,.4)}
-.card2 .nm{font-weight:700;color:#11362b;font-size:1rem}
+.card2{background:#fff;border:1px solid #e3ece7;border-radius:14px;padding:14px 17px;margin-bottom:10px;box-shadow:0 6px 18px -16px rgba(13,46,54,.4)}
+.card2 .nm{font-weight:700;color:#0D2E36;font-size:1rem}
 .card2 .sub{font-size:.83rem;color:#5f6b62;margin-top:3px}
-.card2 .meta{font-size:.78rem;color:#8a978f;margin-top:6px}
+.card2 .meta{font-size:.78rem;color:#45595E;margin-top:6px}
 .tag2{display:inline-block;padding:2px 9px;border-radius:99px;font-size:.72rem;font-weight:700;margin-right:5px}
 .t-ok{background:#e3f5ea;color:#1a6b45}.t-w{background:#fdf3df;color:#8a6410}.t-n{background:#eef1ef;color:#54615a}
 .empty{color:#7b8a82;font-size:.9rem;padding:16px 0}
-.newbox{background:#fff;border:1px solid #e3ece7;border-left:4px solid #1f8a5c;border-radius:16px;padding:18px 20px;margin:0 0 16px;display:none}
+.newbox{background:#fff;border:1px solid #e3ece7;border-left:4px solid #07702A;border-radius:16px;padding:18px 20px;margin:0 0 16px;display:none}
 .newbox.on{display:block}
-.newbox h3{margin:0 0 3px;color:#11362b;font-size:1.04rem}
+.newbox h3{margin:0 0 3px;color:#0D2E36;font-size:1.04rem}
 .newbox .sub{font-size:.82rem;color:#5f6b62;margin-bottom:12px}
 .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}
 label.f{display:block;font-size:.75rem;font-weight:700;color:#5f6b62;margin-bottom:3px}
 input.f,select.f{width:100%;padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem}
-.addbtn{background:#1f8a5c;color:#fff;border:none;border-radius:999px;padding:11px 22px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
+.addbtn{background:#07702A;color:#fff;border:none;border-radius:999px;padding:11px 22px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit}
 .addbtn:disabled{opacity:.5;cursor:not-allowed}
 .ghost{background:#fff;border:1px solid #d7e5dd;color:#33453d;border-radius:999px;padding:11px 20px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit}
 #nmsg{font-weight:700;margin-top:10px;font-size:.9rem}
@@ -181,7 +181,7 @@ var FORMS=[['e5cd427e-4d3c-47cd-bc3b-158d4ef96c3f','TP Conseiller commercial'],
            ['02fac9a2-f83e-41b0-af9e-cc520a115405','Formation IA dirigeants']];
 $('nForm').innerHTML='<option value="">— aucune —</option>'+FORMS.map(function(f){
   return '<option value="'+f[0]+'">'+f[1]+'</option>';}).join('');
-function nmsg(t,c){var m=$('nmsg');m.style.color=c||'#1f8a5c';m.innerHTML=t;}
+function nmsg(t,c){var m=$('nmsg');m.style.color=c||'#07702A';m.innerHTML=t;}
 function ncheck(){$('nSave').disabled=!(LIVE&&$('nNom').value.trim()&&$('nPre').value.trim());}
 ['nNom','nPre'].forEach(function(i){$(i).addEventListener('input',ncheck);});
 $('toggleNew').addEventListener('click',function(){
@@ -214,7 +214,7 @@ $('nSave').addEventListener('click',function(){
     var t='✅ Apprenant créé dans YPAREO.';
     if(o.j.cursus)t+=' Inscrit à la formation.';
     if(o.j.cursusErreur)t+=' ⚠️ Inscription formation échouée : '+esc(o.j.cursusErreur);
-    nmsg(t,'#1f8a5c');
+    nmsg(t,'#07702A');
     b.textContent='✅ Créé';
     CACHE={};boot();
     ['nNom','nPre','nNaiss','nMail','nTel','nAdr','nCp','nVille'].forEach(function(i){$(i).value='';});

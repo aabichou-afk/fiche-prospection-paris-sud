@@ -36,26 +36,26 @@
     o.style.cssText='position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;font-family:Inter,system-ui,sans-serif;background:#F7F9F8';
     var userBtns=USERS.map(function(u,i){
       return '<button data-u="'+i+'" class="pu" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:1.5px solid #E9EEEC;border-radius:12px;background:#fff;cursor:pointer;font-family:inherit;text-align:left;transition:.13s">'
-        +'<span style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#1f8a5c,#1f6f5c);color:#fff;font-weight:800;display:grid;place-items:center;font-size:.85rem">'+u.id[0]+'</span>'
-        +'<span><b style="color:#1e2a3a;font-size:.92rem">'+u.id+'</b><br><span style="color:#7a8781;font-size:.74rem">'+u.role+'</span></span></button>';
+        +'<span style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#07702A,#07702A);color:#fff;font-weight:800;display:grid;place-items:center;font-size:.85rem">'+u.id[0]+'</span>'
+        +'<span><b style="color:#0D2E36;font-size:.92rem">'+u.id+'</b><br><span style="color:#45595E;font-size:.74rem">'+u.role+'</span></span></button>';
     }).join('');
-    o.innerHTML='<div style="background:#fff;border:1px solid #E9EEEC;border-radius:22px;padding:30px 28px;max-width:380px;width:100%;box-shadow:0 30px 70px -30px rgba(17,54,43,.35)">'
+    o.innerHTML='<div style="background:#fff;border:1px solid #E9EEEC;border-radius:22px;padding:30px 28px;max-width:380px;width:100%;box-shadow:0 30px 70px -30px rgba(13,46,54,.35)">'
       +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">'
       +'<svg width="40" height="40" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#fff"/><circle cx="41" cy="50" r="19" fill="#00E676"/><circle cx="59" cy="50" r="19" fill="#0A7D6E"/><path d="M50 33.3a19 19 0 0 1 0 33.4 19 19 0 0 1 0-33.4z" fill="#fff"/></svg>'
-      +'<div style="font-family:Poppins,system-ui,sans-serif;font-size:1.15rem;font-weight:800;color:#1e2a3a">Paris Sud <span style="color:#1f8a5c">Formation</span></div></div>'
-      +'<p style="color:#7a8781;font-size:.86rem;margin:2px 0 16px">Choisissez votre profil pour continuer.</p>'
+      +'<div style="font-family:Poppins,system-ui,sans-serif;font-size:1.15rem;font-weight:800;color:#0D2E36">Paris Sud <span style="color:#07702A">Formation</span></div></div>'
+      +'<p style="color:#45595E;font-size:.86rem;margin:2px 0 16px">Choisissez votre profil pour continuer.</p>'
       +'<div id="pusers" style="display:grid;gap:8px">'+userBtns+'</div>'
       +'<div id="pstep2" style="display:none">'
-      +'<button id="pback" style="background:none;border:none;color:#7a8781;font-size:.8rem;cursor:pointer;padding:0;margin-bottom:10px;font-family:inherit">← changer de profil</button>'
-      +'<div id="pwho" style="font-weight:700;color:#1e2a3a;margin-bottom:8px"></div>'
+      +'<button id="pback" style="background:none;border:none;color:#45595E;font-size:.8rem;cursor:pointer;padding:0;margin-bottom:10px;font-family:inherit">← changer de profil</button>'
+      +'<div id="pwho" style="font-weight:700;color:#0D2E36;margin-bottom:8px"></div>'
       +'<input id="psfpw" type="password" placeholder="Mot de passe" style="width:100%;padding:12px 14px;border:1.5px solid #E9EEEC;border-radius:12px;font-size:1rem;font-family:inherit">'
       +'<div id="psferr" style="color:#e2553f;font-size:.8rem;height:16px;margin:8px 0 0"></div>'
-      +'<button id="psfok" style="width:100%;margin-top:10px;padding:13px;border:none;border-radius:999px;background:#1f8a5c;color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;font-family:inherit">Entrer</button>'
+      +'<button id="psfok" style="width:100%;margin-top:10px;padding:13px;border:none;border-radius:999px;background:#07702A;color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;font-family:inherit">Entrer</button>'
       +'</div></div>';
     document.body.appendChild(o);
     var sel=null;
     o.querySelectorAll('.pu').forEach(function(b){
-      b.addEventListener('mouseenter',function(){b.style.borderColor='#1f8a5c'});
+      b.addEventListener('mouseenter',function(){b.style.borderColor='#07702A'});
       b.addEventListener('mouseleave',function(){b.style.borderColor='#E9EEEC'});
       b.addEventListener('click',function(){
         sel=USERS[+b.getAttribute('data-u')];
