@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="style.css?v=202610011522">
 <script src="gate.js?v=202610011522"></script>
 <style>
-.idcard{background:linear-gradient(135deg,#114c39,#0f5138);color:#fff;border-radius:18px;padding:20px 22px;margin-bottom:18px;box-shadow:0 14px 34px -20px rgba(17,54,43,.7)}
+.idcard{background:linear-gradient(135deg,#114c39,#0f5138);color:#fff;border-radius:18px;padding:20px 22px;margin-bottom:18px;box-shadow:0 14px 34px -20px rgba(13,46,54,.7)}
 .idcard h3{color:#fff;margin:0 0 10px;font-family:var(--serif);font-size:1.25rem}
 .idrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px}
 .idit{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:11px;padding:9px 13px;cursor:pointer;transition:.13s}
@@ -15,11 +15,11 @@
 .idit .c{font-size:.68rem;opacity:.6}
 .dsearch{width:100%;max-width:100%;padding:12px 15px;border:1px solid #dbe6e0;border-radius:12px;font-size:.98rem;font-family:inherit;margin-bottom:14px}
 .dgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-.ditem{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #e6ebe8;border-radius:14px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.4);transition:.14s;text-decoration:none}
-.ditem:hover{transform:translateY(-2px);border-color:#1f8a5c;box-shadow:0 14px 28px -18px rgba(31,138,92,.5)}
+.ditem{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #e6ebe8;border-radius:14px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(13,46,54,.4);transition:.14s;text-decoration:none}
+.ditem:hover{transform:translateY(-2px);border-color:#07702A;box-shadow:0 14px 28px -18px rgba(7,112,42,.5)}
 .ditem .em{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:1.25rem;background:#eaf3ee;flex:none}
-.ditem .t{font-weight:700;color:#11362b;font-size:.9rem}
-.ditem .d{font-size:.75rem;color:#8a978f}
+.ditem .t{font-weight:700;color:#0D2E36;font-size:.9rem}
+.ditem .d{font-size:.75rem;color:#45595E}
 </style>
 </head><body data-page="documents">
 <div class="app">
@@ -97,7 +97,7 @@ function render(f){
    var ext=it[3].indexOf('http')===0;
    return '<a class="ditem" href="'+it[3]+'"'+(ext||it[3].indexOf('.pdf')>-1?' target="_blank" rel="noopener"':'')+'><span class="em">'+it[0]+'</span><span><span class="t">'+it[1]+(ext?' ↗':'')+'</span><br><span class="d">'+it[2]+'</span></span></a>';
   }).join('')+'</div>';
- }).join('')||'<p style="color:#8a978f;text-align:center;padding:24px">Aucun résultat.</p>';
+ }).join('')||'<p style="color:#45595E;text-align:center;padding:24px">Aucun résultat.</p>';
 }
 render();
 $('#dsearch').addEventListener('input',function(){render(this.value);});

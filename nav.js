@@ -32,7 +32,7 @@
     sop:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.2V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.2-2.7H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.2 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>'
   };
   function logoSVG(id){return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="49" fill="#fff"/><circle cx="41" cy="50" r="19" fill="#00E676"/><circle cx="59" cy="50" r="19" fill="#0A7D6E"/><path d="M50 33.3a19 19 0 0 1 0 33.4 19 19 0 0 1 0-33.4z" fill="#fff"/></svg>';}
-  function opco(txt){return '<span class="opco-badge" style="color:'+txt+'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#8cc63f"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/><path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#8cc63f"/><circle cx="12" cy="12" r="3.1" fill="#00a88e" stroke="none"/></svg>OPCO Mobilités</span>';}
+  function opco(txt){return '<span class="opco-badge" style="color:'+txt+'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M3 8V4a1 1 0 0 1 1-1h4" stroke="#07702A"/><path d="M16 3h4a1 1 0 0 1 1 1v4" stroke="#00a88e"/><path d="M21 16v4a1 1 0 0 1-1 1h-4" stroke="#00a88e"/><path d="M8 21H4a1 1 0 0 1-1-1v-4" stroke="#07702A"/><circle cx="12" cy="12" r="3.1" fill="#00a88e" stroke="none"/></svg>OPCO Mobilités</span>';}
 
   var META={
     accueil:['Accueil','index.html',I.home], ia:['Assistant','ia.html',I.audit],
@@ -135,7 +135,7 @@
       +'</div>'
       +'<div class="sb-foot">'
         +'<a class="sb-cta" href="https://calendly.com/paris-sud/com" target="_blank" rel="noopener">🎯 Audit gratuit</a>'
-        +'<div class="sb-badge">'+opco('#1f6f5c')+'</div>'
+        +'<div class="sb-badge">'+opco('#07702A')+'</div>'
         +'<div class="sb-legal">Habilité OPCO Mobilités · Qualiopi · RNCP 38575<br>Outil interne — ne pas diffuser.</div>'
       +'</div>';
   }
@@ -157,8 +157,16 @@
     if(h1&&content){
       if(document.querySelector('.hero-banner')){h1.remove();if(tag&&tag.className.indexOf('conn')<0)tag.remove();}
       else{
+        // Même ouverture que paris-sud.com : un surtitre monospace « + … »
+        // au-dessus du titre, plutôt qu'une pastille posée à côté.
         var ph=document.createElement('div');ph.className='page-head';
-        ph.appendChild(h1);if(tag)ph.appendChild(tag);
+        if(tag&&tag.className.indexOf('conn')<0){
+          var sur=document.createElement('p');sur.className='surtitre';
+          sur.textContent=tag.textContent;
+          ph.appendChild(sur);tag.remove();
+        }
+        ph.appendChild(h1);
+        if(tag&&tag.className.indexOf('conn')>=0)ph.appendChild(tag);
         content.insertBefore(ph,content.firstChild);
       }
     }
@@ -265,19 +273,19 @@
     css.textContent='.crmban{position:sticky;top:0;z-index:60;display:flex;gap:12px;align-items:center;flex-wrap:wrap;'
       +'background:#FDF1E7;border-bottom:1px solid #F0D3B8;color:#8a4b12;padding:11px 18px;font-size:.88rem;font-weight:600}'
       +'.crmban b{color:#6d3a0c}'
-      +'.crmban button{margin-left:auto;background:#1f6f5c;color:#fff;border:0;border-radius:999px;padding:8px 16px;'
+      +'.crmban button{margin-left:auto;background:#07702A;color:#fff;border:0;border-radius:999px;padding:8px 16px;'
       +'font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit}'
-      +'.crmban button:hover{background:#11362b}'
-      +'.crmov{position:fixed;inset:0;z-index:99998;background:rgba(17,54,43,.45);display:none;place-items:center;padding:20px}'
+      +'.crmban button:hover{background:#0D2E36}'
+      +'.crmov{position:fixed;inset:0;z-index:99998;background:rgba(13,46,54,.45);display:none;place-items:center;padding:20px}'
       +'.crmov.on{display:grid}'
-      +'.crmbox{background:#fff;border-radius:18px;padding:24px 26px;max-width:430px;width:100%;box-shadow:0 30px 70px -30px rgba(17,54,43,.5)}'
-      +'.crmbox h3{margin:0 0 4px;font-family:var(--serif,Poppins),sans-serif;color:#11362b;font-size:1.15rem}'
-      +'.crmbox p{margin:0 0 14px;color:#7a8781;font-size:.85rem;line-height:1.45}'
+      +'.crmbox{background:#fff;border-radius:18px;padding:24px 26px;max-width:430px;width:100%;box-shadow:0 30px 70px -30px rgba(13,46,54,.5)}'
+      +'.crmbox h3{margin:0 0 4px;font-family:var(--serif,Poppins),sans-serif;color:#0D2E36;font-size:1.15rem}'
+      +'.crmbox p{margin:0 0 14px;color:#45595E;font-size:.85rem;line-height:1.45}'
       +'.crmbox label{display:block;font-size:.78rem;font-weight:700;color:#5f6b62;margin:10px 0 4px}'
       +'.crmbox input{width:100%;padding:10px 12px;border:1.5px solid #E0DED2;border-radius:10px;font-family:inherit;font-size:.9rem}'
       +'.crmbox .go{display:flex;gap:9px;margin-top:16px}'
       +'.crmbox .go button{flex:1;border:0;border-radius:10px;padding:11px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}'
-      +'.crmbox .ok{background:#1f8a5c;color:#fff}.crmbox .no{background:#EEF1EF;color:#5f6b62}';
+      +'.crmbox .ok{background:#07702A;color:#fff}.crmbox .no{background:#EEF1EF;color:#5f6b62}';
     document.head.appendChild(css);
 
     var ban=document.createElement('div');

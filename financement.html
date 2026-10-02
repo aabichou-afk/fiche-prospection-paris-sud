@@ -6,32 +6,32 @@
 <script src="gate.js?v=202610011522"></script>
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:2px 0 16px}
-.kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:15px;padding:13px 15px;box-shadow:0 6px 18px -14px rgba(13,46,54,.5)}
 .kpi .v{font-family:var(--serif);font-size:1.7rem;font-weight:700;color:var(--primary);line-height:1}
 .kpi .l{font-size:.76rem;color:var(--muted);margin-top:3px}
-.doss{background:#fff;border:1px solid #e6ebe8;border-radius:16px;padding:16px 18px;margin-bottom:13px;box-shadow:0 6px 18px -14px rgba(17,54,43,.5)}
+.doss{background:#fff;border:1px solid #e6ebe8;border-radius:16px;padding:16px 18px;margin-bottom:13px;box-shadow:0 6px 18px -14px rgba(13,46,54,.5)}
 .doss .hd{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
-.doss .nm{font-weight:700;color:#11362b;font-size:1.05rem}
+.doss .nm{font-weight:700;color:#0D2E36;font-size:1.05rem}
 .doss .sub{font-size:.83rem;color:#5f6b62}
-.doss .mt{margin-left:auto;font-family:var(--serif);font-weight:700;color:#1f8a5c;font-size:1.2rem;white-space:nowrap}
+.doss .mt{margin-left:auto;font-family:var(--serif);font-weight:700;color:#07702A;font-size:1.2rem;white-space:nowrap}
 .stepsbar{display:flex;align-items:center;margin:14px 0 4px;overflow-x:auto;padding-bottom:2px}
 .stp{display:flex;flex-direction:column;align-items:center;min-width:86px;position:relative;flex:1}
-.stp .dot{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:800;background:#eef1ef;color:#8a978f;border:2px solid #e0e8e4;z-index:1}
-.stp.done .dot{background:#1f8a5c;color:#fff;border-color:#1f8a5c}
-.stp.cur .dot{background:#fff;color:#1f8a5c;border-color:#1f8a5c;box-shadow:0 0 0 4px rgba(31,138,92,.15)}
+.stp .dot{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:800;background:#eef1ef;color:#45595E;border:2px solid #e0e8e4;z-index:1}
+.stp.done .dot{background:#07702A;color:#fff;border-color:#07702A}
+.stp.cur .dot{background:#fff;color:#07702A;border-color:#07702A;box-shadow:0 0 0 4px rgba(7,112,42,.15)}
 .stp.blocked .dot{background:#d1543a;color:#fff;border-color:#d1543a}
-.stp .lb{font-size:.66rem;color:#8a978f;margin-top:5px;text-align:center;line-height:1.2;max-width:90px}
-.stp.done .lb,.stp.cur .lb{color:#11362b;font-weight:600}
+.stp .lb{font-size:.66rem;color:#45595E;margin-top:5px;text-align:center;line-height:1.2;max-width:90px}
+.stp.done .lb,.stp.cur .lb{color:#0D2E36;font-weight:600}
 .stp::before{content:"";position:absolute;top:13px;left:-50%;width:100%;height:3px;background:#e0e8e4}
 .stp:first-child::before{display:none}
-.stp.done::before,.stp.cur::before{background:#1f8a5c}
-.nextact{display:flex;gap:9px;align-items:center;flex-wrap:wrap;background:#f2f8f4;border:1px dashed #bfe3cd;border-radius:11px;padding:10px 14px;margin-top:10px;font-size:.89rem;color:#11362b}
+.stp.done::before,.stp.cur::before{background:#07702A}
+.nextact{display:flex;gap:9px;align-items:center;flex-wrap:wrap;background:#f2f8f4;border:1px dashed #bfe3cd;border-radius:11px;padding:10px 14px;margin-top:10px;font-size:.89rem;color:#0D2E36}
 .nextact.warn{background:#fdf3ec;border-color:#f0c9ae;color:#8a4a12}
 .nextact b{font-weight:800}
 .doss select{padding:7px 10px;border:1px solid #dbe6e0;border-radius:9px;font-size:.84rem;font-family:inherit;background:#fff;min-height:0;width:auto;margin-left:auto}
 .legend{background:#fff;border:1px solid #e6ebe8;border-radius:14px;padding:14px 16px;margin:18px 0;font-size:.85rem;color:#5f6b62}
 .conn{font-size:.78rem;padding:4px 11px;border-radius:999px;font-weight:700}.conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fdf3df;color:#9a7212}
-.savepill{font-size:.72rem;color:#1f8a5c;font-weight:700;opacity:0;transition:.2s}.savepill.show{opacity:1}
+.savepill{font-size:.72rem;color:#07702A;font-weight:700;opacity:0;transition:.2s}.savepill.show{opacity:1}
 </style>
 </head><body data-page="financement">
 <div class="app">
@@ -43,9 +43,9 @@
     </div>
     <div class="content">
       <div class="kpis" id="kpis"></div>
-      <div id="list"><div style="text-align:center;color:#8a978f;padding:30px">Chargement…</div></div>
+      <div id="list"><div style="text-align:center;color:#45595E;padding:30px">Chargement…</div></div>
 
-      <div class="legend"><b style="color:#11362b">Le circuit de financement (7 étapes)</b> — ① Adhésion entreprise (formulaire) → ② Compte OPCO créé par l'entreprise → ③ Saisie YPAREO → ④ CERFA + convention générés → ⑤ Signatures électroniques → ⑥ Dépôt OPCO → accord de prise en charge → ⑦ Facturation OPCO (0 € pour l'entreprise). Changez le statut d'un dossier : la prochaine action se met à jour.</div>
+      <div class="legend"><b style="color:#0D2E36">Le circuit de financement (7 étapes)</b> — ① Adhésion entreprise (formulaire) → ② Compte OPCO créé par l'entreprise → ③ Saisie YPAREO → ④ CERFA + convention générés → ⑤ Signatures électroniques → ⑥ Dépôt OPCO → accord de prise en charge → ⑦ Facturation OPCO (0 € pour l'entreprise). Changez le statut d'un dossier : la prochaine action se met à jour.</div>
 
       <div class="grid g2">
         <div class="card"><h3 style="color:var(--primary-3)">🔗 Outils du circuit</h3><ul class="clean">
@@ -122,7 +122,7 @@ function render(){
    +bar
    +'<div class="nextact'+(na[1]?' warn':'')+'">👉 <b>Prochaine action :</b> '+esc(na[0])
    +'<select data-id="'+r.id+'">'+STATUTS.map(function(s){return '<option'+(s===r.statut?' selected':'')+'>'+s+'</option>'}).join('')+'</select><span class="savepill">✓</span></div></div>';
- }).join('')||'<div style="text-align:center;color:#8a978f;padding:30px">Aucun dossier.</div>';
+ }).join('')||'<div style="text-align:center;color:#45595E;padding:30px">Aucun dossier.</div>';
  document.querySelectorAll('.doss select').forEach(function(s){s.addEventListener('change',function(){
    var id=s.getAttribute('data-id');var rec=ROWS.filter(function(x){return x.id===id})[0];if(rec)rec.statut=s.value;
    save(id,s.value,s.parentElement.querySelector('.savepill'));});});

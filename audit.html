@@ -5,29 +5,29 @@
 <link rel="stylesheet" href="style.css?v=202610011522">
 <script src="gate.js?v=202610011522"></script>
 <style>
-.qz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
-.qz .qt{font-weight:700;color:#11362b;font-size:1.02rem;margin-bottom:4px}
+.qz{background:#fff;border:1px solid #e3ece7;border-radius:16px;padding:18px 20px;margin:12px 0;box-shadow:0 8px 24px -18px rgba(13,46,54,.5)}
+.qz .qt{font-weight:700;color:#0D2E36;font-size:1.02rem;margin-bottom:4px}
 .qz .qs{font-size:.82rem;color:#5f6b62;margin-bottom:10px}
 .qz.done{border-color:#bfe3cd;background:#fcfffd}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid #d7e5dd;background:#fff;color:#33453d;border-radius:999px;padding:9px 15px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.13s;font-family:inherit}
-.chip:hover{border-color:#1f8a5c;background:#f2faf5}
-.chip.on{background:#1f8a5c;color:#fff;border-color:#1f8a5c}
-.chip.on.warn{background:#c9a24a;border-color:#c9a24a}
+.chip:hover{border-color:#07702A;background:#f2faf5}
+.chip.on{background:#07702A;color:#fff;border-color:#07702A}
+.chip.on.warn{background:#8a6d1f;border-color:#8a6d1f}
 .chip.on.red{background:#d1543a;border-color:#d1543a}
-.scorewrap{position:sticky;top:118px;z-index:10;background:linear-gradient(135deg,#11362b,#1f6f5c);color:#fff;border-radius:16px;padding:16px 20px;margin-bottom:8px;box-shadow:0 14px 34px -20px rgba(17,54,43,.7)}
+.scorewrap{position:sticky;top:118px;z-index:10;background:linear-gradient(135deg,#0D2E36,#07702A);color:#fff;border-radius:16px;padding:16px 20px;margin-bottom:8px;box-shadow:0 14px 34px -20px rgba(13,46,54,.7)}
 .scorewrap .big{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.1rem;font-weight:700;line-height:1.05}
 .scorewrap .lbl{font-size:.85rem;opacity:.92}
 .bar{height:12px;background:rgba(255,255,255,.22);border-radius:999px;overflow:hidden;margin-top:8px}
-.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8cc63f,#f4ce1e);transition:.35s}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#07702A,#10B261);transition:.35s}
 .prog{font-size:.78rem;opacity:.85;margin-top:6px}
 .reco{background:#eef7f2;border:1px solid #bfe3cd;border-radius:14px;padding:16px 18px;margin:12px 0}
-.reco h3{margin:0 0 6px;color:#11362b}
+.reco h3{margin:0 0 6px;color:#0D2E36}
 .act{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .act button,.act a{border:none;border-radius:999px;padding:12px 20px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
-.savebtn{background:#1f8a5c;color:#fff}.savebtn:disabled{opacity:.55;cursor:not-allowed}
+.savebtn{background:#07702A;color:#fff}.savebtn:disabled{opacity:.55;cursor:not-allowed}
 .copybtn{background:#18BFFF;color:#fff}
-.calbtn{background:#11362b;color:#fff}
+.calbtn{background:#0D2E36;color:#fff}
 .resetbtn{background:#fff;border:1px solid #d7e5dd!important;color:#33453d}
 /* bloc identification */
 .who{background:#fff;border:1px solid #e3ece7;border-left:4px solid #18BFFF;border-radius:16px;padding:16px 20px;margin:0 0 14px}
@@ -35,12 +35,12 @@
 .who label{display:block;font-size:.76rem;font-weight:700;color:#5f6b62;margin-bottom:3px}
 .who input,.who select{width:100%;padding:9px 11px;border:1px solid #d7e5dd;border-radius:10px;font-family:inherit;font-size:.9rem}
 .sugg{position:relative}
-.sugglist{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fff;border:1px solid #d7e5dd;border-radius:11px;box-shadow:0 18px 40px -22px rgba(17,54,43,.6);max-height:210px;overflow:auto;display:none}
+.sugglist{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fff;border:1px solid #d7e5dd;border-radius:11px;box-shadow:0 18px 40px -22px rgba(13,46,54,.6);max-height:210px;overflow:auto;display:none}
 .sugglist.on{display:block}
 .sugglist div{padding:9px 12px;font-size:.86rem;cursor:pointer;border-bottom:1px solid #f0f4f2}
 .sugglist div:hover{background:#f2faf5}
 .sugglist .meta{color:#7b8a82;font-size:.76rem}
-.linked{font-size:.8rem;font-weight:700;color:#1f8a5c;margin-top:8px}
+.linked{font-size:.8rem;font-weight:700;color:#07702A;margin-top:8px}
 .linked.none{color:#9a7212}
 @media(max-width:640px){.scorewrap{top:8px}}
 </style>
@@ -57,7 +57,7 @@
 
       <!-- ===== Qui auditez-vous ? ===== -->
       <div class="who">
-        <div class="qt" style="font-weight:700;color:#11362b;margin-bottom:8px">👤 Qui auditez-vous ?</div>
+        <div class="qt" style="font-weight:700;color:#0D2E36;margin-bottom:8px">👤 Qui auditez-vous ?</div>
         <div class="row">
           <div class="sugg">
             <label>Entreprise</label>
@@ -102,7 +102,7 @@
           <a class="calbtn" href="https://calendly.com/paris-sud/com" target="_blank" rel="noopener">📅 Bloquer l'audit avec Abdel</a>
           <button class="resetbtn" id="reset">Nouveau questionnaire</button>
         </div>
-        <div class="hint" id="copied" style="color:#1f8a5c;font-weight:700;margin-top:8px"></div>
+        <div class="hint" id="copied" style="color:#07702A;font-weight:700;margin-top:8px"></div>
       </div>
 
       <div class="callout c-warn"><b>Les 3 règles.</b> ① L'audit sert à faire parler le dirigeant et à décrocher le RDV avec Abdel — pas à vendre au téléphone. ② Financement = <b>OPCO Mobilités uniquement</b> : on dit « 100 % financé par votre OPCO Mobilités, 0 € pour vous », jamais « CPF » ni « AGEFICE ». ③ <b>Ne jamais annoncer de montant</b> : « le montant exact, on le calcule ensemble pendant l'audit ».</div>
@@ -282,7 +282,7 @@ function restoreDraft(){
   bar.className='callout c-warn';
   bar.style.cssText='display:flex;gap:12px;align-items:center;flex-wrap:wrap';
   bar.innerHTML='<span>💾 Un audit non enregistré a été retrouvé ('+(d.ent||'sans entreprise')+' · '+quand+').</span>'
-    +'<button id="drRestore" class="chip" style="background:#1f8a5c;color:#fff;border-color:#1f8a5c">Reprendre</button>'
+    +'<button id="drRestore" class="chip" style="background:#07702A;color:#fff;border-color:#07702A">Reprendre</button>'
     +'<button id="drDrop" class="chip">Ignorer</button>';
   var c=document.querySelector('.content');c.insertBefore(bar,c.children[1]);
   document.getElementById('drDrop').addEventListener('click',function(){clearDraft();bar.remove();});
@@ -331,7 +331,7 @@ document.getElementById('save').addEventListener('click',function(){
   var ent=document.getElementById('wEnt').value.trim();
   var interet=(ISSUES.filter(function(p){return p[0]===ISSUE})[0]||[])[1]||'';
   var agent=document.getElementById('wAgent').value||ME;
-  btn.disabled=true;btn.textContent='Enregistrement…';hint.style.color='#1f8a5c';hint.textContent='';
+  btn.disabled=true;btn.textContent='Enregistrement…';hint.style.color='#07702A';hint.textContent='';
 
   var fields={'Statut prospection':ISSUE,'Intérêt':interet,'Appelé':true,'Notes prospect':resume()};
   if(agent){fields['Agent']=agent;fields['Appelé par']=agent;}
@@ -364,7 +364,7 @@ document.getElementById('save').addEventListener('click',function(){
 
 document.getElementById('copy').addEventListener('click',function(){
   navigator.clipboard.writeText(resume()).then(function(){
-    var h=document.getElementById('copied');h.style.color='#1f8a5c';
+    var h=document.getElementById('copied');h.style.color='#07702A';
     h.textContent='✓ Résumé copié.';setTimeout(function(){h.textContent='';},4000);
   });
 });

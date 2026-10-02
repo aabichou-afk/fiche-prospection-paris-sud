@@ -7,26 +7,26 @@
 <style>
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:6px 0 20px}
 @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
-.kpi{background:#fff;border:1px solid var(--line,#E8E4D8);border-radius:16px;padding:16px 18px;box-shadow:0 8px 24px -18px rgba(17,54,43,.5)}
-.kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:700;color:var(--primary,#1f8a5c);line-height:1}
+.kpi{background:#fff;border:1px solid var(--line,#E8E4D8);border-radius:16px;padding:16px 18px;box-shadow:0 8px 24px -18px rgba(13,46,54,.5)}
+.kpi .v{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:700;color:var(--primary,#07702A);line-height:1}
 .kpi .l{font-size:.82rem;color:#5f6b62;margin-top:4px}
-.rowcard{background:#fff;border:1px solid #EDEAE0;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 6px 18px -16px rgba(17,54,43,.4)}
+.rowcard{background:#fff;border:1px solid #EDEAE0;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 6px 18px -16px rgba(13,46,54,.4)}
 .rowcard .r1{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
-.rowcard .nm{font-weight:700;color:#11362b}
+.rowcard .nm{font-weight:700;color:#0D2E36}
 .rowcard .sub{font-size:.82rem;color:#5f6b62;margin-top:2px;max-width:520px}
 .rowcard select{border:1px solid #E0DED2;border-radius:9px;padding:6px 8px;font-size:.82rem;font-family:inherit;background:#FAF8F2}
-.rowcard .savepill{opacity:0;color:#1f8a5c;font-weight:700;transition:.2s;margin-left:6px;font-size:.78rem;white-space:nowrap}
+.rowcard .savepill{opacity:0;color:#07702A;font-weight:700;transition:.2s;margin-left:6px;font-size:.78rem;white-space:nowrap}
 .rowcard .savepill.show{opacity:1}
-.money{font-weight:700;color:#11362b;white-space:nowrap}
-.livebtn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;background:#11362b;color:#fff;font-weight:700;font-size:.9rem;text-decoration:none}
-.livebtn:hover{background:#1f6f5c}
+.money{font-weight:700;color:#0D2E36;white-space:nowrap}
+.livebtn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;background:#0D2E36;color:#fff;font-weight:700;font-size:.9rem;text-decoration:none}
+.livebtn:hover{background:#07702A}
 .synced{font-size:.8rem;color:#5f6b62;margin-left:10px}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1f8a5c;margin-right:5px;vertical-align:middle}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#07702A;margin-right:5px;vertical-align:middle}
 .conn{font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:999px}
 .conn.live{background:#e3f5ea;color:#1f7a4d}.conn.demo{background:#fde8e3;color:#c0432a}
 .chipbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
 .chip{padding:6px 13px;border-radius:999px;background:#fff;border:1px solid #E0DED2;font-size:.8rem;font-weight:600;color:#5f6b62;cursor:pointer}
-.chip.on{background:#11362b;color:#fff;border-color:#11362b}
+.chip.on{background:#0D2E36;color:#fff;border-color:#0D2E36}
 </style>
 </head><body data-page="contrats">
 <div class="app">
@@ -42,7 +42,7 @@
         <h1>Vos dossiers et vos tâches, en direct.</h1>
         <p>Modifiez ici ou dans Airtable — c'est la même donnée, à jour des deux côtés, instantanément.</p>
         <div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap">
-          <a class="livebtn" href="https://airtable.com/appaAZXNf5RFf89WV/paguMocSPAlHEMgrS" target="_blank" rel="noopener"><span class="dot" style="background:#8cc63f"></span>Contrats dans Airtable →</a>
+          <a class="livebtn" href="https://airtable.com/appaAZXNf5RFf89WV/paguMocSPAlHEMgrS" target="_blank" rel="noopener"><span class="dot" style="background:#07702A"></span>Contrats dans Airtable →</a>
           <a class="livebtn" href="https://airtable.com/appaAZXNf5RFf89WV/pagJaOpzp1Nd4W00y" target="_blank" rel="noopener" style="background:#18BFFF;margin-left:8px">Tâches dans Airtable →</a>
           <span class="synced" id="synced"></span>
         </div>
@@ -62,11 +62,11 @@
 
       <h2 class="grp-title" style="margin-top:34px">Repères — financeurs & agréments</h2>
       <div class="grid g2">
-        <div class="card"><h3 style="color:var(--primary-3,#11362b)">OPCO Mobilités</h3><ul class="clean"><li>Travels Partners · GTS · Euro Trans · Laya Cars</li></ul></div>
-        <div class="card"><h3 style="color:var(--primary-3,#11362b)">AKTO</h3><ul class="clean"><li>Betra Services · Anya Clean Service · Laya Clean</li></ul></div>
-        <div class="card"><h3 style="color:var(--primary-3,#11362b)">Op'Commerce</h3><ul class="clean"><li>SAFE · Kalishop · Global Trading Company</li></ul></div>
-        <div class="card"><h3 style="color:var(--primary-3,#11362b)">OPCO EP</h3><ul class="clean"><li>Quick Évasion Beauté (Sahli) · Maison des Pains · Laya Bat · N Fournil</li></ul></div>
-        <div class="card"><h3 style="color:var(--primary-3,#11362b)">ATLAS</h3><ul class="clean"><li>Laya Consulting (RPMS)</li></ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#0D2E36)">OPCO Mobilités</h3><ul class="clean"><li>Travels Partners · GTS · Euro Trans · Laya Cars</li></ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#0D2E36)">AKTO</h3><ul class="clean"><li>Betra Services · Anya Clean Service · Laya Clean</li></ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#0D2E36)">Op'Commerce</h3><ul class="clean"><li>SAFE · Kalishop · Global Trading Company</li></ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#0D2E36)">OPCO EP</h3><ul class="clean"><li>Quick Évasion Beauté (Sahli) · Maison des Pains · Laya Bat · N Fournil</li></ul></div>
+        <div class="card"><h3 style="color:var(--primary-3,#0D2E36)">ATLAS</h3><ul class="clean"><li>Laya Consulting (RPMS)</li></ul></div>
         <div class="card"><h3 style="color:var(--gold-d,#9a7212)">🎓 Agréments</h3><ul class="clean"><li>TP RPMS RNCP 38575 (Niveau 5)</li><li>DRIEETS n°27230466 — 2ᵉ TP en instruction</li><li>N° DA 11911094991 · UAI 0912524Z · Qualiopi</li></ul></div>
       </div>
 
@@ -196,10 +196,10 @@ function boot(){
 boot();
 
 var T=[
- ['YPAREO Neo','Saisie contrats','https://paris-sud.ypareo-neo.com','','#1f8a5c'],
+ ['YPAREO Neo','Saisie contrats','https://paris-sud.ypareo-neo.com','','#07702A'],
  ['OPCO Mobilités','Prise en charge','https://mgestion.opcomobilites.fr','','#e2553f'],
- ['jesignexpert','Signature électronique','https://www.jesignexpert.com','','#1f8a5c'],
- ['EDOF','Compte Formation OF','https://www.of.moncompteformation.gouv.fr','','#1f6f5c'],
+ ['jesignexpert','Signature électronique','https://www.jesignexpert.com','','#07702A'],
+ ['EDOF','Compte Formation OF','https://www.of.moncompteformation.gouv.fr','','#07702A'],
  ['Adhésion entreprise','Formulaire contrat','https://airtable.com/appaAZXNf5RFf89WV/pagliROW5NttiqP9c/form','airtable','#18BFFF'],
  ['Adhésion salarié','Formulaire contrat','https://airtable.com/appv3OIuP1STIpVgz/pagaIdjkbRKz9ztJK/form','airtable','#18BFFF']
 ];

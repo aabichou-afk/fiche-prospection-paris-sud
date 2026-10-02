@@ -7,7 +7,7 @@
 <style>
 .hometiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:6px 0 40px}
 .hometile{display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid var(--border);border-radius:20px;padding:26px 24px;box-shadow:var(--shadow);transition:.16s;text-decoration:none}
-.hometile:hover{transform:translateY(-3px);border-color:var(--primary);box-shadow:0 22px 44px -26px rgba(31,138,92,.45)}
+.hometile:hover{transform:translateY(-3px);border-color:var(--primary);box-shadow:0 22px 44px -26px rgba(7,112,42,.45)}
 .hometile .hi{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:1.5rem;background:#EAF3EE}
 .hometile .ht{font-family:var(--serif);font-weight:700;font-size:1.14rem;color:var(--dark)}
 .hometile .hd{font-size:.86rem;color:var(--muted);line-height:1.45;flex:1}
@@ -48,16 +48,16 @@
       <div class="grp-sub">Cliquez sur une carte pour ouvrir l'outil — tout le reste est dans « 🧰 Tous les outils » à gauche.</div>
       <div class="hometiles" id="dailyTiles"></div>
 
-      <div class="card" style="border-left:4px solid #1f8a5c;background:linear-gradient(180deg,#fff,#f4faf6);margin-bottom:38px">
-        <h3 style="margin-top:0;color:#11362b;font-size:1.22rem">👋 Nouveau ? Commencez ici</h3>
+      <div class="card" style="border-left:4px solid #07702A;background:linear-gradient(180deg,#fff,#f4faf6);margin-bottom:38px">
+        <h3 style="margin-top:0;color:#0D2E36;font-size:1.22rem">👋 Nouveau ? Commencez ici</h3>
         <p style="margin:.2rem 0 1rem;color:#4a5a52">6 étapes pour être opérationnel dès aujourd'hui.</p>
         <div class="circuit" style="margin:0">
-          <div class="c"><div class="n">1</div><div class="x">Lire la Bible</div><div class="o"><a href="Bible_Commerciale.pdf" target="_blank" rel="noopener" style="color:#1f8a5c;font-weight:700">le guide 📕</a></div></div>
-          <div class="c"><div class="n">2</div><div class="x">Ma liste d'appels</div><div class="o"><a href="https://airtable.com/appaAZXNf5RFf89WV/pagjaeMjeC1CBFWXv" target="_blank" rel="noopener" style="color:#1f8a5c;font-weight:700">suivi des appels ↗</a></div></div>
-          <div class="c"><div class="n">3</div><div class="x">Appeler</div><div class="o"><a href="scripts.html" style="color:#1f8a5c;font-weight:700">script + pitch</a></div></div>
-          <div class="c"><div class="n">4</div><div class="x">Objection ?</div><div class="o"><a href="playbook.html" style="color:#1f8a5c;font-weight:700">le playbook</a></div></div>
-          <div class="c"><div class="n">5</div><div class="x">Remplir la fiche</div><div class="o"><a href="qualification.html" style="color:#1f8a5c;font-weight:700">à chaque appel</a></div></div>
-          <div class="c"><div class="n">6</div><div class="x">Suivre ma journée</div><div class="o"><a href="journee.html" style="color:#1f8a5c;font-weight:700">ma checklist</a></div></div>
+          <div class="c"><div class="n">1</div><div class="x">Lire la Bible</div><div class="o"><a href="Bible_Commerciale.pdf" target="_blank" rel="noopener" style="color:#07702A;font-weight:700">le guide 📕</a></div></div>
+          <div class="c"><div class="n">2</div><div class="x">Ma liste d'appels</div><div class="o"><a href="https://airtable.com/appaAZXNf5RFf89WV/pagjaeMjeC1CBFWXv" target="_blank" rel="noopener" style="color:#07702A;font-weight:700">suivi des appels ↗</a></div></div>
+          <div class="c"><div class="n">3</div><div class="x">Appeler</div><div class="o"><a href="scripts.html" style="color:#07702A;font-weight:700">script + pitch</a></div></div>
+          <div class="c"><div class="n">4</div><div class="x">Objection ?</div><div class="o"><a href="playbook.html" style="color:#07702A;font-weight:700">le playbook</a></div></div>
+          <div class="c"><div class="n">5</div><div class="x">Remplir la fiche</div><div class="o"><a href="qualification.html" style="color:#07702A;font-weight:700">à chaque appel</a></div></div>
+          <div class="c"><div class="n">6</div><div class="x">Suivre ma journée</div><div class="o"><a href="journee.html" style="color:#07702A;font-weight:700">ma checklist</a></div></div>
         </div>
         <div class="callout c-ok" style="margin:14px 0 0">🎯 <b>Objectif quotidien :</b> 10 appels le matin + 10 l'après-midi (qualité &gt; quantité) · viser 2-3 RDV d'audit · <b>100 % des appels tracés</b>.</div>
       </div>
@@ -109,14 +109,14 @@ document.getElementById('dailyTiles').innerHTML=DAILY.map(function(t){
       var d8=String(f['Échéance']||''), jour=d8?d8.slice(8,10)+'/'+d8.slice(5,7):'';
       var frais=d8===new Date().toISOString().slice(0,10);
       box.style.display='block';
-      box.innerHTML='<div class="card" style="border-left:4px solid '+(ok?'#1f8a5c':'#c2410c')+
+      box.innerHTML='<div class="card" style="border-left:4px solid '+(ok?'#07702A':'#c2410c')+
         ';background:linear-gradient(180deg,#fff,'+(ok?'#f4faf6':'#fff8f4')+')">'+
-        '<h3 style="margin:0 0 .3rem;color:#11362b;font-size:1.18rem">🔎 Veille du '+jour+
+        '<h3 style="margin:0 0 .3rem;color:#0D2E36;font-size:1.18rem">🔎 Veille du '+jour+
           (frais?'':' <span style="font-weight:400;color:#8a7a6a;font-size:.8rem">(dernière en date)</span>')+'</h3>'+
         '<p style="margin:0 0 .9rem;color:#6b7c74;font-size:.84rem">Établie automatiquement par le serveur, sans que votre Mac soit allumé. Aucun email n\'a été envoyé.</p>'+
         '<pre style="white-space:pre-wrap;font:inherit;font-size:.92rem;color:#2f3f38;margin:0">'+
           String(f['Notes']||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').split('\n\n— Généré')[0]+'</pre>'+
-        '<div style="margin-top:14px"><a href="contrats.html" style="color:#1f8a5c;font-weight:700;font-size:.88rem">Ouvrir les dossiers concernés →</a></div>'+
+        '<div style="margin-top:14px"><a href="contrats.html" style="color:#07702A;font-weight:700;font-size:.88rem">Ouvrir les dossiers concernés →</a></div>'+
         '</div>';
     })
     .catch(function(){});
