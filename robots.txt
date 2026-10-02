@@ -1,0 +1,10 @@
+# Espace de travail interne de Paris Sud Formation.
+# Rien ici n'a vocation à apparaître dans un moteur de recherche.
+# L'interdiction qui fait foi est la balise noindex de chaque page :
+# on laisse donc les robots lire les pages, pour qu'ils la voient.
+User-agent: *
+Allow: /
+Disallow: /Bible_Commerciale.pdf
+
+# Le site public, lui, est ici :
+Sitemap: https://paris-sud.com/sitemap.xml
