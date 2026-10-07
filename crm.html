@@ -296,9 +296,29 @@ function openAdd(){var T=TABS[cur],fields;
 }
 
 /* ============ config ============ */
-function openCfg(){var h='<h3>⚙️ Connexion CRM</h3><label>URL du proxy</label><input id="cApi" type="text" value="'+esc(CFG.api)+'"><label>Clé CRM</label><input id="cKey" type="text" placeholder="votre clé secrète" value="'+esc(CFG.key)+'"><div class="go"><button class="ok" id="cSave">Connecter</button><button class="no" id="cNo">Fermer</button></div>';openModal(h);
+/* ⛔ Deux règles sur ce formulaire, corrigées le 07/10/2026 — ne pas les défaire :
+   1. Le champ clé est en type="password" et n'est JAMAIS prérempli. Il était en
+      type="text" avec la valeur affichée en clair : la clé apparaissait à l'écran,
+      donc sur toute capture d'écran du modal. Cette clé accepte POST et PATCH.
+   2. On teste la clé contre le proxy AVANT de l'enregistrer. Avant, n'importe
+      quelle chaîne non vide passait (LIVE=!!(api&&key)) et le bandeau annonçait
+      « ✅ Connecté » pendant que les pages servaient des données de démonstration.
+      Un faux « connecté » est pire que pas de connexion : on décide sur du faux. */
+function openCfg(){var h='<h3>⚙️ Connexion CRM</h3><label>URL du proxy</label><input id="cApi" type="text" value="'+esc(CFG.api)+'"><label>Clé CRM</label><input id="cKey" type="password" autocomplete="off" placeholder="'+(CFG.key?'clé déjà enregistrée — ressaisir pour changer':'votre clé secrète')+'"><div class="go"><button class="ok" id="cSave">Connecter</button><button class="no" id="cNo">Fermer</button></div>';openModal(h);
  $('#cNo').addEventListener('click',closeModal);
- $('#cSave').addEventListener('click',function(){CFG.api=$('#cApi').value.trim();CFG.key=$('#cKey').value.trim();localStorage.setItem('crm_api',CFG.api);localStorage.setItem('crm_key',CFG.key);LIVE=!!(CFG.api&&CFG.key);setConn();closeModal();refresh();toast(LIVE?'✅ Connecté':'Aperçu');});}
+ $('#cSave').addEventListener('click',function(){
+   var a=$('#cApi').value.trim(),k=$('#cKey').value.trim()||CFG.key;
+   if(!a||!k){toast('⚠️ Renseigne l\'URL du proxy et la clé');return;}
+   var btn=this;btn.textContent='Vérification…';btn.disabled=true;
+   fetch(a+'?table=Prospects&max=1',{headers:{'x-crm-key':k}}).then(function(r){
+     if(!r.ok)throw new Error(r.status===401?'Clé refusée par le proxy':'Erreur '+r.status);
+     CFG.api=a;CFG.key=k;localStorage.setItem('crm_api',a);localStorage.setItem('crm_key',k);
+     LIVE=true;setConn();closeModal();refresh();toast('✅ Connecté');
+   }).catch(function(e){
+     btn.textContent='Connecter';btn.disabled=false;
+     toast('❌ '+e.message+' — clé non enregistrée');
+   });
+ });}
 function openModal(h){$('#modal').innerHTML=h;$('#ov').classList.add('on');}
 function closeModal(){$('#ov').classList.remove('on');}
 $('#ov').addEventListener('click',function(e){if(e.target===$('#ov'))closeModal();});
