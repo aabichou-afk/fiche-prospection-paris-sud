@@ -107,11 +107,11 @@
         <div class="hint" id="copied" style="color:#07702A;font-weight:700;margin-top:8px"></div>
       </div>
 
-      <div class="callout c-warn"><b>Les 3 règles.</b> ① L'audit sert à faire parler le dirigeant et à décrocher le RDV avec Abdel — pas à vendre au téléphone. ② Financement = <b>OPCO Mobilités uniquement</b> : on dit « 100 % financé par votre OPCO Mobilités, 0 € pour vous », jamais « CPF » ni « AGEFICE ». ③ <b>Ne jamais annoncer de montant</b> : « le montant exact, on le calcule ensemble pendant l'audit ».</div>
+      <div class="callout c-warn"><b>Les 3 règles.</b> ① L'audit sert à faire parler le dirigeant et à décrocher le RDV avec Abdel — pas à vendre au téléphone. ② Financement = <b>OPCO Mobilités uniquement</b> : on dit « jusqu'à 100 % financé par votre OPCO, objectif : 0 € de reste à charge », jamais de financement personnel ni d'autre financeur que l'OPCO. ③ <b>Ne jamais annoncer de montant</b> : « le montant exact, on le calcule ensemble pendant l'audit ».</div>
     </div>
   </div>
 </div>
-<script src="nav.js?v=202610011522"></script>
+<script src="nav.js?v=202610091730"></script>
 <script>
 /* ============ connexion CRM (même clé que le reste de l'espace) ============ */
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
@@ -234,7 +234,7 @@ function compute(){
   if(answered<3){v='à évaluer';opp='Continuez à cliquer les réponses du dirigeant…';}
   else if(pct>=70){v='🔥 Très fort potentiel';opp='Retard IA + douleurs marquées = énorme marge de progrès. Foncez sur le RDV.';}
   else if(pct>=45){v='🟡 Bon potentiel';opp='De vraies douleurs à adresser. Un audit va révéler des gains concrets.';}
-  else{v='❄️ Potentiel plus faible';opp='Déjà assez outillé — vendez l\'avance et le financement à 0 €.';}
+  else{v='❄️ Potentiel plus faible';opp='Déjà assez outillé — vendez l\'avance et le financement (objectif : 0 € de reste à charge).';}
   document.getElementById('verdict').textContent=v;
   document.getElementById('opp').textContent=opp;
   if(answered>=4){document.getElementById('reco').style.display='block';buildReco(pct);}
@@ -247,11 +247,11 @@ function buildReco(pct){
   var levers=[];
   var map={'Manque de clients':'prospection clients pilotée par IA + nouvelles lignes régulières','Trajets à vide':'optimisation des tournées + lignes de retour','Charges trop lourdes':'audit des charges + apprentissage (moins de charges sociales)','Noyé sous l\'administratif':'automatisation des devis, mails et relances','Marges serrées':'cockpit de pilotage de la marge par ligne','Recruter des chauffeurs':'aide au recrutement + POEI','Pilotage à vue':'CRM & tableau de bord temps réel','Dépendance à 1 client':'diversification via prospection + donneurs d\'ordre'};
   d.forEach(function(o){if(map[o[0]])levers.push(map[o[0]]);});
-  it.forEach(function(o){var m={'Automatiser les devis':'automatisation des devis','Piloter sa marge':'pilotage de la marge','Former ses salariés':'formation des salariés prise en charge par l\'OPCO','Flotte électrique':'accompagnement transition flotte électrique','Communauté / entraide':'communauté Transporteurs 2.0'};if(m[o[0]]&&levers.indexOf(m[o[0]])<0)levers.push(m[o[0]]);});
+  it.forEach(function(o){var m={'Automatiser les devis':'automatisation des devis','Piloter sa marge':'pilotage de la marge','Former ses salariés':'formation des salariés (finançable via l\'OPCO)','Flotte électrique':'accompagnement transition flotte électrique','Communauté / entraide':'communauté Transporteurs 2.0'};if(m[o[0]]&&levers.indexOf(m[o[0]])<0)levers.push(m[o[0]]);});
   if(!levers.length)levers.push('pilotage IA de l\'activité + formation dirigeant');
   var offre=pct>=45
-    ? 'Formation IA Dirigeant — <b>100 % financée par son OPCO Mobilités, 0 € pour lui</b> — porte d\'entrée de l\'accompagnement 360°'
-    : 'Formation IA Dirigeant (0 € via l\'OPCO Mobilités) en valorisant son avance sur ses confrères';
+    ? 'Formation IA Dirigeant — <b>jusqu\'à 100 % financée par son OPCO, objectif : 0 € de reste à charge</b> — porte d\'entrée de l\'accompagnement 360°'
+    : 'Formation IA Dirigeant (objectif : 0 € de reste à charge via l\'OPCO) en valorisant son avance sur ses confrères';
   var txt='<b>Offre à proposer :</b> '+offre+'.<br>'
     +'<b>Leviers à mettre en avant :</b> '+levers.slice(0,4).join(' · ')+'.<br>'
     +'<b>Prochaine étape :</b> bloquer l\'audit gratuit de 30 min avec Abdel.<br>'
