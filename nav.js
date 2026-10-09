@@ -267,8 +267,21 @@
   (function(){
     var api=localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records';
     var key=localStorage.getItem('crm_key')||'';
-    if(api&&key)return; // déjà connecté : rien à afficher
+    if(api&&key){
+      // Une clé enregistrée peut être PÉRIMÉE : la clé a été renouvelée le 29/09/2026 et les
+      // appareils qui gardaient l'ancienne affichaient des pages vides, sans aucun message.
+      // On la teste une fois par onglet ; refusée (401) → on l'efface et on affiche le bandeau.
+      var dejaTeste='';try{dejaTeste=sessionStorage.getItem('crm_key_ok')||'';}catch(e){}
+      if(dejaTeste==='1')return;
+      fetch(api+'?table=Prospects&max=1',{headers:{'x-crm-key':key}}).then(function(r){
+        if(r.status===401){try{localStorage.removeItem('crm_key');}catch(e){}bandeau(true);}
+        else if(r.ok){try{sessionStorage.setItem('crm_key_ok','1');}catch(e){}}
+      }).catch(function(){}); // réseau coupé : on ne conclut rien
+      return;
+    }
+    bandeau(false);
 
+    function bandeau(perimee){
     var css=document.createElement('style');
     css.textContent='.crmban{position:sticky;top:0;z-index:60;display:flex;gap:12px;align-items:center;flex-wrap:wrap;'
       +'background:#FDF1E7;border-bottom:1px solid #F0D3B8;color:#8a4b12;padding:11px 18px;font-size:.88rem;font-weight:600}'
@@ -290,7 +303,9 @@
 
     var ban=document.createElement('div');
     ban.className='crmban';
-    ban.innerHTML='<span>⚠️ <b>CRM déconnecté sur cet appareil</b> — les pages affichent des données de démonstration, pas vos 583 prospects réels.</span>'
+    ban.innerHTML=(perimee
+        ?'<span>⚠️ <b>Clé CRM périmée sur cet appareil</b> — elle a été renouvelée : ressaisissez la nouvelle pour retrouver vos prospects réels.</span>'
+        :'<span>⚠️ <b>CRM déconnecté sur cet appareil</b> — les pages affichent des données de démonstration, pas vos prospects réels.</span>')
       +'<button id="crmReco">🔌 Reconnecter</button>';
     var mainEl=document.querySelector('.main');
     if(mainEl)mainEl.insertBefore(ban,mainEl.firstChild);
@@ -326,6 +341,7 @@
     document.getElementById('crmKey').addEventListener('keydown',function(e){
       if(e.key==='Enter')document.getElementById('crmSave').click();
     });
+    }
   })();
 
   // bouton flottant WhatsApp

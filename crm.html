@@ -94,7 +94,7 @@
 <div class="drawer" id="drawer"></div>
 <div class="overlay" id="ov"><div class="modal" id="modal"></div></div>
 
-<script src="nav.js?v=202610011522"></script>
+<script src="nav.js?v=202610091730"></script>
 <script>
 /* ============ config ============ */
 var CFG={api:localStorage.getItem('crm_api')||'https://psf-crm-proxy.vercel.app/api/records',key:localStorage.getItem('crm_key')||''};
@@ -269,8 +269,8 @@ function closeDrawer(){$('#drawer').classList.remove('on');}
 
 /* ============ message assistant ============ */
 function aiMsg(data){var p=data.split('|'),nm=p[0]||'',tel=p[1]||'';var wn=waNum(tel);
- var msgs=[['Prise de contact','Bonjour, je vous contacte de la part de Paris Sud Formation (organisme habilité OPCO Mobilités). On accompagne les dirigeants du transport à piloter avec l\'IA — 100% financé, 0 € pour vous. 2 minutes cette semaine ?'],
-  ['Relance douce','Bonjour, je reviens vers vous : vous avez une enveloppe formation OPCO (~1 500 €) à débloquer en 2 semaines. On cale 30 min d\'audit gratuit avec Abdel ?'],
+ var msgs=[['Prise de contact','Bonjour, je vous contacte de la part de Paris Sud Formation (organisme de formation certifié Qualiopi). On accompagne les dirigeants du transport à piloter avec l\'IA — jusqu\'à 100 % financé par votre OPCO, objectif : 0 € de reste à charge. 2 minutes cette semaine ?'],
+  ['Relance douce','Bonjour, je reviens vers vous : votre entreprise dispose peut-être d\'un budget formation auprès de son OPCO. On cale 30 min d\'audit gratuit avec Abdel pour le vérifier ?'],
   ['Confirmation RDV','Bonjour, petit rappel de notre audit IA (30 min, visio). Rien à préparer, on regarde vos droits OPCO + 2-3 usages concrets. À tout à l\'heure !']];
  var h='<h3>🤖 Message pour '+esc(nm||'ce contact')+'</h3>';
  msgs.forEach(function(m,i){h+='<label>'+m[0]+'</label><textarea id="m'+i+'" rows="4">'+esc(m[1])+'</textarea><div style="display:flex;gap:8px;margin:6px 0 10px">'+(wn?'<a class="btnadd" style="text-decoration:none;text-align:center;flex:1" target="_blank" rel="noopener" href="https://wa.me/'+wn+'" data-wa="'+i+'">💬 WhatsApp</a>':'')+'<button class="btncfg" data-copy="'+i+'" style="flex:1">Copier</button></div>';});
