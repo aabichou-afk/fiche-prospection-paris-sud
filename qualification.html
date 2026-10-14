@@ -76,7 +76,7 @@
     </div>
 
     <div class="content" id="done">
-      <div class="big">✅</div><h2 style="font-size:1.4rem">Fiche envoyée dans Airtable&nbsp;!</h2>
+      <div class="big" id="doneIcon">✅</div><h2 style="font-size:1.4rem" id="doneTitle">Fiche enregistrée dans Airtable&nbsp;!</h2>
       <p class="muted" id="doneMsg"></p>
       <button class="btn btn-p" id="again" style="margin:22px auto 0;max-width:280px">Nouvelle fiche</button>
     </div>
@@ -118,11 +118,18 @@ $('#send').addEventListener('click',function(){
     rdv:state.rdv,creneau:g('#creneau'),objection:g('#objection'),notes:notes.join(' · '),statut:statut()};
   if(g('#eff'))map.effectif=g('#eff');
   var p=new URLSearchParams();Object.keys(map).forEach(function(k){if(map[k])p.append(k,map[k])});
-  var btn=$('#send');btn.disabled=true;btn.textContent='Envoi…';$('#sendHint').textContent='';
-  fetch(WEBHOOK,{method:'POST',mode:'no-cors',body:p}).then(function(){
-    $('#doneMsg').textContent=statut()==='RDV qualifié'?'🔥 RDV qualifié enregistré dans ENTREPRISES.':'Fiche « '+(statut()||'en cours')+' » enregistrée dans ENTREPRISES.';
+  var btn=$('#send');btn.disabled=true;btn.textContent='Envoi… (quelques secondes)';$('#sendHint').textContent='';
+  // Make répond {"ok":true} quand la fiche est créée dans Airtable, « Accepted » quand il la garde en attente (Airtable en panne ou scénario arrêté).
+  var echec=function(msg){btn.disabled=false;btn.textContent='Envoyer la fiche dans Airtable';$('#sendHint').textContent=msg;};
+  fetch(WEBHOOK,{method:'POST',body:p}).then(function(r){return r.text().then(function(t){return {ok:r.ok,code:r.status,t:t.trim()};});}).then(function(x){
+    var ok=false;if(x.ok){try{ok=JSON.parse(x.t).ok===true;}catch(e){}}
+    if(ok){$('#doneIcon').textContent='✅';$('#doneTitle').textContent='Fiche enregistrée dans Airtable !';
+      $('#doneMsg').textContent=statut()==='RDV qualifié'?'🔥 RDV qualifié enregistré dans ENTREPRISES.':'Fiche « '+(statut()||'en cours')+' » enregistrée dans ENTREPRISES.';}
+    else if(x.ok&&x.t==='Accepted'){$('#doneIcon').textContent='⏳';$('#doneTitle').textContent='Fiche reçue, en attente';
+      $('#doneMsg').textContent='Elle n\'est pas encore dans Airtable mais elle est conservée : ne la ressaisissez pas. Prévenez Abdel que les fiches sont en attente.';}
+    else{echec('❌ Fiche NON enregistrée (code '+x.code+'). Ne fermez pas la page : réessayez dans une minute.');return;}
     $('#app').style.display='none';$('#done').style.display='block';window.scrollTo({top:0,behavior:'smooth'});
-  }).catch(function(){btn.disabled=false;btn.textContent='Envoyer la fiche dans Airtable';$('#sendHint').textContent='❌ Échec d\'envoi (réseau). Réessayez.';});
+  }).catch(function(){echec('❌ Fiche NON envoyée (réseau). Ne fermez pas la page : réessayez.');});
 });
 function resetForm(){$$('#app input,#app textarea').forEach(function(i){i.value=''});$('#type').value='';$('#offre').value='';
   $$('.seg button').forEach(function(b){b.classList.remove('on','good','bad')});for(var k in state)state[k]='';
